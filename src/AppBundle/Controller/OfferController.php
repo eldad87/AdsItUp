@@ -15,17 +15,17 @@ class OfferController extends Controller
     /**
      * List all offers
      *
-     * @Route("/Dashboard/Offer", name="dashboard.offer.list")
+     * @Route("/Dashboard/Offer", name="dashboard.offer")
      * @Method({"GET", "POST"})
      */
     public function listAction(Request $request)
     {
         $source = new Entity('AppBundle:Offer');
         $grid = $this->get('grid');
+
         /** @var Grid $grid */
         $grid->setSource($source);
         $grid->isReadyForRedirect();
-
 
         return $grid->getGridResponse('::listGrid.html.twig');
     }
@@ -33,10 +33,10 @@ class OfferController extends Controller
     /**
      * View an Offer
      *
-     * @Route("/Dashboard/Offer/List", name="dashboard.offer.view")
+     * @Route("/Dashboard/Offer/{id}", requirements={"id": "\d+"}, name="dashboard.offer.view")
      * @Method("GET")
      */
-    public function viewAction(Request $request)
+    public function viewAction(Request $request, $id)
     {
 
     }

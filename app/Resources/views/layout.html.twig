@@ -14,83 +14,47 @@
     {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
 </head>
 <body>
-<nav class="navbar navbar-inverse" role="navigation">
-    <div class="container-fluid">
-       {# <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ path('dashboard') }}">AdsItUp</a>
-        </div>
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ path('dashboard') }}">AdsItUp</a>
+            </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                {% if app.user %}
-                    {% if is_granted('ROLE_AFFILIATE') %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                {{ 'Offer'|trans }}
-                                <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ path('offer') }}"><span class="glyphicon glyphicon-list"></span> {{ 'List'|trans }}</a></li>
-                                {% if is_granted('ROLE_AFFILIATE') %}
-                                    <li><a href="{{ path('offer.save') }}"><span class="glyphicon glyphicon-plus"></span> {{ 'New'|trans }}</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    {% endif %}
-                    {% if is_granted('ROLE_AFFILIATE_MANAGER') %}
-                        <li><a href="{{ path('user.list') }}">{{ 'Users'|trans }}</a></li>
-                    {% endif %}
-                {% endif %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if app.user %}
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            {{ 'Hello'|trans }}, {{ app.user.displayName }}!
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="{{ path('user') }}"><span class="glyphicon glyphicon-user"></span> {{ 'View your profile'|trans }}</a></li>
-                            <li><a href="{{ path('user.edit', { id: app.user.id }) }}"><span class="glyphicon glyphicon-edit"></span> {{ 'Edit your profile'|trans }}</a></li>
-                            <li><a href="{{ path('user.logout') }}"><span class="glyphicon glyphicon-off"></span> {{ 'Sign out'|trans }}</a></li>
-                        </ul>
-                    </li>
-                {% else %}
-                    <li><a href="{{ path('user.login') }}">{{ 'Sign in'|trans }}</a></li>
-                    <li><a href="{{ path('user.register') }}">{{ 'Register'|trans }}</a></li>
-                {% endif %}
-            </ul>
-        </div><!-- /.navbar-collapse -->#}
-    </div><!-- /.container-fluid -->
-</nav>
+            {# Collect the nav links, forms, and other content for toggling #}
+            <div class="collapse navbar-collapse" id="admin-navbar-collapse-1">
+                {{ knp_menu_render('AppBundle:Builder:mainMenu', {'currentClass': 'active', 'template': '::knp_menu_extend.html.twig'}) }}
 
-<div class="container">
-    {#{% if app.session.flashbag.has('alert') %}
-        {% for flashMessage in app.session.flashbag.get('alert') %}
-            <div class="alert alert-info">{{ flashMessage }}</div>
-        {% endfor %}
-    {% endif %}
+                {{ knp_menu_render('AppBundle:Builder:userMenu', {'currentClass': 'active', 'template': '::knp_menu_extend.html.twig'}) }}
+            </div>
+        </div><!-- /.container-fluid -->
+    </nav>
 
-    <div class="row">
-        {{renderBreadCrumbs()}}
-    </div>#}
+    <div class="container">
+        {#{% if app.session.flashbag.has('alert') %}
+            {% for flashMessage in app.session.flashbag.get('alert') %}
+                <div class="alert alert-info">{{ flashMessage }}</div>
+            {% endfor %}
+        {% endif %}
 
-    {% block content %}{% endblock %}
-</div>
+        <div class="row">
+            {{renderBreadCrumbs()}}
+        </div>#}
 
-<!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
-<script src="{{ asset('js/jquery.js') }}"></script>
-<!-- Include all JavaScripts, compiled by Assetic -->
-<script src="{{ asset('js/bootstrap.js') }}"></script>
-{#<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>#}
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- jQuery (necessary for Bootstraps JavaScript plugins) -->
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <!-- Include all JavaScripts, compiled by Assetic -->
+    <script src="{{ asset('js/bootstrap.js') }}"></script>
+    {#<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>#}
 </body>
 </html>
