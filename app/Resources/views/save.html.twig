@@ -1,0 +1,15 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <div id="alert_placeholder"></div>
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {#{{ form_errors(form) }}#}
+
+    {{ form_widget(form, {'form_type': 'horizontal'}) }}
+
+    {{ form_rest(form) }}
+
+    <input type="submit" value="Save" />
+    {{ form_end(form) }}
+{% endblock %}

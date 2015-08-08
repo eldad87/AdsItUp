@@ -1,0 +1,190 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="offer")
+ */
+class Offer {
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $name;
+
+    /**
+     * @ORM\Column(type="string", length=500)
+     */
+    protected $destination
+    ;
+    /**
+     * @ORM\Column(type="text")
+     */
+    protected $description;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    protected $isActive;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="OfferCategory", inversedBy="offers")
+     */
+    protected $offerCategory;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Brand", inversedBy="offers")
+     */
+    protected $brand;
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Brand
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getDestination()
+    {
+        return $this->destination;
+    }
+
+    /**
+     * @param mixed $destination
+     * @return Brand
+     */
+    public function setDestination($destination)
+    {
+        $this->destination = $destination;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param mixed $description
+     * @return Brand
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Set isActive
+     *
+     * @param boolean $isActive
+     * @return Brand
+     */
+    public function setIsActive($isActive)
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get isActive
+     *
+     * @return boolean 
+     */
+    public function getIsActive()
+    {
+        return $this->isActive;
+    }
+
+    /**
+     * Set brand
+     *
+     * @param \AppBundle\Entity\User $brand
+     * @return User
+     */
+    public function setBrand(\AppBundle\Entity\User $brand = null)
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    /**
+     * Get brand
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getBrand()
+    {
+        return $this->brand;
+    }
+
+    /**
+     * Set offerCategory
+     *
+     * @param \AppBundle\Entity\OfferCategory $offerCategory
+     * @return Offer
+     */
+    public function setOfferCategory(\AppBundle\Entity\OfferCategory $offerCategory = null)
+    {
+        $this->offerCategory = $offerCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get offerCategory
+     *
+     * @return \AppBundle\Entity\OfferCategory 
+     */
+    public function getOfferCategory()
+    {
+        return $this->offerCategory;
+    }
+}

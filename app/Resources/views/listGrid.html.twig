@@ -1,0 +1,13 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <div id="alert_placeholder"></div>
+
+    {% if header is defined %}
+        <div class="page-header">
+            <h1>{{ header }}</h1>
+        </div>
+    {% endif %}
+
+    {{ grid(grid, '::apy_data_grid_blocks.html.twig') }}
+{% endblock %}

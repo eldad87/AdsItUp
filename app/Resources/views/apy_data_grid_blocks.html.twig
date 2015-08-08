@@ -1,0 +1,202 @@
+{% extends 'APYDataGridBundle::blocks.html.twig' %}
+
+{# ------------------------------------------------------ grid ------------------------------------------------------ #}
+{% block grid %}
+    <div class="grid">
+        {% if grid.totalCount > 0 or grid.isFiltered or grid.noDataMessage is sameas(false) %}
+            <form class="form-inline" id="{{ grid.hash }}" action="{{ grid.routeUrl }}" method="post">
+                <div class="grid_header">
+                    {% if grid.massActions|length > 0 %}
+                        {{ grid_actions(grid) }}
+                    {% endif %}
+                </div>
+                <div class="grid_body">
+                    <table class="table table-bordered table-striped">
+                        {% if grid.isTitleSectionVisible %}
+                            {{ grid_titles(grid) }}
+                        {% endif %}
+                        {% if grid.isFilterSectionVisible %}
+                            {{ grid_filters(grid) }}
+                        {% endif %}
+                        {{ grid_rows(grid) }}
+                    </table>
+                </div>
+                <div class="grid_footer">
+                    {% if grid.isPagerSectionVisible %}
+                        {{ grid_pager(grid) }}
+                    {% endif %}
+                    {% if grid.exports|length > 0 %}
+                        {{ grid_exports(grid) }}
+                    {% endif %}
+                    {% if grid.tweaks|length > 0 %}
+                        {{ grid_tweaks(grid) }}
+                    {% endif %}
+                </div>
+                {% if withjs %}
+                    {{ grid_scripts(grid) }}
+                {% endif %}
+            </form>
+        {% else %}
+            {{ grid_no_data(grid) }}
+        {% endif %}
+    </div>
+{% endblock grid %}
+{# -------------------------------------------- grid_column_filter_type_input --------------------------------------- #}
+{% block grid_column_filter_type_input %}
+    {% set btwOperator = constant('APY\\DataGridBundle\\Grid\\Column\\Column::OPERATOR_BTW') %}
+    {% set btweOperator = constant('APY\\DataGridBundle\\Grid\\Column\\Column::OPERATOR_BTWE') %}
+    {% set isNullOperator = constant('APY\\DataGridBundle\\Grid\\Column\\Column::OPERATOR_ISNULL') %}
+    {% set isNotNullOperator = constant('APY\\DataGridBundle\\Grid\\Column\\Column::OPERATOR_ISNOTNULL') %}
+    {% set op = column.data.operator is defined ? column.data.operator : column.defaultOperator %}
+    {% set from = column.data.from is defined ? column.data.from : null %}
+    {% set to = column.data.to is defined ? column.data.to : null %}
+    <span class="grid-filter-input">
+    {{ grid_column_operator(column, grid, op, submitOnChange) }}
+        <span class="grid-filter-input-query">
+        <input type="{{ column.inputType }}" value="{{ from }}" class="form-control input-sm grid-filter-input-query-from" name="{{ grid.hash }}[{{ column.id }}][from]" id="{{ grid.hash }}__{{ column.id }}__query__from" {% if submitOnChange is sameas(true) %}onkeypress="return {{ grid.hash }}_submitForm(event, this.form);"{% endif%} {{ ( op == isNullOperator or op == isNotNullOperator ) ? 'style="display: none;" disabled="disabled"' : '' }} />
+        <input type="{{ column.inputType }}" value="{{ to }}" class="form-control input-sm grid-filter-input-query-to" name="{{ grid.hash }}[{{ column.id }}][to]" id="{{ grid.hash }}__{{ column.id }}__query__to" {% if submitOnChange is sameas(true) %}onkeypress="return {{ grid.hash }}_submitForm(event, this.form);"{% endif%} {{ ( op == btwOperator or op == btweOperator ) ? '': 'style="display: none;" disabled="disabled"' }} />
+    </span>
+</span>
+{% endblock grid_column_filter_type_input %}
+{# -------------------------------------------- grid_column_filter_type_select --------------------------------------- #}
+{% block grid_column_filter_type_select %}
+    {% set btwOperator = constant('APY\\DataGridBundle\\Grid\\Column\\Column::OPERATOR_BTW') %}
+    {% set btweOperator = constant('APY\\DataGridBundle\\Grid\\Column\\Column::OPERATOR_BTWE') %}
+    {% set isNullOperator = constant('APY\\DataGridBundle\\Grid\\Column\\Column::OPERATOR_ISNULL') %}
+    {% set isNotNullOperator = constant('APY\\DataGridBundle\\Grid\\Column\\Column::OPERATOR_ISNOTNULL') %}
+    {% set op = column.data.operator is defined ? column.data.operator : column.defaultOperator %}
+    {% set from = column.data.from is defined ? column.data.from : null %}
+    {% set to = column.data.to is defined ? column.data.to : null %}
+    {% set multiple = column.selectMulti %}
+    {% set expanded = column.selectExpanded %}
+    <span class="grid-filter-select">
+    {{ grid_column_operator(column, grid, op, submitOnChange) }}
+        <span class="grid-filter-select-query">
+    {% if expanded %}
+        <span class="grid-filter-select-query-from" id="{{ grid.hash }}__{{ column.id }}__query__from" {{ ( op == isNullOperator or op == isNotNullOperator ) ? 'style="display: none;" disabled="disabled"' : '' }}>
+        {% for key, value in column.values %}
+            <span><input type="{% if multiple %}checkbox{% else %}radio{% endif %}" name="{{ grid.hash }}[{{ column.id }}][from][]" value="{{ key }}" {% if key in from %} checked="checked"{% endif %} {% if submitOnChange is sameas(true) %}onclick="return {{ grid.hash }}_submitForm(event, this.form);"{% endif%}/><label>{{ value }}</label></span>
+        {% endfor %}
+        </span>
+        <span class="grid-filter-select-query-to" id="{{ grid.hash }}__{{ column.id }}__query__to" {{ ( op == btwOperator or op == btweOperator ) ? '': 'style="display: none;" disabled="disabled"' }}>
+        {% for key, value in column.values %}
+            <span><input type="{% if multiple %}checkbox{% else %}radio{% endif %}" name="{{ grid.hash }}[{{ column.id }}][to]" value="{{ key }}" {% if not to is null and to == key %} checked="checked"{% endif %} {% if submitOnChange is sameas(true) %}onclick="return {{ grid.hash }}_submitForm(event, this.form);"{% endif%}/><label>{{ value }}</label></span>
+        {% endfor %}
+        </span>
+        {% if multiple %}<input type="submit" value="{{ 'Go'|trans }}" />{% endif %}
+    {% else %}
+        <select{% if multiple %} multiple="multiple"{% endif %} name="{{ grid.hash }}[{{ column.id }}][from][]" class="form-control input-sm grid-filter-select-query-from" id="{{ grid.hash }}__{{ column.id }}__query__from" {% if submitOnChange is sameas(true) %}onchange="return {{ grid.hash }}_submitForm(event, this.form);"{% endif%} {{ ( op == isNullOperator or op == isNotNullOperator ) ? 'style="display: none;" disabled="disabled"' : '' }}>
+            <option value="">&nbsp;</option>
+            {% for key, value in column.values %}
+                <option value="{{ key }}"{% if key in from %} selected="selected"{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        <select name="{{ grid.hash }}[{{ column.id }}][to]" class="form-control input-sm grid-filter-select-query-to" id="{{ grid.hash }}__{{ column.id }}__query__to" {% if submitOnChange is sameas(true) %}onchange="return {{ grid.hash }}_submitForm(event, this.form);"{% endif%} {{ ( op == btwOperator or op == btweOperator ) ? '': 'style="display: none;" disabled="disabled"' }}>
+            <option value="">&nbsp;</option>
+            {% for key, value in column.values %}
+                <option value="{{ key }}"{% if not to is null and to == key %} selected="selected"{% endif %}>{{ value }}</option>
+            {% endfor %}
+        </select>
+        {% if multiple %}<input type="submit" value="{{ 'Go'|trans }}" />{% endif %}
+    {% endif %}
+    </span>
+</span>
+{% endblock grid_column_filter_type_select %}
+{# -------------------------------------------- grid_column_filter_type_massaction --------------------------------------- #}
+{% block grid_column_filter_type_massaction %}
+    <input type="button" class="form-control input-sm grid-search-reset" value="R" title="{{ 'Reset'|trans }}" onclick="return {{ grid.hash }}_reset();"/>
+{% endblock grid_column_filter_type_massaction %}
+{# -------------------------------------------- grid_column_filter_type_massaction_filter --------------------------------------- #}
+{% block grid_column_filter_type_actions %}
+    <a class="form-control input-sm grid-reset" href="{{ grid_url('reset', grid) }}">{{ 'Reset'|trans }}</a>
+{% endblock grid_column_filter_type_actions %}
+{# --------------------------------------------------- grid_actions ------------------------------------------------- #}
+{% block grid_actions %}
+    <div class="mass-actions">
+    <span class="grid_massactions_helper">
+        <a href="#" onclick="return {{ grid.hash }}_markVisible(true);">{{ 'Select visible'|trans }}</a> |
+        <a href="#" onclick="return {{ grid.hash }}_markVisible(false);">{{ 'Deselect visible'|trans }}</a> |
+        <a href="#" onclick="return {{ grid.hash }}_markAll(true);">{{ 'Select all'|trans }}</a> |
+        <a href="#" onclick="return {{ grid.hash }}_markAll(false);">{{ 'Deselect all'|trans }}</a>
+        <span class="mass-actions-selected" id="{{ grid.hash }}_mass_action_selected"></span>
+    </span>
+        {% spaceless %}
+            <div style="float:right;" class="grid_massactions">
+                <div class="form-group">
+                    <select class="form-control input-sm" name="{{ grid.hash }}[{{ constant('APY\\DataGridBundle\\Grid\\Grid::REQUEST_QUERY_MASS_ACTION') }}]">
+                        <option value="-1"></option>
+                        {% for key, massAction in grid.massActions %}
+                            <option value="{{ key }}">{{ massAction.title|trans }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <input type="submit" class="btn btn-default" value="{{ 'Submit Action'|trans }}"/>
+            </div>
+        {% endspaceless %}
+    </div>
+{% endblock grid_actions %}
+
+{# --------------------------------------------------- grid_column_actions_cell ------------------------------------- #}
+
+{% block grid_column_actions_cell %}
+    {% set actions = column.getActionsToRender(row) %}
+    <select class="grid-row-actions" style="margin-top:10px;">
+        <option value="#">Chose</option>
+        {% for action in actions %}
+            <option {% for name, value in action.attributes %} {{ name }}="{{ value }}" {% endfor %} data-target="{{ action.target }}" {% if action.confirm %} data-confirm-message="{{ action.confirmMessage }}"{% endif %} value="{{ url(action.route, column.routeParameters(row, action), false) }}">{{ action.title|trans }}</option>
+        {% endfor %}
+    </select>
+{% endblock grid_column_actions_cell %}
+
+{# --------------------------------------------------- grid_exports ------------------------------------------------- #}
+{% block grid_exports %}
+    <div class="exports" style="float:right">
+        {% spaceless %}
+            <div class="form-group">
+                <select class="form-control input-sm" name="{{grid.hash}}[{{ constant('APY\\DataGridBundle\\Grid\\Grid::REQUEST_QUERY_EXPORT') }}]">
+                    <option value="-1"></option>
+                    {% for key, export in grid.exports %}
+                        <option value="{{key}}">{{ export.title|trans }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" class="btn btn-default" value="{{ 'Export'|trans }}"/>
+        {% endspaceless %}
+    </div>
+{% endblock grid_exports %}
+
+{# --------------------------------------------------- grid_exports ------------------------------------------------- #}
+{% block grid_scripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(function(){
+            $('.grid-row-actions').on('change', function(){
+                var optionVal = $(this).val();
+                if(optionVal == '#') {
+                    return false;
+                }
+
+                var selectedOptionElement = $(this).find(":selected");
+                if(selectedOptionElement.data('confirm-message')) {
+                    if(!confirm(selectedOptionElement.data('confirm-message'))) {
+                        $(this).prop('selectedIndex', 0); //Reset selection to first option
+                        return false;
+                    }
+                }
+
+                if(selectedOptionElement.data('target') == '_blank') {
+                    var win = window.open(optionVal, '_blank')
+                    if(win) { //May have popup blocker enabled
+                        win.focus();
+                        $(this).prop('selectedIndex', 0); //Reset selection to first option
+                    }
+
+                } else {
+                    window.location = optionVal;
+                }
+
+            });
+        });
+    </script>
+{% endblock grid_scripts %}
