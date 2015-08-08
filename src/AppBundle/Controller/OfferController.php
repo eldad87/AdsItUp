@@ -2,11 +2,16 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Offer;
+use AppBundle\Form\OfferType;
+use APY\DataGridBundle\Grid\Action\MassAction;
+use APY\DataGridBundle\Grid\Action\RowAction;
 use APY\DataGridBundle\Grid\Grid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use APY\DataGridBundle\Grid\Source\Entity;
 
@@ -25,6 +30,19 @@ class OfferController extends Controller
 
         /** @var Grid $grid */
         $grid->setSource($source);
+
+        // Edit
+        $rowAction = new RowAction('Edit', 'dashboard.offer.save', false, '_self', array(), array('ROLE_BRAND'));
+        $rowAction->setRouteParameters(array('id'));
+        $grid->addRowAction($rowAction);
+
+        // Add
+        $massAction = new MassAction('Add', function() {
+            return new RedirectResponse($this->generateUrl('dashboard.offer.save'));
+        }, false, array(), array('ROLE_BRAND'));
+        $grid->addMassAction($massAction);
+
+
         $grid->isReadyForRedirect();
 
         return $grid->getGridResponse('::listGrid.html.twig');
@@ -49,8 +67,33 @@ class OfferController extends Controller
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_BRAND')")
      */
-    public function saveAction(Request $request)
+    public function saveAction(Request $request, $id)
     {
+        $em = $this->getDoctrine()->getManager();
 
+        if($id) {
+            $offer = $em->getRepository('AppBundle:Offer')->findOneBy(array(
+                'id' => $id,
+                'brand' => $this->get('Brand')->byHost()
+            ));
+        } else {
+            $offer = new Offer();
+        }
+
+        $form = $this->createForm(new OfferType(), $offer);
+        $form->handleRequest($request);
+        if ($form->isValid() && $request->isMethod($request::METHOD_POST)) {
+            $offer = $form->getData();
+            $offer->setBrand($this->get('Brand')->byHost());
+
+            $em->persist($offer);
+            $em->flush();
+
+            return $this->redirectToRoute('dashboard.offer');
+        }
+
+        return $this->render('::save.html.twig', array(
+            'form' => $form->createView(),
+        ));
     }
 }

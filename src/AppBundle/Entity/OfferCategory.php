@@ -153,4 +153,9 @@ class OfferCategory {
     {
         return $this->offers;
     }
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
 }

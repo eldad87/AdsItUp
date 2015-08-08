@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use APY\DataGridBundle\Grid\Mapping as GRID;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -22,6 +23,12 @@ class Offer {
     protected $id;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 50
+     * )
+     *
      * @ORM\Column(type="string", length=255)
      *
      * @GRID\Column(title="Name", type="text", operatorsVisible=false)
@@ -29,13 +36,21 @@ class Offer {
     protected $name;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="string", length=500)
      *
      * @GRID\Column(title="Destination", type="text", operatorsVisible=false)
      */
-    protected $destination
-    ;
+    protected $destination;
+
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 50
+     * )
+     *
      * @ORM\Column(type="text")
      *
      * @GRID\Column(title="Description", type="text", operatorsVisible=false)
@@ -43,6 +58,8 @@ class Offer {
     protected $description;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\Column(type="boolean")
      *
      * @GRID\Column(title="Is Active", type="boolean", operatorsVisible=false)
@@ -50,6 +67,8 @@ class Offer {
     protected $isActive;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\ManyToOne(targetEntity="OfferCategory", inversedBy="offers")
      *
      * @GRID\Column(field="offerCategory.name", title="Category", operatorsVisible=false, filter="select", selectFrom="query")
@@ -57,6 +76,8 @@ class Offer {
     protected $offerCategory;
 
     /**
+     * @Assert\NotBlank()
+     *
      * @ORM\ManyToOne(targetEntity="Brand", inversedBy="offers")
      *
      * @GRID\Column(field="brand.name", title="Brand", operatorsVisible=false, filter="select", selectFrom="query")
@@ -161,10 +182,10 @@ class Offer {
     /**
      * Set brand
      *
-     * @param \AppBundle\Entity\User $brand
+     * @param \AppBundle\Entity\Brand $brand
      * @return User
      */
-    public function setBrand(\AppBundle\Entity\User $brand = null)
+    public function setBrand(\AppBundle\Entity\Brand $brand = null)
     {
         $this->brand = $brand;
 
@@ -202,5 +223,10 @@ class Offer {
     public function getOfferCategory()
     {
         return $this->offerCategory;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }
