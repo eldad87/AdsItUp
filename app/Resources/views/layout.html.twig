@@ -44,11 +44,11 @@
             {% for flashMessage in app.session.flashbag.get('alert') %}
                 <div class="alert alert-info">{{ flashMessage }}</div>
             {% endfor %}
-        {% endif %}
+        {% endif %}s#}
 
         <div class="row">
-            {{renderBreadCrumbs()}}
-        </div>#}
+            {{ apy_breadcrumb_trail_render() }}
+        </div>
 
         {% block content %}{% endblock %}
     </div>

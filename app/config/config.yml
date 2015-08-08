@@ -102,3 +102,6 @@ braincrafted_bootstrap:
     less_filter: less
     auto_configure:
         assetic: false
+
+apy_breadcrumb_trail:
+    template: ::breadcrumbtrail.html.twig

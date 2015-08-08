@@ -10,11 +10,16 @@ use APY\DataGridBundle\Grid\Grid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use APY\DataGridBundle\Grid\Source\Entity;
 
+/**
+ * @Breadcrumb("Dashboard", route={"name"="dashboard"})
+ * @Breadcrumb("Offers", route={"name"="dashboard.offer"})
+ */
 class OfferController extends Controller
 {
     /**
@@ -51,6 +56,8 @@ class OfferController extends Controller
     /**
      * View an Offer
      *
+     * @Breadcrumb("Save")
+     * @Breadcrumb("{offer}")
      * @Route("/Dashboard/Offer/{id}", requirements={"id": "\d+"}, name="dashboard.offer.view")
      * @Method("GET")
      */
@@ -62,20 +69,21 @@ class OfferController extends Controller
     /**
      * Add/Edit an Offer
      *
+     * @Breadcrumb("Save")
+     * @Breadcrumb("{offer}")
      * @Route("/Dashboard/Offer/Save/{id}", defaults={"id" = false}, requirements={"id": "\d+"},
      *          name="dashboard.offer.save")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_BRAND')")
      */
-    public function saveAction(Request $request, $id)
+    public function saveAction(Request $request, Offer $offer=null)
     {
         $em = $this->getDoctrine()->getManager();
 
-        if($id) {
-            $offer = $em->getRepository('AppBundle:Offer')->findOneBy(array(
-                'id' => $id,
-                'brand' => $this->get('Brand')->byHost()
-            ));
+        if($offer) {
+            if($offer->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
+                throw $this->createAccessDeniedException('Unable to access this page!');
+            }
         } else {
             $offer = new Offer();
         }

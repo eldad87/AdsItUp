@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "59ab86bdec63562fb07d1285f7c9b930",
+    "hash": "aebb5907030619e9b6b21b50ed7c6300",
     "packages": [
+        {
+            "name": "apy/breadcrumbtrail-bundle",
+            "version": "dev-master",
+            "target-dir": "APY/BreadcrumbTrailBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Abhoryo/APYBreadcrumbTrailBundle.git",
+                "reference": "f37a011a106d59ab7009acc9e69ec6783b7e797a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Abhoryo/APYBreadcrumbTrailBundle/zipball/f37a011a106d59ab7009acc9e69ec6783b7e797a",
+                "reference": "f37a011a106d59ab7009acc9e69ec6783b7e797a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "2.*"
+            },
+            "suggest": {
+                "ext-intl": "*"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "APY\\BreadcrumbTrailBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Yoann Petit",
+                    "email": "abhoryo@free.fr"
+                }
+            ],
+            "description": "Symfony2 Breadcrumbs Bundle with annotations and PHP",
+            "homepage": "https://github.com/Abhoryo/APYBreadcrumbTrailBundle",
+            "keywords": [
+                "Breadcrumb Trail",
+                "annotation",
+                "breadcrumbs",
+                "fil ariane",
+                "symfony"
+            ],
+            "time": "2015-07-26 08:07:32"
+        },
         {
             "name": "apy/datagrid-bundle",
             "version": "2.2.16",
@@ -2153,7 +2202,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "friendsofsymfony/user-bundle": 20
+        "friendsofsymfony/user-bundle": 20,
+        "apy/breadcrumbtrail-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

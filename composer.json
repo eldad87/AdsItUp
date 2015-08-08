@@ -37,7 +37,8 @@
         "jquery/jquery":  "1.11.*",
         "braincrafted/bootstrap-bundle": "~2.0",
         "apy/datagrid-bundle": "^2.2",
-        "knplabs/knp-menu-bundle": "~2"
+        "knplabs/knp-menu-bundle": "~2",
+        "apy/breadcrumbtrail-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3"
