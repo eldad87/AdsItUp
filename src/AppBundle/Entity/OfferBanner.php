@@ -9,10 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="offer")
- * @GRID\Source(columns="id, name, destination, description, isActive, offerCategory.name, brand.name")
+ * @ORM\Table(name="offer_banner")
+ * @GRID\Source(columns="id, name, width, height")
  */
-class Offer {
+class OfferBanner {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -37,25 +37,27 @@ class Offer {
 
     /**
      * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 2
+     * )
      *
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="integer")
      *
-     * @GRID\Column(title="Destination", type="text", operatorsVisible=false)
+     * @GRID\Column(title="Width", title="Width", type="number", operatorsVisible=false, operators="eq", defaultOperator="eq")
      */
-    protected $destination;
+    protected $width;
 
     /**
      * @Assert\NotBlank()
-     * @Assert\Length(
-     *      min = 2,
-     *      max = 50
+     * @Assert\Range(
+     *      min = 2
      * )
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="integer")
      *
-     * @GRID\Column(title="Description", type="text", operatorsVisible=false)
+     * @GRID\Column(title="Height", title="Width", type="number", operatorsVisible=false, operators="eq", defaultOperator="eq")
      */
-    protected $description;
+    protected $height;
 
     /**
      * @Assert\NotBlank()
@@ -69,25 +71,20 @@ class Offer {
     /**
      * @Assert\NotBlank()
      *
-     * @ORM\ManyToOne(targetEntity="OfferCategory", inversedBy="offers")
+     * @ORM\ManyToOne(targetEntity="Offer", inversedBy="offerBanners")
      *
-     * @GRID\Column(field="offerCategory.name", title="Category", operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(field="offer.name", title="Offer", operatorsVisible=false, filter="select", selectFrom="query")
      */
-    protected $offerCategory;
+    protected $offer;
 
     /**
      * @Assert\NotBlank()
      *
-     * @ORM\ManyToOne(targetEntity="Brand", inversedBy="offers")
+     * @ORM\ManyToOne(targetEntity="Brand", inversedBy="offerBanners")
      *
      * @GRID\Column(field="brand.name", title="Brand", operatorsVisible=false, filter="select", selectFrom="query")
      */
     protected $brand;
-
-    /**
-     * @ORM\OneToMany(targetEntity="OfferBanner", mappedBy="offer")
-     */
-    protected $offerBanners;
 
     /**
      * Get id
@@ -126,18 +123,18 @@ class Offer {
     /**
      * @return mixed
      */
-    public function getDestination()
+    public function getWidth()
     {
-        return $this->destination;
+        return $this->width;
     }
 
     /**
-     * @param mixed $destination
+     * @param mixed $width
      * @return Brand
      */
-    public function setDestination($destination)
+    public function setWidth($width)
     {
-        $this->destination = $destination;
+        $this->width = $width;
 
         return $this;
     }
@@ -145,18 +142,18 @@ class Offer {
     /**
      * @return mixed
      */
-    public function getDescription()
+    public function getHeight()
     {
-        return $this->description;
+        return $this->height;
     }
 
     /**
-     * @param mixed $description
+     * @param mixed $height
      * @return Brand
      */
-    public function setDescription($description)
+    public function setHeight($height)
     {
-        $this->description = $description;
+        $this->height = $height;
 
         return $this;
     }
@@ -210,12 +207,12 @@ class Offer {
     /**
      * Set offerCategory
      *
-     * @param \AppBundle\Entity\OfferCategory $offerCategory
+     * @param \AppBundle\Entity\Offer $offer
      * @return Offer
      */
-    public function setOfferCategory(\AppBundle\Entity\OfferCategory $offerCategory = null)
+    public function setOffer(\AppBundle\Entity\Offer $offer = null)
     {
-        $this->offerCategory = $offerCategory;
+        $this->offer = $offer;
 
         return $this;
     }
@@ -223,44 +220,11 @@ class Offer {
     /**
      * Get offerCategory
      *
-     * @return \AppBundle\Entity\OfferCategory 
+     * @return \AppBundle\Entity\Offer
      */
-    public function getOfferCategory()
+    public function getOffer()
     {
-        return $this->offerCategory;
-    }
-
-    /**
-     * Add offers
-     *
-     * @param \AppBundle\Entity\OfferBanner $offerBanner
-     * @return OfferCategory
-     */
-    public function addOfferBanner(\AppBundle\Entity\OfferBanner $offerBanner)
-    {
-        $this->offerBanners[] = $offerBanner;
-
-        return $this;
-    }
-
-    /**
-     * Remove offers
-     *
-     * @param \AppBundle\Entity\OfferBanner $offerBanner
-     */
-    public function removeOfferBanner(\AppBundle\Entity\OfferBanner $offerBanner)
-    {
-        $this->offerBanners->removeElement($offerBanner);
-    }
-
-    /**
-     * Get offers
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getOfferBanners()
-    {
-        return $this->offerBanners;
+        return $this->offer;
     }
 
     public function __toString()

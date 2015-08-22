@@ -43,6 +43,11 @@ class Brand {
     protected $offers;
 
     /**
+     * @ORM\OneToMany(targetEntity="OfferBanner", mappedBy="brand")
+     */
+    protected $offerBanners;
+
+    /**
      * @ORM\OneToMany(targetEntity="OfferCategory", mappedBy="brand")
      */
     protected $offerCategories;
@@ -195,6 +200,39 @@ class Brand {
     public function getOffers()
     {
         return $this->offers;
+    }
+
+    /**
+     * Add offer banner
+     *
+     * @param \AppBundle\Entity\OfferBanner $offerBanner
+     * @return Brand
+     */
+    public function addOfferBanner(\AppBundle\Entity\OfferBanner $offerBanner)
+    {
+        $this->offerBanners[] = $offerBanner;
+
+        return $this;
+    }
+
+    /**
+     * Remove offer Banner
+     *
+     * @param \AppBundle\Entity\OfferBanner $offerBanner
+     */
+    public function removeOfferBanner(\AppBundle\Entity\OfferBanner $offerBanner)
+    {
+        $this->offerBanners->removeElement($offerBanner);
+    }
+
+    /**
+     * Get offers
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOfferBanners()
+    {
+        return $this->offerBanners;
     }
 
     /**

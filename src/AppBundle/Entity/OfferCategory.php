@@ -124,24 +124,24 @@ class OfferCategory {
     /**
      * Add offers
      *
-     * @param \AppBundle\Entity\Offer $offers
+     * @param \AppBundle\Entity\Offer $offer
      * @return OfferCategory
      */
-    public function addOffer(\AppBundle\Entity\Offer $offers)
+    public function addOffer(\AppBundle\Entity\Offer $offer)
     {
-        $this->offers[] = $offers;
+        $this->offers[] = $offer;
 
         return $this;
     }
 
     /**
-     * Remove offers
+     * Remove offer
      *
-     * @param \AppBundle\Entity\Offer $offers
+     * @param \AppBundle\Entity\Offer $offer
      */
-    public function removeOffer(\AppBundle\Entity\Offer $offers)
+    public function removeOffer(\AppBundle\Entity\Offer $offer)
     {
-        $this->offers->removeElement($offers);
+        $this->offers->removeElement($offer);
     }
 
     /**
