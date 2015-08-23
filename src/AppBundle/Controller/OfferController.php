@@ -3,6 +3,8 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Offer;
+use AppBundle\Entity\OfferBanner;
+use AppBundle\Form\OfferBannerType;
 use AppBundle\Form\OfferType;
 use APY\DataGridBundle\Grid\Action\MassAction;
 use APY\DataGridBundle\Grid\Action\RowAction;
@@ -12,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use APY\BreadcrumbTrailBundle\Annotation\Breadcrumb;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use APY\DataGridBundle\Grid\Source\Entity;
@@ -41,6 +44,11 @@ class OfferController extends Controller
         $rowAction->setRouteParameters(array('id'));
         $grid->addRowAction($rowAction);
 
+        // View
+        $rowAction = new RowAction('View', 'dashboard.offer.view', false, '_self', array(), array('ROLE_AFFILIATE'));
+        $rowAction->setRouteParameters(array('id'));
+        $grid->addRowAction($rowAction);
+
         // Add
         $massAction = new MassAction('Add', function() {
             return new RedirectResponse($this->generateUrl('dashboard.offer.save'));
@@ -56,14 +64,62 @@ class OfferController extends Controller
     /**
      * View an Offer
      *
-     * @Breadcrumb("Save")
      * @Breadcrumb("{offer}")
-     * @Route("/Dashboard/Offer/{id}", requirements={"id": "\d+"}, name="dashboard.offer.view")
-     * @Method("GET")
+     * @Route("/Dashboard/Offer/{id}", requirements={"id": "\d+"},
+     *          name="dashboard.offer.view")
+     * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_AFFILIATE')")
      */
-    public function viewAction(Request $request, $id)
+    public function viewAction(Request $request, Offer $offer)
     {
+        if($offer->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
+            throw $this->createAccessDeniedException('Unable to access this page!');
+        }
 
+        $form = null;
+        if($this->isGranted('ROLE_BRAND')) {
+            $offerBanner = new OfferBanner();
+            $form = $this->createForm(new OfferBannerType(), $offerBanner);
+
+            $form->handleRequest($request);
+            if ($form->isValid() && $request->isMethod($request::METHOD_POST)) {
+
+                /** @var OfferBanner $offerBanner */
+                $offerBanner = $form->getData();
+                $offerBanner->setIsActive(true);
+                $offerBanner->setBrand($this->get('Brand')->byHost());
+                $offerBanner->setOffer($offer);
+
+                /** @var UploadedFile $file */
+                $file = $offerBanner->getFile();
+
+                //Move file
+                $absPath = $this->get('kernel')->getRootDir()
+                    . '/../web/upload/brand/'
+                    . $offerBanner->getBrand()->getId()
+                    . '/offer/'
+                    . $offerBanner->getOffer()->getId()
+                    . '/';
+                $fileName = time() . '_' . str_ireplace(' ', '_', $file->getClientOriginalName());
+                $file->move($absPath, $fileName);
+                $offerBanner->setFile($fileName);
+
+                //Set resolution
+                $size = @getimagesize($absPath . $fileName);
+                $offerBanner->setWidth($size[0]);
+                $offerBanner->setHeight($size[1]);
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($offerBanner);
+                $em->flush();
+            }
+        }
+
+        return $this->render('AppBundle:Dashboard:offer.view.html.twig', array(
+                'offer' => $offer,
+                'form'  => $form ? $form->createView() : null
+            )
+        );
     }
 
     /**

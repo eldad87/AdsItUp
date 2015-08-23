@@ -6,11 +6,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use APY\DataGridBundle\Grid\Mapping as GRID;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="offer_banner")
- * @GRID\Source(columns="id, name, width, height")
+ * @UniqueEntity(fields={"file"})
+ * @GRID\Source(columns="id, file, width, height")
  */
 class OfferBanner {
     /**
@@ -24,21 +26,19 @@ class OfferBanner {
 
     /**
      * @Assert\NotBlank()
-     * @Assert\Length(
-     *      min = 2,
-     *      max = 50
-     * )
+     * @Assert\Image(minWidth=2, minHeight=2, maxSize = "10240k", mimeTypes={ "image/jpeg", "image/png", "image/gif", "application/x-shockwave-flash" })
      *
      * @ORM\Column(type="string", length=255)
      *
      * @GRID\Column(title="Name", type="text", operatorsVisible=false)
      */
-    protected $name;
+    protected $file;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"postUpload"})
      * @Assert\Range(
-     *      min = 2
+     *      min = 2,
+     *      groups={"postUpload"}
      * )
      *
      * @ORM\Column(type="integer")
@@ -48,9 +48,10 @@ class OfferBanner {
     protected $width;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"postUpload"})
      * @Assert\Range(
-     *      min = 2
+     *      min = 2,
+     *      groups={"postUpload"}
      * )
      *
      * @ORM\Column(type="integer")
@@ -60,7 +61,7 @@ class OfferBanner {
     protected $height;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"postUpload"})
      *
      * @ORM\Column(type="boolean")
      *
@@ -69,7 +70,7 @@ class OfferBanner {
     protected $isActive;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"postUpload"})
      *
      * @ORM\ManyToOne(targetEntity="Offer", inversedBy="offerBanners")
      *
@@ -78,7 +79,7 @@ class OfferBanner {
     protected $offer;
 
     /**
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"postUpload"})
      *
      * @ORM\ManyToOne(targetEntity="Brand", inversedBy="offerBanners")
      *
@@ -97,26 +98,26 @@ class OfferBanner {
     }
 
     /**
-     * Set name
+     * Set file
      *
-     * @param string $name
+     * @param string $file
      * @return Brand
      */
-    public function setName($name)
+    public function setFile($file)
     {
-        $this->name = $name;
+        $this->file = $file;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get file
      *
      * @return string 
      */
-    public function getName()
+    public function getFile()
     {
-        return $this->name;
+        return $this->file;
     }
 
 
@@ -229,6 +230,6 @@ class OfferBanner {
 
     public function __toString()
     {
-        return $this->getName();
+        return $this->getFile();
     }
 }
