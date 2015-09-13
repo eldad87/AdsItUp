@@ -58,6 +58,11 @@ class Offer {
     protected $description;
 
     /**
+     * @ORM\Column(type="string", length=32, options={"fixed" = true})
+     */
+    protected $salt;
+
+    /**
      * @Assert\NotBlank()
      *
      * @ORM\Column(type="boolean")
@@ -162,6 +167,24 @@ class Offer {
     }
 
     /**
+     * @return string
+     */
+    public function getSalt()
+    {
+        return $this->salt;
+    }
+
+    /**
+     * @param string $salt
+     * @return $this
+     */
+    public function setSalt($salt)
+    {
+        $this->salt = $salt;
+        return $this;
+    }
+
+    /**
      * Set isActive
      *
      * @param boolean $isActive
@@ -200,7 +223,7 @@ class Offer {
     /**
      * Get brand
      *
-     * @return \AppBundle\Entity\User
+     * @return \AppBundle\Entity\Brand
      */
     public function getBrand()
     {

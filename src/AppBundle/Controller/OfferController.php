@@ -18,6 +18,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use APY\DataGridBundle\Grid\Source\Entity;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\Security\Core\Util\StringUtils;
 
 /**
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
@@ -142,6 +144,7 @@ class OfferController extends Controller
             }
         } else {
             $offer = new Offer();
+            $offer->setSalt(md5($this->get('security.secure_random')->nextBytes(32)));
         }
 
         $form = $this->createForm(new OfferType(), $offer);
@@ -159,5 +162,29 @@ class OfferController extends Controller
         return $this->render('::save.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * Handle offer click
+     *
+     * @Route("/Offer/Click/{transaction}", name="offer.click")
+     *
+     * @Method({"GET"})
+     */
+    public function clickAction(Request $request, $transaction)
+    {
+        $data = $this->get('Offer')->decodeTransaction($transaction);
+        if(!$data) {
+            throw $this->createAccessDeniedException('Unable to access this page!');
+        }
+        /** @var Offer $offer */
+        $offer = $this->getDoctrine()
+            ->getRepository('AppBundle:Offer')
+            ->find($data['oid']);
+
+
+        // Add click
+
+        return $this->redirect($offer->getDestination());
     }
 }

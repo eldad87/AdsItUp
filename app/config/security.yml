@@ -41,3 +41,4 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/Dashboard, role: ROLE_AFFILIATE }
+        - { path: ^/Offer, role: IS_AUTHENTICATED_ANONYMOUSLY } #Incoming clicks

@@ -26,6 +26,14 @@ class Brand {
      * @ORM\Column(type="string", length=255)
      */
     protected $host;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $adServerHost;
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $clickServerHost;
 
     /**
      * @ORM\Column(type="boolean")
@@ -111,6 +119,42 @@ class Brand {
     public function getHost()
     {
         return $this->host;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdServerHost()
+    {
+        return $this->adServerHost;
+    }
+
+    /**
+     * @param mixed $adServerHost
+     * @return $this
+     */
+    public function setAdServerHost($adServerHost)
+    {
+        $this->adServerHost = $adServerHost;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClickServerHost()
+    {
+        return $this->clickServerHost;
+    }
+
+    /**
+     * @param mixed $clickServerHost
+     * @return $this
+     */
+    public function setClickServerHost($clickServerHost)
+    {
+        $this->clickServerHost = $clickServerHost;
+        return $this;
     }
 
     /**

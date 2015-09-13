@@ -12,3 +12,15 @@ services:
         calls:
             - [setContainer,[ @service_container ] ]
             - [setRequest, [@request_stack]]
+    Offer:
+        class: AppBundle\Services\Offer
+        calls:
+            - [setTokenStorage,[ @security.token_storage ] ]
+            - [setRouter,[ @router ] ]
+            - [setDoctrine,[ @doctrine ] ]
+    OfferTwigExt:
+        class: AppBundle\Twig\Offer
+        public: false
+        arguments: [@Offer]
+        tags:
+            - { name: twig.extension }
