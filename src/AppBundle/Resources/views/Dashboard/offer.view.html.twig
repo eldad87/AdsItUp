@@ -9,7 +9,7 @@
         <h4>Direct Link</h4>
     </div>
     <div class="row">
-        {% set urlBlock = '<a href="' ~ generateOfferClickURL(offer) ~ '">' ~ offer.name ~ '</a>' %}
+        {% set urlBlock = '<a href="' ~ url('offer.click', (getClickParameters(offer, false)|merge({'host':getClickHost(offer)}))) ~ '">' ~ offer.name ~ '</a>' %}
         <div class="well well-sm">{{ urlBlock|e('html') }}</div>
     </div>
 
@@ -22,7 +22,7 @@
             <h5>{{ banner.width }}x{{ banner.height }}</h5>
             <img src="{{ bannerURL }}" />
             <div class="well well-sm">
-                {% set bannerBlock = '<a href="' ~ generateOfferBannerClickURL(banner) ~ '"><img src="' ~ bannerURL ~ '" /></a>' %}
+                {% set bannerBlock = '<a href="' ~ url('offer.click',(getBannerClickParameters(banner, false)|merge({'host':getClickHost(offer)}))) ~ '"><img src="' ~ bannerURL ~ '" /></a>' %}
                 {{ bannerBlock|e('html') }}
             </div>
         </div>

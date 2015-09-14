@@ -167,24 +167,18 @@ class OfferController extends Controller
     /**
      * Handle offer click
      *
-     * @Route("/Offer/Click/{transaction}", name="offer.click")
-     *
+     * @Route("/Offer/Click/{transaction}", host="{host}",
+     *          requirements={"host": ".+"},
+     *          defaults={"transaction" = null}, name="offer.click"),
      * @Method({"GET"})
      */
-    public function clickAction(Request $request, $transaction)
+    public function ClickAction(Request $request, $transaction=null)
     {
-        $data = $this->get('Offer')->decodeTransaction($transaction);
-        if(!$data) {
+        $result = $this->get('Offer')->handleClick($request, $transaction, $request->query->all());
+        if(false === $result) {
             throw $this->createAccessDeniedException('Unable to access this page!');
         }
-        /** @var Offer $offer */
-        $offer = $this->getDoctrine()
-            ->getRepository('AppBundle:Offer')
-            ->find($data['oid']);
 
-
-        // Add click
-
-        return $this->redirect($offer->getDestination());
+        return $this->redirect($result);
     }
 }

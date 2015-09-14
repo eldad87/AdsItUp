@@ -60,6 +60,11 @@ class Brand {
      */
     protected $offerCategories;
 
+    /**
+     * @ORM\OneToMany(targetEntity="OfferClick", mappedBy="brand")
+     */
+    protected $offerClicks;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -310,5 +315,38 @@ class Brand {
     public function getOfferCategories()
     {
         return $this->offerCategories;
+    }
+
+    /**
+     * Add click
+     *
+     * @param \AppBundle\Entity\OfferClick $offerClick
+     * @return OfferCategory
+     */
+    public function addOfferClick(\AppBundle\Entity\OfferClick $offerClick)
+    {
+        $this->offerClicks[] = $offerClick;
+
+        return $this;
+    }
+
+    /**
+     * Remove click
+     *
+     * @param \AppBundle\Entity\OfferClick $offerClick
+     */
+    public function removeOfferClick(\AppBundle\Entity\OfferClick $offerClick)
+    {
+        $this->offerClicks->removeElement($offerClick);
+    }
+
+    /**
+     * Get clicks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOfferClicks()
+    {
+        return $this->offerClicks;
     }
 }

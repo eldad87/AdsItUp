@@ -88,6 +88,11 @@ class OfferBanner {
     protected $brand;
 
     /**
+     * @ORM\OneToMany(targetEntity="OfferClick", mappedBy="offerBanner")
+     */
+    protected $offerClicks;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -226,6 +231,39 @@ class OfferBanner {
     public function getOffer()
     {
         return $this->offer;
+    }
+
+    /**
+     * Add click
+     *
+     * @param \AppBundle\Entity\OfferClick $offerClick
+     * @return OfferCategory
+     */
+    public function addOfferClick(\AppBundle\Entity\OfferClick $offerClick)
+    {
+        $this->offerClicks[] = $offerClick;
+
+        return $this;
+    }
+
+    /**
+     * Remove click
+     *
+     * @param \AppBundle\Entity\OfferClick $offerClick
+     */
+    public function removeOfferClick(\AppBundle\Entity\OfferClick $offerClick)
+    {
+        $this->offerClicks->removeElement($offerClick);
+    }
+
+    /**
+     * Get clicks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getOfferClicks()
+    {
+        return $this->offerClicks;
     }
 
     public function __toString()

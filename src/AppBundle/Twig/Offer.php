@@ -17,19 +17,25 @@ class Offer extends \Twig_Extension
 	public function getFunctions()
 	{
 		return array(
-			'generateOfferClickURL' => new \Twig_Function_Method($this, 'getClickURL'),
-			'generateOfferBannerClickURL' => new \Twig_Function_Method($this, 'getBannerClickURL'),
+			'getClickParameters' => new \Twig_Function_Method($this, 'getClickParameters'),
+			'getBannerClickParameters' => new \Twig_Function_Method($this, 'getBannerClickParameters'),
+			'getClickHost' => new \Twig_Function_Method($this, 'getClickHost'),
 		);
 	}
 
-	public function getClickURL(OfferEntity $offer)
+	public function getClickParameters(OfferEntity $offer, $encoded=true)
 	{
-		return $this->offer->getClickURL($offer);
+		return $this->offer->getClickParameters($offer, $encoded);
 	}
 
-	public function getBannerClickURL(OfferBanner $banner)
+	public function getBannerClickParameters(OfferBanner $banner, $encoded=true)
 	{
-		return $this->offer->getBannerClickURL($banner);
+		return $this->offer->getBannerClickParameters($banner, $encoded);
+	}
+
+	public function getClickHost(OfferEntity $offer)
+	{
+		return $this->offer->getClickHost($offer);
 	}
 
 	public function getName()

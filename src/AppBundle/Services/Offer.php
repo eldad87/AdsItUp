@@ -3,13 +3,15 @@ namespace AppBundle\Services;
 
 use AppBundle\Entity\Offer AS OfferEntity;
 use AppBundle\Entity\OfferBanner;
+use AppBundle\Entity\OfferClick;
 use AppBundle\Entity\User;
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Util\StringUtils;
-
+use UAParser\Parser;
 
 class Offer
 {
@@ -26,45 +28,104 @@ class Offer
     public function setDoctrine(AbstractManagerRegistry $doctrine) {
         $this->doctrine = $doctrine;
     }
-
     public function setRouter(Router $router) {
         $this->router = $router;
     }
 
-    public function getClickURL(OfferEntity $offer)
+    public function getClickHost(OfferEntity $offer)
     {
-        $data = array(
-            'oid'   => $offer->getId(),
-            'uid'    => $this->getUser()->getId(),
-            't'      => time()
-        );
-
-        $transaction = $this->encodeTransaction($offer, $data);
-        return $this->getTransactionURL($offer, $transaction);
+        return $offer->getBrand()->getClickServerHost();
     }
 
-    public function getBannerClickURL(OfferBanner $banner)
+    public function getClickParameters(OfferEntity $offer, $encoded=true)
     {
         $data = array(
-            'oid'   => $banner->getOffer()->getId(),
-            'bid'  => $banner->getId(),
-            'uid'    => $this->getUser()->getId(),
-            't'      => time()
+            'offerId'   => $offer->getId(),
+            'userId'    => $this->getUser()->getId(),
+            'date'      => date('dmy'),
         );
-
-        $transaction = $this->encodeTransaction($banner->getOffer(), $data);
-
-        return $this->getTransactionURL($banner->getOffer(), $transaction);
+        return $encoded ? array('transaction'=>$this->encode($offer, $data)) : $data;
     }
 
-    public function decodeTransaction($transaction)
+    public function getBannerClickParameters(OfferBanner $banner, $encoded=true)
+    {
+        $data = array(
+            'offerId'   => $banner->getOffer()->getId(),
+            'bannerId'  => $banner->getId(),
+            'userId'    => $this->getUser()->getId(),
+            'date'      => date('dmy')
+        );
+
+        return $encoded ? array('transaction'=>$this->encode($banner->getOffer(), $data)) : $data;
+    }
+
+    public function handleClick(Request $request, $transaction)
+    {
+        if(!is_null($transaction)) {
+            $parameters = $this->decode($transaction);
+        } else {
+            $parameters = $request->query->all();
+        }
+        if(!$parameters) {
+            return false;
+        }
+
+        /** @var \AppBundle\Entity\Offer $offer */
+        $offer = $this->doctrine
+            ->getRepository('AppBundle:Offer')
+            ->find($parameters['offerId']);
+        if(!$offer) {
+            return false;
+        }
+
+        $offerClick = new OfferClick();
+        $offerClick->setUaRaw($request->headers->get('User-Agent'));
+        $offerClick->setOffer($offer);
+        $offerClick->setBrand($offer->getBrand());
+        if(isSet($parameters['bannerId'])) {
+            /** @var OfferBanner $offerBanner */
+            $offerBanner = $this->doctrine
+                ->getRepository('AppBundle:OfferBanner')
+                ->find($parameters['bannerId']);
+            if(!$offerBanner || $offerBanner->getBrand()->getId() != $offer->getBrand()->getId()) {
+                return false;
+            }
+            $offerClick->setOfferBanner($offerBanner);
+        }
+
+        $parser = Parser::create();
+        $ua = $parser->parse($request->headers->get('User-Agent'));
+        $offerClick->setIp($request->getClientIp());
+        $offerClick->setUa($ua->ua->family); // Safari
+        $offerClick->setUaVersion($ua->ua->toVersion()); //6.2.1
+        $offerClick->setOs($ua->os->family); // Macx OS X
+        $offerClick->setOsVersion($ua->os->toVersion()); //10
+        $offerClick->setDevice($ua->device->family); //Other
+
+        $this->doctrine->getManager()->persist($offerClick);
+        $this->doctrine->getManager()->flush();
+        return $offer->getDestination();
+    }
+
+    /**
+     * @param OfferEntity $order
+     * @param array $data
+     * @return string
+     */
+    private function encode(OfferEntity $order, array $data)
+    {
+        $data['sig'] = $this->generateSignature($order->getSalt(), $data);
+        return base64_encode((http_build_query($data)));
+    }
+
+    private function decode($transaction)
     {
         $transaction = base64_decode($transaction);
         parse_str($transaction, $data);
 
         $offer = $this->doctrine
             ->getRepository('AppBundle:Offer')
-            ->find($data['oid']);
+            ->find($data['offerId']);
 
         if(!$offer || !$this->validateSignature($offer->getSalt(), $data)) {
             return false;
@@ -86,28 +147,6 @@ class Offer
 
         $signature2 = $this->generateSignature($salt, $data);
         return StringUtils::equals($signature, $signature2);
-    }
-
-    private function encodeTransaction(OfferEntity $order, array $data)
-    {
-        $data['sig'] = $this->generateSignature($order->getSalt(), $data);
-        return base64_encode(http_build_query($data));
-    }
-
-    private function getTransactionURL(OfferEntity $offer, $transaction)
-    {
-        $url = $this->router->generate('offer.click',
-            array(
-                'transaction'   => $transaction
-            )
-        );
-
-        return sprintf(
-            '%s://%s%s',
-            parse_url($offer->getDestination(), PHP_URL_SCHEME),
-            $offer->getBrand()->getClickServerHost(),
-            $url
-        );
     }
 
     /**
