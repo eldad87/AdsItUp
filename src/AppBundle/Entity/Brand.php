@@ -52,6 +52,11 @@ class Brand {
     protected $updatedAt;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Platform", inversedBy="brands")
+     */
+    protected $platform;
+
+    /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="brand")
      */
     protected $users;
@@ -242,6 +247,29 @@ class Brand {
     public function setUpdatedAtValue()
     {
         $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Set platform
+     *
+     * @param \AppBundle\Entity\Platform $platform
+     * @return User
+     */
+    public function setPlatform(\AppBundle\Entity\Platform $platform = null)
+    {
+        $this->platform = $platform;
+
+        return $this;
+    }
+
+    /**
+     * Get platform
+     *
+     * @return \AppBundle\Entity\Platform
+     */
+    public function getPlatform()
+    {
+        return $this->platform;
     }
 
     /**

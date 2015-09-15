@@ -5,15 +5,17 @@ use AppBundle\Entity\Offer AS OfferEntity;
 use AppBundle\Entity\OfferBanner;
 use AppBundle\Entity\OfferClick;
 use AppBundle\Entity\User;
+use AppBundle\Services\Platform\PlatformAbstract;
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Util\StringUtils;
 use UAParser\Parser;
 
-class Offer
+class Offer extends ContainerAware
 {
     /** @var TokenStorage  */
     protected $tokenStorage;
@@ -75,6 +77,14 @@ class Offer
             return false;
         }
 
+        /** @var \AppBundle\Entity\User $user */
+        $user = $this->doctrine
+            ->getRepository('AppBundle:User')
+            ->find($parameters['userId']);
+        if(!$user) {
+            return false;
+        }
+
         /** @var \AppBundle\Entity\Offer $offer */
         $offer = $this->doctrine
             ->getRepository('AppBundle:Offer')
@@ -82,10 +92,15 @@ class Offer
         if(!$offer) {
             return false;
         }
+        if($offer->getBrand()->getId() != $user->getBrand()->getId()) {
+            return false;
+        }
 
         $offerClick = new OfferClick();
-        $offerClick->setUaRaw($request->headers->get('User-Agent'));
+        $offerClick->setUser($user);
         $offerClick->setOffer($offer);
+
+        $offerClick->setUaRaw($request->headers->get('User-Agent'));
         $offerClick->setBrand($offer->getBrand());
         if(isSet($parameters['bannerId'])) {
             /** @var OfferBanner $offerBanner */
@@ -127,7 +142,10 @@ class Offer
 
         $this->doctrine->getManager()->persist($offerClick);
         $this->doctrine->getManager()->flush();
-        return $offer->getDestination();
+
+        /** @var PlatformAbstract $platform */
+        $platform = $this->container->get($offer->getBrand()->getPlatform()->getName());
+        return $platform->handleClick($offerClick);
     }
 
     /**
@@ -179,29 +197,4 @@ class Offer
     {
         return $this->tokenStorage->getToken()->getUser();
     }
-
-    /**
-     * @param $url
-     * @param array $parameters
-     * @return string $url
-     */
-    /*private function appendParametersToURL($url, array $parameters=array())
-    {
-        $urlParts = parse_url($url);
-        parse_str((isSet($urlParts['query']) ? $urlParts['query'] : ''), $params);
-        $params = array_merge($parameters, $params);
-        $urlParts['query'] = http_build_query($params);
-        //return http_build_url($urlParts);
-
-        $url = $urlParts['scheme'] . '://' . $urlParts['host'];
-        if(isSet($urlParts['path'])) {
-            $url .= $urlParts['path'];
-        }
-        if(isSet($urlParts['query'])) {
-            $url .= '?';
-            $url .= $urlParts['query'];
-        }
-
-        return $url;
-    }*/
 }

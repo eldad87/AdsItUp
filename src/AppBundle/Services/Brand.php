@@ -17,11 +17,11 @@ class Brand extends ContainerAware
         $this->request = $request_stack->getCurrentRequest();
     }
 
-    public function byHost()
+    public function byHost($host=null)
     {
         $em = $this->container->get('doctrine')->getManager();
         return $em->getRepository('AppBundle:Brand')->findOneBy(array(
-            'host' => $this->request->getHost()
+            'host' => ($host ? $host : $this->request->getHost())
         ));
     }
 }

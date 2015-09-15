@@ -15,10 +15,16 @@ services:
     Offer:
         class: AppBundle\Services\Offer
         calls:
+            - [setContainer,[ @service_container ] ]
             - [setTokenStorage,[ @security.token_storage ] ]
             - [setRouter,[ @router ] ]
             - [setDoctrine,[ @doctrine ] ]
             - [setMaxMindDB,[ %kernel.root_dir%/../src/AppBundle/MaxMindDB/GeoLite2-City.mmdb ] ]
+# Brands!
+    Spot:
+        class: AppBundle\Services\Platform\Spot
+        calls:
+            - [setDoctrine,[ @doctrine ] ]
     OfferTwigExt:
         class: AppBundle\Twig\Offer
         public: false

@@ -108,6 +108,13 @@ class OfferClick {
     protected $offer;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="offerClicks")
+     *
+     * @GRID\Column(field="user.username", title="Username", operatorsVisible=false, filter="select", selectFrom="query")
+     */
+    protected $user;
+
+    /**
      * @ORM\ManyToOne(targetEntity="OfferBanner", inversedBy="bannerClicks")
      *
      * @GRID\Column(field="OfferBanner.width", title="BannerW", operatorsVisible=false, filter="select", selectFrom="query")
@@ -354,7 +361,7 @@ class OfferClick {
     /**
      * Get brand
      *
-     * @return \AppBundle\Entity\User
+     * @return \AppBundle\Entity\Brand
      */
     public function getBrand()
     {
@@ -393,12 +400,11 @@ class OfferClick {
     public function setOffer(\AppBundle\Entity\Offer $offer = null)
     {
         $this->offer = $offer;
-
         return $this;
     }
 
     /**
-     * Get offerCategory
+     * Get offer
      *
      * @return \AppBundle\Entity\Offer
      */
@@ -407,8 +413,30 @@ class OfferClick {
         return $this->offer;
     }
 
+    /**
+     * Set user
+     *
+     * @param \AppBundle\Entity\User $user
+     * @return User
+     */
+    public function setUser(\AppBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * Get userCategory
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
     public function __toString()
     {
-        return 'click';
+        return (string) $this->getId();
     }
 }
