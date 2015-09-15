@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use APY\DataGridBundle\Grid\Mapping as GRID;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="offer")
  * @GRID\Source(columns="id, name, destination, description, isActive, offerCategory.name, brand.name")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Offer {
     /**
@@ -70,6 +70,20 @@ class Offer {
      * @GRID\Column(title="Is Active", type="boolean", operatorsVisible=false)
      */
     protected $isActive;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false)
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false)
+     */
+    protected $updatedAt;
 
     /**
      * @Assert\NotBlank()
@@ -210,6 +224,54 @@ class Offer {
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setUpdatedAt(\DateTime $createdAt)
+    {
+        $this->updatedAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue()
+    {
+        $this->updatedAt = new \DateTime();
     }
 
     /**

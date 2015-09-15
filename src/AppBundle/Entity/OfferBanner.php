@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use APY\DataGridBundle\Grid\Mapping as GRID;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,6 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="offer_banner")
  * @UniqueEntity(fields={"file"})
  * @GRID\Source(columns="id, file, width, height")
+ * @ORM\HasLifecycleCallbacks()
  */
 class OfferBanner {
     /**
@@ -68,6 +68,20 @@ class OfferBanner {
      * @GRID\Column(title="Is Active", type="boolean", operatorsVisible=false)
      */
     protected $isActive;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false)
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false)
+     */
+    protected $updatedAt;
 
     /**
      * @Assert\NotBlank(groups={"postUpload"})
@@ -185,6 +199,54 @@ class OfferBanner {
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setUpdatedAt(\DateTime $createdAt)
+    {
+        $this->updatedAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue()
+    {
+        $this->updatedAt = new \DateTime();
     }
 
     /**

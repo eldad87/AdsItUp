@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity
  * @ORM\Table(name="offer_click")
+ * @ORM\HasLifecycleCallbacks()
  * @GRID\Source(columns="id, file, width, height")
  */
 class OfferClick {
@@ -70,6 +71,13 @@ class OfferClick {
      * @GRID\Column(title="IP", type="text", operatorsVisible=false)
      */
     protected $ip;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false)
+     */
+    protected $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity="Offer", inversedBy="offerClicks")
@@ -232,6 +240,30 @@ class OfferClick {
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
      * Set brand
      *
      * @param \AppBundle\Entity\Brand $brand
@@ -276,7 +308,6 @@ class OfferClick {
     {
         return $this->offerBanner;
     }
-
 
     /**
      * Set offerCategory

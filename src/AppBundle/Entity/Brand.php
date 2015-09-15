@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="brand")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Brand {
     /**
@@ -39,6 +40,16 @@ class Brand {
      * @ORM\Column(type="boolean")
      */
     protected $isActive;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $updatedAt;
 
     /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="brand")
@@ -183,6 +194,54 @@ class Brand {
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setUpdatedAt(\DateTime $createdAt)
+    {
+        $this->updatedAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue()
+    {
+        $this->updatedAt = new \DateTime();
     }
 
     /**

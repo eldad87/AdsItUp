@@ -2,12 +2,12 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="offer_category")
+ * @ORM\HasLifecycleCallbacks()
  */
 class OfferCategory {
     /**
@@ -28,6 +28,16 @@ class OfferCategory {
     protected $isActive;
 
     /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    protected $updatedAt;
+
+    /**
      * @ORM\OneToMany(targetEntity="Offer", mappedBy="offerCategory")
      */
     protected $offers;
@@ -36,11 +46,6 @@ class OfferCategory {
      * @ORM\ManyToOne(targetEntity="Brand", inversedBy="offerCategories")
      */
     protected $brand;
-
-    public function __construct()
-    {
-        $this->offers = new ArrayCollection();
-    }
 
     /**
      * Get id
@@ -96,6 +101,54 @@ class OfferCategory {
     public function getIsActive()
     {
         return $this->isActive;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedAtValue()
+    {
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setUpdatedAt(\DateTime $createdAt)
+    {
+        $this->updatedAt = $createdAt;
+    }
+
+    /**
+     * @ORM\PreUpdate
+     */
+    public function setUpdatedAtValue()
+    {
+        $this->updatedAt = new \DateTime();
     }
 
     /**
