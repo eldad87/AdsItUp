@@ -25,42 +25,42 @@ class OfferClick {
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      *
      * @GRID\Column(title="User Agent", type="text", operatorsVisible=false)
      */
     protected $ua;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      *
      * @GRID\Column(title="User Agent Version", type="text", operatorsVisible=false)
      */
     protected $uaVersion;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      *
      * @GRID\Column(title="OS", type="text", operatorsVisible=false)
      */
     protected $os;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      *
      * @GRID\Column(title="OS", type="text", operatorsVisible=false)
      */
     protected $osVersion;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, nullable=true)
      *
      * @GRID\Column(title="Browser", type="text", operatorsVisible=false)
      */
     protected $device;
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=500, nullable=true)
      *
      * @GRID\Column(title="User Agent Raw", type="text", operatorsVisible=false)
      */
@@ -71,6 +71,27 @@ class OfferClick {
      * @GRID\Column(title="IP", type="text", operatorsVisible=false)
      */
     protected $ip;
+
+    /**
+     * @ORM\Column(type="string", length=2, options={"fixed" = true}, nullable=true)
+     *
+     * @GRID\Column(title="Country Code", type="text", operatorsVisible=false)
+     */
+    protected $countryCode;
+
+    /**
+     * @ORM\Column(type="string", length=2, options={"fixed" = true}, nullable=true)
+     *
+     * @GRID\Column(title="Subdivision Code", type="text", operatorsVisible=false)
+     */
+    protected $subdivisionCode;
+
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     *
+     * @GRID\Column(title="City", type="text", operatorsVisible=false)
+     */
+    protected $city;
 
     /**
      * @ORM\Column(type="datetime")
@@ -236,6 +257,60 @@ class OfferClick {
     public function setIp($ip)
     {
         $this->ip = $ip;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountryCode()
+    {
+        return $this->countryCode;
+    }
+
+    /**
+     * @param string $countryCode
+     * @return $this
+     */
+    public function setCountryCode($countryCode)
+    {
+        $this->countryCode = $countryCode;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubdivisionCode()
+    {
+        return $this->subdivisionCode;
+    }
+
+    /**
+     * @param string $subdivisionCode
+     * @return $this
+     */
+    public function setSubdivisionCode($subdivisionCode)
+    {
+        $this->subdivisionCode = $subdivisionCode;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity()
+    {
+        return $this->city;
+    }
+
+    /**
+     * @param string $city
+     * @return $this;
+     */
+    public function setCity($city)
+    {
+        $this->city = $city;
         return $this;
     }
 

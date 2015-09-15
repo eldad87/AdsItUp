@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="MySQL - adsitup_new@localhost" uuid="d69a3f2d-6e26-443f-b263-c93311ddf91c">
-      <secret-storage>master_key</secret-storage>
-      <user-name>root</user-name>
-      <schema-pattern>adsitup_new.*</schema-pattern>
-      <default-schemas>adsitup_new.*</default-schemas>
-    </data-source>
+    <data-source name="MySQL - adsitup_new@localhost" uuid="d69a3f2d-6e26-443f-b263-c93311ddf91c" />
   </component>
 </project>

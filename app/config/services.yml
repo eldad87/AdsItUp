@@ -18,6 +18,7 @@ services:
             - [setTokenStorage,[ @security.token_storage ] ]
             - [setRouter,[ @router ] ]
             - [setDoctrine,[ @doctrine ] ]
+            - [setMaxMindDB,[ %kernel.root_dir%/../src/AppBundle/MaxMindDB/GeoLite2-City.mmdb ] ]
     OfferTwigExt:
         class: AppBundle\Twig\Offer
         public: false

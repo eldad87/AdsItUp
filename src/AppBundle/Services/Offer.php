@@ -21,6 +21,8 @@ class Offer
     protected $router;
     /** @var AbstractManagerRegistry */
     protected $doctrine;
+    /** @var  */
+    protected $maxMindDB;
 
     public function setTokenStorage(TokenStorage $tokenStorage) {
         $this->tokenStorage = $tokenStorage;
@@ -30,6 +32,9 @@ class Offer
     }
     public function setRouter(Router $router) {
         $this->router = $router;
+    }
+    public function setMaxMindDB($maxMindDB) {
+        $this->maxMindDB = $maxMindDB;
     }
 
     public function getClickHost(OfferEntity $offer)
@@ -93,14 +98,32 @@ class Offer
             $offerClick->setOfferBanner($offerBanner);
         }
 
+        //User Agent
         $parser = Parser::create();
         $ua = $parser->parse($request->headers->get('User-Agent'));
-        $offerClick->setIp($request->getClientIp());
         $offerClick->setUa($ua->ua->family); // Safari
         $offerClick->setUaVersion($ua->ua->toVersion()); //6.2.1
         $offerClick->setOs($ua->os->family); // Macx OS X
         $offerClick->setOsVersion($ua->os->toVersion()); //10
         $offerClick->setDevice($ua->device->family); //Other
+
+        //IP Base location
+        $offerClick->setIp($request->getClientIp());
+        try {
+            // Maxmind GeoIP2 Provider: e.g. the database reader
+            $reader   = new \GeoIp2\Database\Reader($this->maxMindDB);
+            $city = $reader->city($request->getClientIp());
+            if($city->country->isoCode) {
+                $offerClick->setCountryCode($city->country->isoCode);
+            }
+            if($city->mostSpecificSubdivision->isoCode) {
+                $offerClick->setSubdivisionCode($city->mostSpecificSubdivision->isoCode);
+            }
+            if($city->city->name) {
+                $offerClick->setCity($city->city->name);
+            }
+        } catch(\Exception $e) {
+        }
 
         $this->doctrine->getManager()->persist($offerClick);
         $this->doctrine->getManager()->flush();
