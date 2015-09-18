@@ -17,3 +17,5 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    brand.1: { type: 'Spot', campaignId: 1, url: 'http://api-domain/api', user: 'apiUser', password: 'apiPassword' }

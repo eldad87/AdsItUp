@@ -6,6 +6,7 @@ use AppBundle\Entity\OfferBanner;
 use AppBundle\Entity\OfferClick;
 use AppBundle\Entity\User;
 use AppBundle\Services\Platform\PlatformAbstract;
+use AppBundle\Services\Platform\PlatformFactory;
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -143,8 +144,10 @@ class Offer extends ContainerAware
         $this->doctrine->getManager()->persist($offerClick);
         $this->doctrine->getManager()->flush();
 
+        /** @var PlatformFactory $platformFactory */
+        $platformFactory = $this->container->get('PlatformFactory');
         /** @var PlatformAbstract $platform */
-        $platform = $this->container->get($offer->getBrand()->getPlatform()->getName());
+        $platform = $platformFactory->create($offer->getBrand());
         return $platform->handleClick($offerClick);
     }
 

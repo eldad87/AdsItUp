@@ -2,15 +2,53 @@
 
 namespace AppBundle\Services\Platform;
 
+use AppBundle\Entity\Brand;
 use AppBundle\Entity\OfferClick;
+use AppBundle\Services\Platform\Exception\InvalidSettingException;
+use AppBundle\Services\Platform\Setting\SettingAbstract;
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
+use Symfony\Component\Validator\Validator\RecursiveValidator;
 
 abstract class PlatformAbstract {
     /** @var AbstractManagerRegistry */
     protected $doctrine;
+    /** @var RecursiveValidator */
+    protected $validator;
+    /** @var SettingAbstract */
+    protected $setting;
+    /** @var Brand */
+    protected $brand;
 
-    public function setDoctrine(AbstractManagerRegistry $doctrine) {
+
+    public function setDoctrine(AbstractManagerRegistry $doctrine)
+    {
         $this->doctrine = $doctrine;
+    }
+
+    public function setValidator(RecursiveValidator $validator)
+    {
+        $this->validator = $validator;
+    }
+
+    public function setBrand(Brand $brand)
+    {
+        $this->brand = $brand;
+    }
+
+    /**
+     * @param SettingAbstract $setting
+     * @return $this
+     * @throws InvalidSettingException
+     */
+    public function setSetting(SettingAbstract $setting)
+    {
+        $errors = $this->validator->validate($setting);
+        if (count($errors) > 0) {
+            throw new InvalidSettingException(sprintf('Invalid setting given for brand %d: %s',
+               $this->brand->getId(), (string) $errors));
+        }
+        $this->setting = $setting;
+        return $this;
     }
 
     /**
