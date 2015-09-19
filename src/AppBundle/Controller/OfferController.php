@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Brand;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\OfferBanner;
 use AppBundle\Form\OfferBannerType;
@@ -9,6 +10,7 @@ use AppBundle\Form\OfferType;
 use APY\DataGridBundle\Grid\Action\MassAction;
 use APY\DataGridBundle\Grid\Action\RowAction;
 use APY\DataGridBundle\Grid\Grid;
+use Doctrine\ORM\QueryBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -36,7 +38,17 @@ class OfferController extends Controller
     public function listAction(Request $request)
     {
         $source = new Entity('AppBundle:Offer');
+        /** @var Brand $brand */
+        $brand = $this->get('Brand')->byHost();
+        $source->manipulateQuery(
+            function (QueryBuilder $query) use ($source, $brand)
+            {
+                $query->andWhere(sprintf('%s.brand = :brand', $source->getTableAlias()));
+                $query->setParameter('brand', $brand);
+            }
+        );
         $grid = $this->get('grid');
+
 
         /** @var Grid $grid */
         $grid->setSource($source);
