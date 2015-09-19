@@ -1,0 +1,48 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <div id="alert_placeholder"></div>
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {#{{ form_errors(form) }}#}
+
+    {{ form_widget(form, {'form_type': 'horizontal'}) }}
+
+    {{ form_rest(form) }}
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary pull-right" value="Save" />
+    </div>
+
+    {{ form_end(form) }}
+
+    <script>
+        debugger;
+        var $commissionPlanStrategy = $('#commission_plan_strategy');
+        // When sport gets selected ...
+        $commissionPlanStrategy.change(function() {
+            // ... retrieve the corresponding form.
+            var $form = $(this).closest('form');
+            // Simulate form data, but only include the selected sport value.
+            var data = $($form).serializeArray().reduce(function(obj, item) {
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+            //data[$commissionPlanStrategy.attr('name')] = $commissionPlanStrategy.val();
+            // Submit data via AJAX to the form's action path.
+            $.ajax({
+                url : $form.attr('action'),
+                type: $form.attr('method'),
+                data : data,
+                success: function(html) {
+                    // Replace current position field ...
+                    $('#commission_plan_criteria').replaceWith(
+                            // ... with the returned one from the AJAX response.
+                            $(html).find('#commission_plan_criteria')
+                    );
+                    // Position field now displays the appropriate positions.
+                }
+            });
+        });
+    </script>
+{% endblock %}

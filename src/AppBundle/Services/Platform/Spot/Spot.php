@@ -1,18 +1,19 @@
 <?php
 
-namespace AppBundle\Services\Platform;
+namespace AppBundle\Services\Platform\Spot;
 
 use AppBundle\Entity\OfferClick;
 use AppBundle\Services\Platform\Exception\InvalidSettingException;
-use AppBundle\Services\Platform\Setting\SettingAbstract;
-use AppBundle\Services\Platform\Setting\SpotSetting;
-use AppBundle\Services\Platform\Spot\BatchRequest;
-use AppBundle\Services\Platform\Spot\BatchResponse;
-use AppBundle\Services\Platform\Spot\Request;
-use AppBundle\Services\Platform\Spot\RequestException;
-use AppBundle\Services\Platform\Spot\Response;
-use AppBundle\Services\Platform\Spot\ResponseException;
-use AppBundle\Services\Platform\Spot\ResponseParser;
+use AppBundle\Services\Platform\PlatformAbstract;
+use AppBundle\Services\Platform\SettingAbstract;
+use AppBundle\Services\Platform\Spot\Communication\BatchRequest;
+use AppBundle\Services\Platform\Spot\Communication\BatchResponse;
+use AppBundle\Services\Platform\Spot\Communication\Request;
+use AppBundle\Services\Platform\Spot\Communication\RequestException;
+use AppBundle\Services\Platform\Spot\Communication\Response;
+use AppBundle\Services\Platform\Spot\Communication\ResponseException;
+use AppBundle\Services\Platform\Spot\Communication\ResponseParser;
+use AppBundle\Services\Platform\Spot\Setting;
 
 class Spot extends PlatformAbstract {
 
@@ -21,7 +22,7 @@ class Spot extends PlatformAbstract {
 
 	private $batchMode = true;
 
-	/** @var SpotSetting */
+	/** @var Setting */
 	protected $setting;
 
 	public function __construct()
@@ -31,10 +32,9 @@ class Spot extends PlatformAbstract {
 
 	public function setSetting(SettingAbstract $setting)
 	{
-		if(!($setting instanceof SpotSetting)) {
-			throw new InvalidSettingException(sprintf('Wrong setting [%s] given instead of [%s] for brand %d',
+		if(!($setting instanceof Setting)) {
+			throw new InvalidSettingException(sprintf('Wrong setting [%s] given for brand %d',
 				get_class($setting),
-				'SpotSetting',
 				$this->brand->getId()));
 		}
 

@@ -8,14 +8,20 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 
 class PlatformFactory extends ContainerAware {
 
+	const PLATFORM_SPOT = 'Spot';
+
 	/**
 	 * @param Brand $brand
 	 * @return PlatformAbstract
 	 * @throws InvalidSettingException
 	 * @throws MissingPlatformSupportException
 	 */
-	public function create(Brand $brand)
+	public function create(Brand $brand=null)
 	{
+		if(is_null($brand)) {
+			$brand = $this->container->get('Brand')->byHost();
+		}
+
 		/** @var PlatformAbstract $platform */
 		$platform = $this->container->get($brand->getPlatform()->getName());
 		if(!$platform) {
@@ -25,7 +31,7 @@ class PlatformFactory extends ContainerAware {
 		$platform->setBrand($brand);
 
 		$brandsSetting = $this->container->getParameter(sprintf('brand.%d', $brand->getId()));
-		$settingClass = sprintf('AppBundle\Services\Platform\Setting\%sSetting', $brand->getPlatform()->getName()); //Spot -> SpotSetting
+		$settingClass = sprintf('AppBundle\Services\Platform\%s\Setting', $brand->getPlatform()->getName()); //Spot -> SpotSetting
 		$setting = new $settingClass($brandsSetting);
 		$platform->setSetting($setting);
 

@@ -20,9 +20,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use APY\DataGridBundle\Grid\Source\Entity;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Security\Core\Util\StringUtils;
-
 /**
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
  * @Breadcrumb("Offers", route={"name"="dashboard.offer"})
@@ -33,7 +30,7 @@ class OfferController extends Controller
      * List all offers
      *
      * @Route("/Dashboard/Offer", name="dashboard.offer")
-     * @Method({"GET", "POST"})
+     * @Method({"GET"})
      */
     public function listAction(Request $request)
     {

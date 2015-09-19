@@ -4,8 +4,9 @@ namespace AppBundle\Services\Platform;
 
 use AppBundle\Entity\Brand;
 use AppBundle\Entity\OfferClick;
+use AppBundle\Services\Platform\CommissionPlan\CriteriaTypeAbstract;
 use AppBundle\Services\Platform\Exception\InvalidSettingException;
-use AppBundle\Services\Platform\Setting\SettingAbstract;
+use AppBundle\Services\Platform\SettingAbstract;
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use Symfony\Component\Validator\Validator\RecursiveValidator;
 
@@ -52,6 +53,16 @@ abstract class PlatformAbstract {
     }
 
     /**
+     * @return CriteriaTypeAbstract
+     */
+    public function getCommissionPlanCriteriaType()
+    {
+        $criteriaType = sprintf('AppBundle\Services\Platform\%s\CommissionPlan\CriteriaType',
+                $this->brand->getPlatform()->getName());
+        return new $criteriaType();
+    }
+
+    /**
      * Apply affiliate parameters
      *  to offer.destination and return it.
      *
@@ -65,7 +76,7 @@ abstract class PlatformAbstract {
     //abstract public function handleGame();
 
 	/**
-     * Append paremters to URL only if not exists!
+     * Append parameters to URL only if not exists!
 	 * @param $url
 	 * @param array $parameters
 	 * @return string $url

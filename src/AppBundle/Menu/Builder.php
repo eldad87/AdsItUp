@@ -22,6 +22,15 @@ class Builder extends ContainerAware
         $menu['Offer']->addChild('Add', array('route' => 'dashboard.offer.save'))
             ->setAttribute('icon', 'glyphicon glyphicon-plus');
 
+
+        // Commission Plan
+        $menu->addChild('Commission Plan')
+            ->setAttribute('dropdown', true);
+        $menu['Commission Plan']->addChild('List', array('route' => 'dashboard.commission_plan'))
+            ->setAttribute('icon', 'glyphicon glyphicon-list');
+        $menu['Commission Plan']->addChild('Add', array('route' => 'dashboard.commission_plan.save'))
+            ->setAttribute('icon', 'glyphicon glyphicon-plus');
+
         return $menu;
     }
 

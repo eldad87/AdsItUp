@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Services\Platform\Spot;
+namespace AppBundle\Services\Platform\Spot\Communication;
 
 class Request {
 	const COMMAND_VIEW = 'view';

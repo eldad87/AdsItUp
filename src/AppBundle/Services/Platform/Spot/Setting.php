@@ -1,9 +1,10 @@
 <?php
-namespace AppBundle\Services\Platform\Setting;
+namespace AppBundle\Services\Platform\Spot;
 
+use AppBundle\Services\Platform\SettingAbstract;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SpotSetting extends SettingAbstract {
+class Setting extends SettingAbstract {
 	/**
 	 * @Assert\NotBlank()
 	 * @Assert\Url()

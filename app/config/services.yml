@@ -32,7 +32,7 @@ services:
         calls:
             - [setContainer,[ @service_container ] ]
     Spot:
-        class: AppBundle\Services\Platform\Spot
+        class: AppBundle\Services\Platform\Spot\Spot
         calls:
             - [setDoctrine,[ @doctrine ] ]
             - [setValidator,[ @validator ] ]
