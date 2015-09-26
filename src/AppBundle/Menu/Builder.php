@@ -44,7 +44,7 @@ class Builder extends ContainerAware
             $menu->addChild('User', array('label' => 'Hello, ' . $username . '!'))
                 ->setAttribute('dropdown', true);
 
-            $menu['User']->addChild('Profile', array('route' => 'fos_user_profile_show'))
+            $menu['User']->addChild('Profile', array('route' => 'fos_user_profile_edit'))
                 ->setAttribute('icon', 'glyphicon glyphicon-user');
             $menu['User']->addChild('Logout', array('route' => 'fos_user_security_logout'))
                 ->setAttribute('icon', 'glyphicon glyphicon-log-out');

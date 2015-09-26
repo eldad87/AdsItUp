@@ -98,7 +98,12 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: AppBundle\Entity\User
-
+    registration:
+        confirmation:
+            enabled: true
+    from_email:
+        address:        noreply@{domain}
+        sender_name:    Support
 # Bootstrap
 braincrafted_bootstrap:
     less_filter: less
