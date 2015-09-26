@@ -101,6 +101,11 @@ fos_user:
     registration:
         confirmation:
             enabled: true
+        form:
+            type: app_user_registration
+    profile:
+        form:
+            type: app_user_profile
     from_email:
         address:        noreply@{domain}
         sender_name:    Support

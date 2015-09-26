@@ -13,6 +13,21 @@ services:
         arguments: [@Offer]
         tags:
             - { name: twig.extension }
+    fos_user.registration_listener:
+        class: AppBundle\EventListener\FOSRegistrationListener
+        calls:
+            - [setBrand,[ @Brand ] ]
+        arguments: []
+        tags:
+            - { name: kernel.event_subscriber }
+    app.form.registration:
+        class: AppBundle\Form\RegistrationType
+        tags:
+            - { name: form.type, alias: app_user_registration }
+    app.form.profile:
+        class: AppBundle\Form\ProfileType
+        tags:
+            - { name: form.type, alias: app_user_profile }
     Brand:
         class: AppBundle\Services\Brand
         calls:
