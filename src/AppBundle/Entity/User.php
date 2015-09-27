@@ -6,15 +6,20 @@ use FOS\UserBundle\Model\User AS BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 /**
  * @ORM\Entity
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="fos_user", uniqueConstraints={@ORM\UniqueConstraint(name="brand_email", columns={"brand_id", "email"})})
  * @UniqueEntity(
  *     fields={"brand", "email"},
  *     errorPath="email",
  *     message="This email is already in use.",
  *     groups={"CustomRegistration", "CustomProfile"}
  * )
+ * @ORM\AttributeOverrides({
+ *      @ORM\AttributeOverride(name="usernameCanonical", column=@ORM\Column(type="string", length=255, unique=false, nullable=false)),
+ *      @ORM\AttributeOverride(name="emailCanonical", column=@ORM\Column(type="string", length=255, unique=false, nullable=false))
+ * })
  */
 class User extends BaseUser {
     /**
@@ -38,7 +43,7 @@ class User extends BaseUser {
     protected $brand;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
@@ -46,7 +51,7 @@ class User extends BaseUser {
     protected $firstName;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=false)
+     * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
@@ -54,7 +59,7 @@ class User extends BaseUser {
     protected $lastName;
 
     /**
-     * @ORM\Column(type="string", length=20, nullable=false)
+     * @ORM\Column(type="string", length=20, nullable=true)
      *
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      * @Assert\Length(max="20", min="10", groups={"CustomRegistration", "CustomProfile"})
@@ -62,7 +67,7 @@ class User extends BaseUser {
     protected $phone;
 
     /**
-     * @ORM\Column(type="string", length=2, options={"fixed" = true}, nullable=false)
+     * @ORM\Column(type="string", length=2, options={"fixed" = true}, nullable=true)
      *
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      */
