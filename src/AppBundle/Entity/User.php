@@ -5,10 +5,16 @@ namespace AppBundle\Entity;
 use FOS\UserBundle\Model\User AS BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user")
+ * @UniqueEntity(
+ *     fields={"brand", "email"},
+ *     errorPath="email",
+ *     message="This email is already in use.",
+ *     groups={"CustomRegistration", "CustomProfile"}
+ * )
  */
 class User extends BaseUser {
     /**
@@ -19,6 +25,14 @@ class User extends BaseUser {
     protected $id;
 
     /**
+     * @var string
+     * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
+     * @Assert\Length(min="2", max="254", groups={"CustomRegistration", "CustomProfile"})
+     * @Assert\Email(groups={"CustomRegistration", "CustomProfile"})
+     */
+    protected $email;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Brand", inversedBy="users")
      */
     protected $brand;
@@ -26,66 +40,66 @@ class User extends BaseUser {
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
      *
-     * @Assert\NotBlank(groups={"Registration", "Profile"})
-     * @Assert\Length(max="255", groups={"Registration", "Profile"})
+     * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
+     * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $firstName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=false)
      *
-     * @Assert\NotBlank(groups={"Registration", "Profile"})
-     * @Assert\Length(max="255", groups={"Registration", "Profile"})
+     * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
+     * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $lastName;
 
     /**
      * @ORM\Column(type="string", length=20, nullable=false)
      *
-     * @Assert\NotBlank(groups={"Registration", "Profile"})
-     * @Assert\Length(max="20", min="10", groups={"Registration", "Profile"})
+     * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
+     * @Assert\Length(max="20", min="10", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $phone;
 
     /**
      * @ORM\Column(type="string", length=2, options={"fixed" = true}, nullable=false)
      *
-     * @Assert\NotBlank(groups={"Registration", "Profile"})
+     * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      */
     protected $country;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Assert\Length(max="255", groups={"Registration", "Profile"})
+     * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $skype;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Assert\Length(max="255", groups={"Registration", "Profile"})
+     * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $icq;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Assert\Length(max="255", groups={"Registration", "Profile"})
+     * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $company;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
-     * @Assert\Length(max="255", groups={"Registration", "Profile"})
+     * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $website;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=true)
      *
-     * @Assert\Length(max="500", groups={"Registration", "Profile"})
+     * @Assert\Length(max="500", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $comment;
 
@@ -97,6 +111,14 @@ class User extends BaseUser {
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setEmail($email)
+    {
+        parent::setEmail($email);
+        $this->setUsername($email);
+
+        return $this;
     }
 
     /**

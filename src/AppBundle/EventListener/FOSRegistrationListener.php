@@ -4,6 +4,7 @@ namespace AppBundle\EventListener;
 
 use AppBundle\Entity\User;
 use AppBundle\Services\Brand;
+use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,14 +25,14 @@ class FOSRegistrationListener implements EventSubscriberInterface
 	public static function getSubscribedEvents()
 	{
 		return array(
-			FOSUserEvents::REGISTRATION_SUCCESS => 'onRegistrationSuccess',
+			FOSUserEvents::REGISTRATION_INITIALIZE => 'onRegistrationInit',
 		);
 	}
 
-	public function onRegistrationSuccess(FormEvent $event)
+	public function onRegistrationInit(GetResponseUserEvent $event)
 	{
 		/** @var $user User */
-		$user = $event->getForm()->getData();
+		$user = $event->getUser();
 
 		$user->addRole('ROLE_AFFILIATE');
 		$user->setBrand($this->brand->byHost());

@@ -18,7 +18,7 @@ class ProfileType extends AbstractType
             ->add('icq', 'text', array('required'=>false))
             ->add('company', 'text', array('required'=>false))
             ->add('website', 'text', array('required'=>false));
-
+        $builder->remove('username');
     }
 
     public function getParent()

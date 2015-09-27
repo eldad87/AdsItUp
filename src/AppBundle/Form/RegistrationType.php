@@ -19,7 +19,7 @@ class RegistrationType extends AbstractType
             ->add('company', 'text', array('required'=>false))
             ->add('website', 'text', array('required'=>false))
             ->add('comment', 'textarea', array('required'=>false));
-
+        $builder->remove('username');
     }
 
     public function getParent()

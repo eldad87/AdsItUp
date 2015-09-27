@@ -103,9 +103,11 @@ fos_user:
             enabled: true
         form:
             type: app_user_registration
+            validation_groups: [CustomRegistration]
     profile:
         form:
             type: app_user_profile
+            validation_groups: [CustomProfile]
     from_email:
         address:        noreply@{domain}
         sender_name:    Support
