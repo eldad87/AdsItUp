@@ -23,6 +23,7 @@ class CommissionPlanType extends AbstractType {
     {
         $this->criteriaType->setParentBuilder($builder);
         $builder
+            ->add('isActive', 'checkbox')
             ->add('strategy', 'choice', array(
                 'choices' => array(
                     CommissionPlan::TYPE_CPC => 'CPC',

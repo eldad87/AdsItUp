@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use APY\DataGridBundle\Grid\Source\Entity;
 /**
+ *
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
  * @Breadcrumb("Offers", route={"name"="dashboard.offer"})
  */
@@ -31,6 +32,7 @@ class OfferController extends Controller
      *
      * @Route("/Dashboard/Offer", name="dashboard.offer")
      * @Method({"GET"})
+     * @Security("has_role('ROLE_AFFILIATE')")
      */
     public function listAction(Request $request)
     {

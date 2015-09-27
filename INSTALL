@@ -4,7 +4,6 @@ on new platform, add a new %Platform%Setting class
 
 session - save click for 30D in order to identify unique visitors
 
-login/register UI, unique per brand, assign to commission plan
 clickID = uuid
 
 SpotPlatform controller

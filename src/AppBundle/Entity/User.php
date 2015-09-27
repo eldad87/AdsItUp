@@ -2,14 +2,17 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User AS BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use APY\DataGridBundle\Grid\Mapping as GRID;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user", uniqueConstraints={@ORM\UniqueConstraint(name="brand_email", columns={"brand_id", "email"})})
+ * @GRID\Source(columns="id, enabled, email, firstName, lastName, phone, country, skype, icq, company, website, manager.firstName, manager.lastName")
  * @UniqueEntity(
  *     fields={"brand", "email"},
  *     errorPath="email",
@@ -26,16 +29,30 @@ class User extends BaseUser {
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @GRID\Column(title="Id", type="number", operatorsVisible=false)
      */
     protected $id;
+
+    /**
+     * @var boolean
+     * @GRID\Column(title="Enable", type="boolean", operatorsVisible=false)
+     */
+    protected $enabled;
+
 
     /**
      * @var string
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      * @Assert\Length(min="2", max="254", groups={"CustomRegistration", "CustomProfile"})
      * @Assert\Email(groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="Email", type="text", operatorsVisible=false)
      */
     protected $email;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="CommissionPlan", inversedBy="users")
+     */
+    protected $commissionPlans;
 
     /**
      * @ORM\ManyToOne(targetEntity="Brand", inversedBy="users")
@@ -43,10 +60,23 @@ class User extends BaseUser {
     protected $brand;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates")
+     * @GRID\Column(field="manager.firstName", title="Manager First Name", operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(field="manager.lastName", title="Manager Last Name", operatorsVisible=false, filter="select", selectFrom="query")
+     */
+    protected $manager;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="User", mappedBy="manager")
+     */
+    protected $subordinates;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="First Name", type="text", operatorsVisible=false)
      */
     protected $firstName;
 
@@ -55,6 +85,7 @@ class User extends BaseUser {
      *
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="Last Name", type="text", operatorsVisible=false)
      */
     protected $lastName;
 
@@ -63,6 +94,7 @@ class User extends BaseUser {
      *
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
      * @Assert\Length(max="20", min="10", groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="Phone", type="text", operatorsVisible=false)
      */
     protected $phone;
 
@@ -70,6 +102,7 @@ class User extends BaseUser {
      * @ORM\Column(type="string", length=2, options={"fixed" = true}, nullable=true)
      *
      * @Assert\NotBlank(groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="Country", type="text", operatorsVisible=false)
      */
     protected $country;
 
@@ -77,6 +110,7 @@ class User extends BaseUser {
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="Skype", type="text", operatorsVisible=false)
      */
     protected $skype;
 
@@ -84,6 +118,7 @@ class User extends BaseUser {
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="ICQ", type="text", operatorsVisible=false)
      */
     protected $icq;
 
@@ -91,6 +126,7 @@ class User extends BaseUser {
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="Company", type="text", operatorsVisible=false)
      */
     protected $company;
 
@@ -98,6 +134,7 @@ class User extends BaseUser {
      * @ORM\Column(type="string", length=255, nullable=true)
      *
      * @Assert\Length(max="255", groups={"CustomRegistration", "CustomProfile"})
+     * @GRID\Column(title="Website", type="text", operatorsVisible=false)
      */
     protected $website;
 
@@ -107,6 +144,13 @@ class User extends BaseUser {
      * @Assert\Length(max="500", groups={"CustomRegistration", "CustomProfile"})
      */
     protected $comment;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->users = new ArrayCollection();
+        $this->subordinates = new ArrayCollection();
+    }
 
     /**
      * Get id
@@ -308,5 +352,95 @@ class User extends BaseUser {
     public function getBrand()
     {
         return $this->brand;
+    }
+
+    /**
+     * Set manager
+     *
+     * @param \AppBundle\Entity\User $manager
+     * @return $this
+     */
+    public function setManager(\AppBundle\Entity\User $manager = null)
+    {
+        $this->manager = $manager;
+        return $this;
+    }
+
+    /**
+     * Get manager
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     * Add subordinates
+     *
+     * @param \AppBundle\Entity\User $subordinate
+     * @return Brand
+     */
+    public function addSubordinate(\AppBundle\Entity\User $subordinate)
+    {
+        $this->subordinates[] = $subordinate;
+
+        return $this;
+    }
+
+    /**
+     * Remove subordinates
+     *
+     * @param \AppBundle\Entity\User $subordinate
+     */
+    public function removeSubordinate(\AppBundle\Entity\User $subordinate)
+    {
+        $this->subordinates->removeElement($subordinate);
+    }
+
+    /**
+     * Get subordinates
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSubordinates()
+    {
+        return $this->subordinates;
+    }
+
+    /**
+     * Add commissionPlans
+     *
+     * @param \AppBundle\Entity\User $commissionPlan
+     * @return Brand
+     */
+    public function addCommissionPlan(\AppBundle\Entity\User $commissionPlan)
+    {
+        $this->commissionPlans[] = $commissionPlan;
+
+        return $this;
+    }
+
+    /**
+     * Remove commissionplans
+     *
+     * @param \AppBundle\Entity\User $commissionPlan
+     * @return $this
+     */
+    public function removeCommissionPlan(\AppBundle\Entity\User $commissionPlan)
+    {
+        $this->commissionPlans->removeElement($commissionPlan);
+        return $this;
+    }
+
+    /**
+     * Get commissionplans
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCommissionPlans()
+    {
+        return $this->commissionPlans;
     }
 }

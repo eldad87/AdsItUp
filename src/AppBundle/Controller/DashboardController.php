@@ -17,6 +17,7 @@ class DashboardController extends Controller
      *
      * @Route("/Dashboard", name="dashboard")
      * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_AFFILIATE')")
      */
     public function indexAction(Request $request)
     {

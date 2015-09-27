@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Brand;
 use AppBundle\Services\Platform\CommissionPlan\CriteriaAbstract;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use APY\DataGridBundle\Grid\Mapping as GRID;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="commission_plan")
- * @GRID\Source(columns="id, strategy, priority, description, payout")
+ * @GRID\Source(columns="id, isActive, strategy, priority, description, payout")
  * @ORM\HasLifecycleCallbacks()
  */
 class CommissionPlan {
@@ -28,6 +29,15 @@ class CommissionPlan {
 	 * @GRID\Column(title="Id", type="number", operatorsVisible=false)
 	 */
 	protected $id;
+
+	/**
+	 * @Assert\NotBlank()
+	 *
+	 * @ORM\Column(type="boolean")
+	 *
+	 * @GRID\Column(title="Is Active", type="boolean", operatorsVisible=false)
+	 */
+	protected $isActive;
 
 	/**
 	 * @Assert\NotBlank()
@@ -92,6 +102,16 @@ class CommissionPlan {
 	protected $brand;
 
 	/**
+	 * @ORM\ManyToMany(targetEntity="User", inversedBy="commissionPlans")
+	 */
+	protected $users;
+
+	public function __construct()
+	{
+		$this->users = new ArrayCollection();
+	}
+
+	/**
 	 * @return int
 	 */
 	public function getId()
@@ -125,6 +145,29 @@ class CommissionPlan {
 	{
 		$this->strategy = $strategy;
 		return $this;
+	}
+
+	/**
+	 * Set isActive
+	 *
+	 * @param boolean $isActive
+	 * @return Brand
+	 */
+	public function setIsActive($isActive)
+	{
+		$this->isActive = $isActive;
+
+		return $this;
+	}
+
+	/**
+	 * Get isActive
+	 *
+	 * @return boolean
+	 */
+	public function getIsActive()
+	{
+		return $this->isActive;
 	}
 
 	/**
@@ -219,6 +262,41 @@ class CommissionPlan {
 
 	public function __toString()
 	{
-		return $this->getDescription();
+		return sprintf('%d %s', $this->getPriority(), $this->getDescription());
+	}
+
+	/**
+	 * Add users
+	 *
+	 * @param \AppBundle\Entity\User $user
+	 * @return Brand
+	 */
+	public function addUser(\AppBundle\Entity\User $user)
+	{
+		$this->users[] = $user;
+
+		return $this;
+	}
+
+	/**
+	 * Remove users
+	 *
+	 * @param \AppBundle\Entity\User $user
+	 * @return $this
+	 */
+	public function removeUser(\AppBundle\Entity\User $user)
+	{
+		$this->users->removeElement($user);
+		return $this;
+	}
+
+	/**
+	 * Get users
+	 *
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getUsers()
+	{
+		return $this->users;
 	}
 }
