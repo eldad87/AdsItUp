@@ -3,10 +3,10 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Entity\User;
-use AppBundle\Services\Brand;
+use Doctrine\Common\Persistence\AbstractManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
-use FOS\UserBundle\Event\FormEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -14,12 +14,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class FOSRegistrationListener implements EventSubscriberInterface
 {
-	/** @var Brand */
-	protected $brand;
+	/** @var AbstractManagerRegistry */
+	protected $doctrine;
 
-	public function setBrand(Brand $brand)
+	public function __construct(AbstractManagerRegistry $doctrine)
 	{
-		$this->brand = $brand;
+		$this->doctrine = $doctrine;
 	}
 
 	public static function getSubscribedEvents()
@@ -33,8 +33,16 @@ class FOSRegistrationListener implements EventSubscriberInterface
 	{
 		/** @var $user User */
 		$user = $event->getUser();
-
-		$user->addRole('ROLE_AFFILIATE');
-		$user->setBrand($this->brand->byHost());
+		/** @var Request $request */
+		$request = $event->getRequest();
+		$referrerId = $request->query->getInt('referrerId', false);
+		if(!$referrerId) {
+			$referrerId = $request->getSession()->get('referrerId', false);
+		}
+		if($referrerId) {
+			$request->getSession()->set('referrerId', $referrerId);
+			$refUser = $this->doctrine->getManager()->getReference('AppBundle\Entity\User', $referrerId);
+			$user->setReferrer($refUser);
+		}
 	}
 }

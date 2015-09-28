@@ -12,7 +12,7 @@ use APY\DataGridBundle\Grid\Mapping as GRID;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user", uniqueConstraints={@ORM\UniqueConstraint(name="brand_email", columns={"brand_id", "email"})})
- * @GRID\Source(columns="id, enabled, email, firstName, lastName, phone, country, skype, icq, company, website, manager.firstName, manager.lastName")
+ * @GRID\Source(columns="id, enabled, balance, email, firstName, lastName, phone, country, skype, icq, company, website, manager.firstName, manager.lastName")
  * @UniqueEntity(
  *     fields={"brand", "email"},
  *     errorPath="email",
@@ -39,6 +39,12 @@ class User extends BaseUser {
      */
     protected $enabled;
 
+    /**
+     * @var float
+     * @ORM\Column(type="decimal", nullable=true, precision=5, scale=2, options={"default" = 0})
+     * @GRID\Column(title="Balance", type="number", operatorsVisible=false)
+     */
+    protected $balance;
 
     /**
      * @var string
@@ -65,7 +71,14 @@ class User extends BaseUser {
      * @GRID\Column(field="manager.lastName", title="Manager Last Name", operatorsVisible=false, filter="select", selectFrom="query")
      */
     protected $manager;
-    
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates")
+     * @GRID\Column(field="referrer.firstName", title="Referrer First Name", operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(field="referrer.lastName", title="Referrer Last Name", operatorsVisible=false, filter="select", selectFrom="query")
+     */
+    protected $referrer;
+
     /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="manager")
      */
@@ -160,6 +173,24 @@ class User extends BaseUser {
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return float
+     */
+    public function getBalance()
+    {
+        return $this->balance;
+    }
+
+    /**
+     * @param float $balance
+     * @return $this;
+     */
+    public function setBalance($balance)
+    {
+        $this->balance = $balance;
+        return $this;
     }
 
     public function setEmail($email)
@@ -374,6 +405,28 @@ class User extends BaseUser {
     public function getManager()
     {
         return $this->manager;
+    }
+
+    /**
+     * Set referrer
+     *
+     * @param \AppBundle\Entity\User $referrer
+     * @return $this
+     */
+    public function setReferrer(\AppBundle\Entity\User $referrer = null)
+    {
+        $this->referrer = $referrer;
+        return $this;
+    }
+
+    /**
+     * Get referrer
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getReferrer()
+    {
+        return $this->referrer;
     }
 
     /**

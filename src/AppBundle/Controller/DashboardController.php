@@ -2,13 +2,11 @@
 
 namespace AppBundle\Controller;
 
-use APY\DataGridBundle\Grid\Grid;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use APY\DataGridBundle\Grid\Source\Entity;
 
 class DashboardController extends Controller
 {
@@ -21,6 +19,6 @@ class DashboardController extends Controller
      */
     public function indexAction(Request $request)
     {
-
+        return $this->render('AppBundle:Dashboard:index.html.twig');
     }
 }

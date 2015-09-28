@@ -1,0 +1,12 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <h4>Referrer Link</h4>
+    </div>
+    <div class="row">
+        {% set urlBlock = '<a href="' ~ url('fos_user_registration_register', {referrerId: app.user.id}) ~ '">' ~ 'Referr a Friend'|trans ~ '</a>' %}
+        <div class="well well-sm">{{ urlBlock|e('html') }}</div>
+    </div>
+
+{% endblock %}

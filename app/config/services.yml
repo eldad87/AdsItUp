@@ -16,6 +16,11 @@ services:
     app.user_manager:
         class: AppBundle\UserBundle\Doctrine\UserManager
         arguments: [@security.encoder_factory, @fos_user.util.username_canonicalizer, @fos_user.util.email_canonicalizer, @fos_user.entity_manager, @Brand, AppBundle\Entity\User]
+    fos_user.registration_listener:
+        class: AppBundle\EventListener\FOSRegistrationListener
+        arguments: [@doctrine]
+        tags:
+            - { name: kernel.event_subscriber }
     app.form.registration:
         class: AppBundle\Form\RegistrationType
         tags:

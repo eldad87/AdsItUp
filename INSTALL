@@ -2,13 +2,27 @@ composer
 download http://dev.maxmind.com/geoip/geoip2/geolite2/ to /AppBundle/MaxMindDB/GeoLite2-City.mmdb
 on new platform, add a new %Platform%Setting class
 
+platform_record entity
+	id, brand, external_id, external_created, external_updated,
+		type (lead|customer|deposit),
+		user_id, ref_user_id, click_id,
+		created, updated,
+
+		commission_payout, commission_id, ref_commission_payout, ref_commission_id
+	unique: brand, external_id
+
+PlatformX controller
+	handle lead
+	handle customer
+	handle deposit
+
+CommissionManager service
+	checkforCommission(platform_record): commission
+	checkforRefCommission(platform_record): commission
+	grantCommission(platform_record, commission)
+
+pixel
+
 session - save click for 30D in order to identify unique visitors
 
 clickID = uuid
-
-SpotPlatform controller
-	handle registration
-	handle customer
-	handle deposit
-	handle gamePlay
-
