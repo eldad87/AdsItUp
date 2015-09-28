@@ -57,6 +57,11 @@ class Brand {
     protected $platform;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User")
+     */
+    protected $defaultUser;
+
+    /**
      * @ORM\OneToMany(targetEntity="User", mappedBy="brand")
      */
     protected $users;
@@ -270,6 +275,28 @@ class Brand {
     public function getPlatform()
     {
         return $this->platform;
+    }
+
+    /**
+     * Set defaultuser
+     *
+     * @param \AppBundle\Entity\User $defaultUser
+     * @return $this
+     */
+    public function setDefaultUser(\AppBundle\Entity\User $defaultUser = null)
+    {
+        $this->defaultUser = $defaultUser;
+        return $this;
+    }
+
+    /**
+     * Get defaultuser
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getDefaultUser()
+    {
+        return $this->defaultUser;
     }
 
     /**
