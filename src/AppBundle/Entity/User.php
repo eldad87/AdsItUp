@@ -41,7 +41,7 @@ class User extends BaseUser {
 
     /**
      * @var float
-     * @ORM\Column(type="decimal", nullable=true, precision=5, scale=2, options={"default" = 0})
+     * @ORM\Column(type="decimal", nullable=false, precision=5, scale=2, options={"default" = 0})
      * @GRID\Column(title="Balance", type="number", operatorsVisible=false)
      */
     protected $balance;

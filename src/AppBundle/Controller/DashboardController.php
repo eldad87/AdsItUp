@@ -13,7 +13,7 @@ class DashboardController extends Controller
     /**
      * Display Dashboard
      *
-     * @Route("/Dashboard", name="dashboard")
+     * @Route("/", name="dashboard")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_AFFILIATE')")
      */

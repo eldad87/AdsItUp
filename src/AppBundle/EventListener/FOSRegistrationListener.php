@@ -44,5 +44,6 @@ class FOSRegistrationListener implements EventSubscriberInterface
 			$refUser = $this->doctrine->getManager()->getReference('AppBundle\Entity\User', $referrerId);
 			$user->setReferrer($refUser);
 		}
+		$user->setBalance(0);
 	}
 }
