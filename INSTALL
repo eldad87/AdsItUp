@@ -5,7 +5,7 @@ on new platform, add a new %Platform%Setting class
 platform_record entity
 	id, brand, external_id, external_created, external_updated,
 		type (lead|customer|deposit),
-		user_id, ref_user_id, click_id,
+		user_id, ref_user_id, click_id, offer_banner_id, offer_id
 		created, updated,
 
 		commission_payout, commission_id, ref_commission_payout, ref_commission_id
@@ -26,3 +26,6 @@ pixel
 session - save click for 30D in order to identify unique visitors
 
 clickID = uuid
+
+
+lead -> get info by id -> identify affiliate: (id, offer, banner, click) -> check if qualified -> grant commission
