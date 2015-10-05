@@ -29,7 +29,7 @@ class CommissionPlanController extends Controller
 	 * List all Commission Plans
 	 *
 	 * @Route("/Dashboard/CommissionPlan", name="dashboard.commission_plan")
-	 * @Method({"GET"})
+	 * @Method({"GET", "POST"})
 	 * @Security("has_role('ROLE_BRAND')")
 	 */
 	public function listAction(Request $request)

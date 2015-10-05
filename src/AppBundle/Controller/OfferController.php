@@ -31,7 +31,7 @@ class OfferController extends Controller
      * List all offers
      *
      * @Route("/Dashboard/Offer", name="dashboard.offer")
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_AFFILIATE')")
      */
     public function listAction(Request $request)
