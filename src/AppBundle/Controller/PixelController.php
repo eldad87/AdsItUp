@@ -65,28 +65,15 @@ class PixelController extends Controller
      */
     public function handleClientPixelAction(Request $request, $pixelType, $id)
     {
-        switch($pixelType) {
-            case 'Lead':
-                $pixelType = PlatformAbstract::PIXEL_TYPE_LEAD;
-                break;
-            case 'Customer':
-                $pixelType = PlatformAbstract::PIXEL_TYPE_CUSTOMER;
-                break;
-            case 'Deposit':
-                $pixelType = PlatformAbstract::PIXEL_TYPE_DEPOSIT;
-                break;
-            case 'Game':
-                $pixelType = PlatformAbstract::PIXEL_TYPE_GAME;
-                break;
-        }
-
         /** @var PlatformFactory $platformFactory */
         $platformFactory = $this->container->get('PlatformFactory');
         /** @var PlatformAbstract $platform */
         $platform = $platformFactory->create();
 
+        $record = $platform->getRecordByPixel($id, $pixelType);
+
         /** @var BrandRecord $brandRecord */
-        $brandRecord = $platform->getBrandRecord($id, $pixelType, $request);
+        $brandRecord = $platform->getBrandRecord($record, $request);
 
         /**
          * Check if need to grant commission

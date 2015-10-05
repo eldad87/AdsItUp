@@ -16,10 +16,10 @@ use FOS\UserBundle\Model\UserManager;
 use Symfony\Component\Validator\Validator\RecursiveValidator;
 
 abstract class PlatformAbstract {
-    const PIXEL_TYPE_LEAD = 1;
-    const PIXEL_TYPE_CUSTOMER = 2;
-    const PIXEL_TYPE_DEPOSIT = 3;
-    const PIXEL_TYPE_GAME = 4;
+    const PIXEL_TYPE_LEAD = 'Lead';
+    const PIXEL_TYPE_CUSTOMER = 'Customer';
+    const PIXEL_TYPE_DEPOSIT = 'Deposit';
+    const PIXEL_TYPE_GAME = 'Game';
 
     /** @var AbstractManagerRegistry */
     protected $doctrine;
@@ -107,6 +107,16 @@ abstract class PlatformAbstract {
      * @throws InvalidPixelException
      */
     abstract protected function getAffiliateIdentity(array $record);
+
+    /**
+     * Return a record (Lead or Customer) from API by id and pixel type (PlatformAbstract::PIXEL_TYPE_*)
+     *  return false if no such record exists
+     * @param $id
+     * @param $pixelType
+     * @return array|false
+     * @throws InvalidPixelException
+     */
+    abstract public function getRecordByPixel($id, $pixelType);
 
     /**
      * Get brand record

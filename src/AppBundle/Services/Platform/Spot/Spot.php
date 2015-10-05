@@ -85,6 +85,39 @@ class Spot extends PlatformAbstract {
 	/**
 	 * @inheritdoc
 	 */
+	public function getRecordByPixel($id, $pixelType)
+	{
+		$data = false;
+		switch($pixelType) {
+			case PlatformAbstract::PIXEL_TYPE_LEAD:
+				$req = new Request('Lead', 'view', array('FILTER'=>array('id'=>$id)));
+				$data = $this->executeRequest($req);
+				break;
+			case PlatformAbstract::PIXEL_TYPE_CUSTOMER:
+				$req = new Request('Customer', 'view', array('FILTER'=>array('id'=>$id)));
+				$data = $this->executeRequest($req);
+				break;
+			case PlatformAbstract::PIXEL_TYPE_DEPOSIT:
+				$req = new Request('CustomerDeposits', 'view', array('FILTER'=>array('customerId'=>$id)));
+				$deposits = $this->executeRequest($req);
+				if(is_array($deposits) && isset($deposits[0])) {
+					$customerId = $deposits[0]['customerId'];
+					$req = new Request('Customer', 'view', array('FILTER'=>array('id'=>$customerId)));
+					$data = $this->executeRequest($req);
+				}
+				break;
+			case PlatformAbstract::PIXEL_TYPE_GAME:
+				throw new InvalidPixelException(sprintf('Pixel [%s] not supported for brand [%d]',
+					PlatformAbstract::PIXEL_TYPE_GAME, $this->brand->getId()));
+				break;
+		}
+
+		return (is_array($data) && isset($data[0])) ? $data[0] : false;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	protected function getAffiliateIdentity(array $record)
 	{
 		if($this->setting->getCampaignId() != $record['campaignId']) {
