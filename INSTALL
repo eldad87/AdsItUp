@@ -2,26 +2,36 @@ composer
 download http://dev.maxmind.com/geoip/geoip2/geolite2/ to /AppBundle/MaxMindDB/GeoLite2-City.mmdb
 on new platform, add a new %Platform%Setting class
 
+Click
+	store additional parameters
+
+View
+	Pixel log
+	Brand record
+
+PlatformAbstract::handleCommission
+	use repo (update user set balance += x) instead of $brandRecord->getUser()->incBalance($commissionPlan->getPayout());
+		which can be defected by race condition
+
+Cron
+	fire server pixels
+	get spot updates
+
+Referrer - commission plan
+
 platform_record entity
 	id, brand, external_id
 		type (lead|customer|deposit),
 		user_id}, , click_id, offer_banner_id, offer_id,
 		ref_user_id
-		created, updated, commission_id
+		created, updated, commission_id, commission_payout
 	unique: brand, external_id
 
 
 		external_created, external_updated,
-		commission_payout, , ref_commission_payout, ref_commission_id
+		ref_commission_payout, ref_commission_id
 
-CommissionManager service
-	checkforCommission(platform_record): commission
-	checkforRefCommission(platform_record): commission
-	grantCommission(platform_record, commission)
 
-pixel
-
-Referrer - commission plan
 
 session - save click for 30D in order to identify unique visitors
 clickID = uuid

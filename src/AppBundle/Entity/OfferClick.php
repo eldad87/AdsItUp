@@ -25,6 +25,12 @@ class OfferClick {
     protected $id;
 
     /**
+     *
+     * @ORM\Column(type="array")
+     */
+    protected $parameters;
+
+    /**
      * @ORM\Column(type="string", length=50, nullable=true)
      *
      * @GRID\Column(title="User Agent", type="text", operatorsVisible=false)
@@ -139,6 +145,24 @@ class OfferClick {
     public function __construct()
     {
         $this->brandRecords = new ArrayCollection();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
+     * @param mixed $parameters
+     * @return $this
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
+        return $this;
     }
 
     /**

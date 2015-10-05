@@ -27,7 +27,7 @@ class Offer {
      * @Assert\NotBlank()
      * @Assert\Length(
      *      min = 2,
-     *      max = 50
+     *      max = 255
      * )
      *
      * @ORM\Column(type="string", length=255)
@@ -38,7 +38,9 @@ class Offer {
 
     /**
      * @Assert\NotBlank()
-     *
+     * @Assert\Length(
+     *      max = 500
+     * )
      * @ORM\Column(type="string", length=500)
      *
      * @GRID\Column(title="Destination", type="text", operatorsVisible=false)
@@ -119,11 +121,17 @@ class Offer {
      */
     protected $brandRecords;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PixelLog", mappedBy="offer")
+     */
+    protected $pixelLog;
+
     public function __construct()
     {
         $this->offerBanners = new ArrayCollection();
         $this->offerClicks = new ArrayCollection();
         $this->brandRecords = new ArrayCollection();
+        $this->pixelLog = new ArrayCollection();
     }
 
     /**
@@ -272,11 +280,11 @@ class Offer {
     }
 
     /**
-     * @param \DateTime $createdAt
+     * @param \DateTime $updatedAt
      */
-    public function setUpdatedAt(\DateTime $createdAt)
+    public function setUpdatedAt(\DateTime $updatedAt)
     {
-        $this->updatedAt = $createdAt;
+        $this->updatedAt = $updatedAt;
     }
 
     /**
@@ -432,6 +440,39 @@ class Offer {
     {
         return $this->brandRecords;
     }
+
+    /**
+     * Add PixelLog
+     *
+     * @param \AppBundle\Entity\PixelLog $pixelLog
+     * @return OfferCategory
+     */
+    public function addPixelLog(\AppBundle\Entity\PixelLog $pixelLog)
+    {
+        $this->pixelLog[] = $pixelLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\PixelLog $pixelLog
+     */
+    public function removePixelLog(\AppBundle\Entity\PixelLog $pixelLog)
+    {
+        $this->pixelLog->removeElement($pixelLog);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPixelLogs()
+    {
+        return $this->pixelLog;
+    }    
 
     public function __toString()
     {

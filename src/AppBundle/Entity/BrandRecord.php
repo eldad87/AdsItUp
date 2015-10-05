@@ -163,11 +163,48 @@ class BrandRecord {
     protected $payout;
 
     /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @GRID\Column(title="Server Pixel Pending", type="boolean", operatorsVisible=false)
+     */
+    protected $isServerPixelPending;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PixelLog", mappedBy="brandRecord")
+     */
+    protected $pixelLog;
+
+    public function __construct()
+    {
+        $this->pixelLog = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsServerPixelPending()
+    {
+        return $this->isServerPixelPending;
+    }
+
+    /**
+     * @param mixed $isServerPixelPending
+     * @return $this
+     */
+    public function setIsServerPixelPending($isServerPixelPending)
+    {
+        $this->isServerPixelPending = $isServerPixelPending;
+        return $this;
     }
 
     /**
@@ -487,5 +524,38 @@ class BrandRecord {
     public function __toString()
     {
         return (string) $this->getId();
+    }
+
+    /**
+     * Add PixelLog
+     *
+     * @param \AppBundle\Entity\PixelLog $pixelLog
+     * @return OfferCategory
+     */
+    public function addPixelLog(\AppBundle\Entity\PixelLog $pixelLog)
+    {
+        $this->pixelLog[] = $pixelLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\PixelLog $pixelLog
+     */
+    public function removePixelLog(\AppBundle\Entity\PixelLog $pixelLog)
+    {
+        $this->pixelLog->removeElement($pixelLog);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPixelLogs()
+    {
+        return $this->pixelLog;
     }
 }

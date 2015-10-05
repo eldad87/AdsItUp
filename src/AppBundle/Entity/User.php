@@ -159,9 +159,44 @@ class User extends BaseUser {
     protected $comment;
 
     /**
+     * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"1", "2"})
+     *
+     * @ORM\Column(type="integer", options={"default" = 1})
+     *
+     * @GRID\Column(title="Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server"})
+     */
+    protected $pixelType;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Url()
+     *
+     * @ORM\Column(type="text")
+     *
+     * @GRID\Column(title="Name", type="text", operatorsVisible=false)
+     */
+    protected $pixelUrl;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Choice(choices = {"GET", "POST"})
+     *
+     * @ORM\Column(type="integer", options={"default" = 1})
+     *
+     * @GRID\Column(title="Action", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="GET","2"="POST"})
+     */
+    protected $pixelAction;
+
+    /**
      * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerClick")
      */
     protected $brandRecords;
+
+    /**
+     * @ORM\OneToMany(targetEntity="PixelLog", mappedBy="user")
+     */
+    protected $pixelLog;
 
     public function __construct()
     {
@@ -169,6 +204,7 @@ class User extends BaseUser {
         $this->users = new ArrayCollection();
         $this->subordinates = new ArrayCollection();
         $this->brandRecords = new ArrayCollection();
+        $this->pixelLog = new ArrayCollection();
     }
 
     /**
@@ -196,6 +232,16 @@ class User extends BaseUser {
     public function setBalance($balance)
     {
         $this->balance = $balance;
+        return $this;
+    }
+
+    /**
+     * @param float $balance
+     * @return $this;
+     */
+    public function incBalance($balance)
+    {
+        $this->balance += $balance;
         return $this;
     }
 
@@ -370,6 +416,60 @@ class User extends BaseUser {
     }
 
     /**
+     * @return mixed
+     */
+    public function getPixelType()
+    {
+        return $this->pixelType;
+    }
+
+    /**
+     * @param mixed $pixelType
+     * @return $this
+     */
+    public function setPixelType($pixelType)
+    {
+        $this->pixelType = $pixelType;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPixelUrl()
+    {
+        return $this->pixelUrl;
+    }
+
+    /**
+     * @param mixed $pixelUrl
+     * @return $this
+     */
+    public function setPixelUrl($pixelUrl)
+    {
+        $this->pixelUrl = $pixelUrl;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPixelAction()
+    {
+        return $this->pixelAction;
+    }
+
+    /**
+     * @param mixed $pixelAction
+     * @return $this
+     */
+    public function setPixelAction($pixelAction)
+    {
+        $this->pixelAction = $pixelAction;
+        return $this;
+    }
+
+    /**
      * Set brand
      *
      * @param \AppBundle\Entity\Brand $brand
@@ -534,5 +634,38 @@ class User extends BaseUser {
     public function getBrandRecords()
     {
         return $this->brandRecords;
+    }
+
+    /**
+     * Add PixelLog
+     *
+     * @param \AppBundle\Entity\PixelLog $pixelLog
+     * @return OfferCategory
+     */
+    public function addPixelLog(\AppBundle\Entity\PixelLog $pixelLog)
+    {
+        $this->pixelLog[] = $pixelLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\PixelLog $pixelLog
+     */
+    public function removePixelLog(\AppBundle\Entity\PixelLog $pixelLog)
+    {
+        $this->pixelLog->removeElement($pixelLog);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPixelLogs()
+    {
+        return $this->pixelLog;
     }
 }

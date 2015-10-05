@@ -8,6 +8,8 @@ use AppBundle\Entity\CommissionPlan;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\OfferBanner;
 use AppBundle\Entity\OfferClick;
+use AppBundle\Entity\PixelLog;
+use AppBundle\Entity\User;
 use AppBundle\Services\Platform\CommissionPlan\CriteriaTypeAbstract;
 use AppBundle\Services\Platform\Exception\InvalidPixelException;
 use AppBundle\Services\Platform\Exception\InvalidSettingException;
@@ -138,6 +140,7 @@ abstract class PlatformAbstract {
         if(!$brandRecord) {
             //No local record found, init a new one
             $brandRecord = new BrandRecord();
+            $brandRecord->setIsServerPixelPending(false);
             $brandRecord->setBrand($brandRecord->getOffer()->getBrand());
             $brandRecord->setUser($recordAffiliateIdentity->getUser());
             $brandRecord->setReferrer($recordAffiliateIdentity->getUser()->getReferrer());
@@ -158,11 +161,29 @@ abstract class PlatformAbstract {
     }
 
     /**
+     *
+     * @param BrandRecord $brandRecord
+     * @return bool|string
+     */
+    public function getClientPixelURL(BrandRecord $brandRecord)
+    {
+        if(!$brandRecord->getUser()) {
+            return false;
+        }
+        if(PixelLog::TYPE_CLIENT != $brandRecord->getUser()->getPixelType()) {
+            return false;
+        }
+
+        $parameters = $brandRecord->getOfferClick() ? $brandRecord->getOfferClick()->getParameters() : array();
+        return $this->appendParametersToURL($brandRecord->getUser()->getPixelUrl(), $parameters);
+    }
+
+    /**
      * Find best matching CommissionPlan
      * @param BrandRecord $brandRecord
      * @return CommissionPlan|false
      */
-    public function getCommissionPlan(BrandRecord $brandRecord)
+    protected function getCommissionPlan(BrandRecord $brandRecord)
     {
         if($brandRecord->getCommissionPlan()) {
             return $brandRecord->getCommissionPlan();
@@ -183,6 +204,32 @@ abstract class PlatformAbstract {
         }
 
         return false;
+    }
+
+    /**
+     * Find matching commission-plan
+     *  set commission to user
+     * @param BrandRecord $brandRecord
+     * @return bool
+     */
+    public function handleCommission(BrandRecord $brandRecord)
+    {
+        //Get matching commission plan
+        $commissionPlan = $this->getCommissionPlan($brandRecord);
+        if(!$commissionPlan) {
+            return false;
+        }
+
+        //Set Plan
+        $brandRecord->setCommissionPlan($commissionPlan);
+        $brandRecord->setPayout($commissionPlan->getPayout());
+        //Set Commission
+        $brandRecord->getUser()->incBalance($commissionPlan->getPayout());
+
+        $this->doctrine->getManager()->persist($brandRecord);
+        $this->doctrine->getManager()->persist($brandRecord->getUser());
+        $this->doctrine->getManager()->flush();
+        return true;
     }
 
 	/**

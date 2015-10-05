@@ -91,6 +91,11 @@ class Brand {
      */
     protected $brandRecords;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PixelLog", mappedBy="brand")
+     */
+    protected $pixelLog;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -99,6 +104,7 @@ class Brand {
         $this->offerCategories = new ArrayCollection();
         $this->offerClicks = new ArrayCollection();
         $this->brandRecords = new ArrayCollection();
+        $this->pixelLog = new ArrayCollection();
     }
 
     /**
@@ -506,5 +512,38 @@ class Brand {
     public function getBrandRecords()
     {
         return $this->brandRecords;
+    }
+
+    /**
+     * Add PixelLog
+     *
+     * @param \AppBundle\Entity\PixelLog $pixelLog
+     * @return OfferCategory
+     */
+    public function addPixelLog(\AppBundle\Entity\PixelLog $pixelLog)
+    {
+        $this->pixelLog[] = $pixelLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\PixelLog $pixelLog
+     */
+    public function removePixelLog(\AppBundle\Entity\PixelLog $pixelLog)
+    {
+        $this->pixelLog->removeElement($pixelLog);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPixelLogs()
+    {
+        return $this->pixelLog;
     }
 }
