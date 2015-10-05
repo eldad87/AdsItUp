@@ -74,7 +74,7 @@ class Offer extends ContainerAware
         } else {
             $parameters = $request->query->all();
         }
-        if(!$parameters) {
+        if(!$parameters || !isSet($parameters['userId']) || !isSet($parameters['offerId']) || !isSet($parameters['bannerId'])) {
             return false;
         }
 
@@ -98,6 +98,9 @@ class Offer extends ContainerAware
         }
 
         $offerClick = new OfferClick();
+        $additionalParameters = $parameters;
+        unset($additionalParameters['userId'], $additionalParameters['offerId'], $additionalParameters['bannerId']);
+        $offerClick->setParameters($additionalParameters);
         $offerClick->setUser($user);
         $offerClick->setOffer($offer);
 
