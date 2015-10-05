@@ -10,7 +10,8 @@ class OfferBannerType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('file', 'file');
+        $builder->add('name', 'text')
+            ->add('file', 'file');
     }
 
     public function getName()

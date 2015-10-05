@@ -1,0 +1,49 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <h4>Parameters</h4>
+    </div>
+
+    <div class="row">
+        <h4>Direct Link</h4>
+    </div>
+    <div class="row">
+        {% set urlBlock = '<a href="' ~ url('offer.click', (getClickParameters(offer, false)|merge({'host':getClickHost(offer)}))) ~ '">' ~ offer.name ~ '</a>' %}
+        <div class="well well-sm">{{ urlBlock|e('html') }}</div>
+    </div>
+
+    <div class="row">
+        <h4>Banners</h4>
+    </div>
+    {% for banner in offer.offerBanners %}
+        {% set bannerURL = app.request.getSchemeAndHttpHost()  ~ '/upload/brand/' ~ banner.brand.id ~ '/offer/' ~ banner.offer.id ~ '/' ~ banner.file %}
+        <div class="row">
+            <h5>{{ banner.width }}x{{ banner.height }}</h5>
+            <img src="{{ bannerURL }}" />
+            <div class="well well-sm">
+                {% set bannerBlock = '<a href="' ~ url('offer.click',(getBannerClickParameters(banner, false)|merge({'host':getClickHost(offer)}))) ~ '"><img src="' ~ bannerURL ~ '" /></a>' %}
+                {{ bannerBlock|e('html') }}
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if is_granted('ROLE_BRAND') %}
+        <div class="row">
+            <div id="alert_placeholder"></div>
+
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {#{{ form_errors(form) }}#}
+
+            {{ form_widget(form, {'form_type': 'horizontal'}) }}
+
+            {{ form_rest(form) }}
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary pull-right" value="Upload" />
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    {% endif %}
+{% endblock %}

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use APY\DataGridBundle\Grid\Mapping as GRID;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -23,6 +24,11 @@ class OfferBanner {
      * @GRID\Column(title="Id", type="number", operatorsVisible=false)
      */
     protected $id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    protected $name;
 
     /**
      * @Assert\NotBlank()
@@ -107,6 +113,17 @@ class OfferBanner {
     protected $offerClicks;
 
     /**
+     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerClick")
+     */
+    protected $brandRecords;
+
+    public function __construct()
+    {
+        $this->offerClicks = new ArrayCollection();
+        $this->brandRecords = new ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return integer 
@@ -114,6 +131,29 @@ class OfferBanner {
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Brand
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -326,6 +366,39 @@ class OfferBanner {
     public function getOfferClicks()
     {
         return $this->offerClicks;
+    }
+
+    /**
+     * Add record
+     *
+     * @param \AppBundle\Entity\BrandRecord $brandRecord
+     * @return OfferCategory
+     */
+    public function addBrandRecord(\AppBundle\Entity\BrandRecord $brandRecord)
+    {
+        $this->brandRecords[] = $brandRecord;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\BrandRecord $brandRecord
+     */
+    public function removeBrandRecord(\AppBundle\Entity\BrandRecord $brandRecord)
+    {
+        $this->brandRecords->removeElement($brandRecord);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBrandRecords()
+    {
+        return $this->brandRecords;
     }
 
     public function __toString()

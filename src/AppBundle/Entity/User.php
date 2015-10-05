@@ -158,11 +158,17 @@ class User extends BaseUser {
      */
     protected $comment;
 
+    /**
+     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerClick")
+     */
+    protected $brandRecords;
+
     public function __construct()
     {
         parent::__construct();
         $this->users = new ArrayCollection();
         $this->subordinates = new ArrayCollection();
+        $this->brandRecords = new ArrayCollection();
     }
 
     /**
@@ -495,5 +501,38 @@ class User extends BaseUser {
     public function getCommissionPlans()
     {
         return $this->commissionPlans;
+    }
+
+    /**
+     * Add record
+     *
+     * @param \AppBundle\Entity\BrandRecord $brandRecord
+     * @return OfferCategory
+     */
+    public function addBrandRecord(\AppBundle\Entity\BrandRecord $brandRecord)
+    {
+        $this->brandRecords[] = $brandRecord;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\BrandRecord $brandRecord
+     */
+    public function removeBrandRecord(\AppBundle\Entity\BrandRecord $brandRecord)
+    {
+        $this->brandRecords->removeElement($brandRecord);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBrandRecords()
+    {
+        return $this->brandRecords;
     }
 }

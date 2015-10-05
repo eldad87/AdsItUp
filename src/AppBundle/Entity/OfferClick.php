@@ -132,6 +132,16 @@ class OfferClick {
     protected $brand;
 
     /**
+     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerClick")
+     */
+    protected $brandRecords;
+
+    public function __construct()
+    {
+        $this->brandRecords = new ArrayCollection();
+    }
+
+    /**
      * @return mixed
      */
     public function getUa()
@@ -433,6 +443,39 @@ class OfferClick {
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * Add record
+     *
+     * @param \AppBundle\Entity\BrandRecord $brandRecord
+     * @return OfferCategory
+     */
+    public function addBrandRecord(\AppBundle\Entity\BrandRecord $brandRecord)
+    {
+        $this->brandRecords[] = $brandRecord;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\BrandRecord $brandRecord
+     */
+    public function removeBrandRecord(\AppBundle\Entity\BrandRecord $brandRecord)
+    {
+        $this->brandRecords->removeElement($brandRecord);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBrandRecords()
+    {
+        return $this->brandRecords;
     }
 
     public function __toString()

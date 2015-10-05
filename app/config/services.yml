@@ -52,3 +52,4 @@ services:
         calls:
             - [setDoctrine,[ @doctrine ] ]
             - [setValidator,[ @validator ] ]
+            - [setUserManager,[ @fos_user.user_manager ] ]

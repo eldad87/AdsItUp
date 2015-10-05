@@ -6,7 +6,7 @@ class ResponseParser {
 	/**
 	 * @param Request $req
 	 * @param $rawResponse
-	 * @return response
+	 * @return Response
 	 * @throws ResponseException
 	 */
 	static public function parseResponse(Request $req, $rawResponse)
@@ -59,7 +59,7 @@ class ResponseParser {
 	 * @param Request $req
 	 * @param $response
 	 * @param $rawResponse
-	 * @return response
+	 * @return Response
 	 * @throws ResponseException
 	 */
 	static private function parse(Request $req, array $response, $rawResponse)

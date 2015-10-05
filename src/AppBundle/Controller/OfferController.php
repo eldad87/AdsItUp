@@ -128,7 +128,7 @@ class OfferController extends Controller
             }
         }
 
-        return $this->render('AppBundle:Dashboard:offer.view.html.twig', array(
+        return $this->render('AppBundle:Offer:view.html.twig', array(
                 'offer' => $offer,
                 'form'  => $form ? $form->createView() : null
             )
