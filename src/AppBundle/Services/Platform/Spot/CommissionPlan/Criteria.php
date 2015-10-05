@@ -38,7 +38,14 @@ class Criteria extends CriteriaAbstract {
 	 *      min = 0
 	 * )
 	 */
-	protected $minDepositAmount;
+	protected $totalDepositAmount;
+	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Range(
+	 *      min = 0
+	 * )
+	 */
+	protected $totalPositionCount;
 
 	/**
 	 * @return array
@@ -133,18 +140,36 @@ class Criteria extends CriteriaAbstract {
 	/**
 	 * @return float
 	 */
-	public function getMinDepositAmount()
+	public function getTotalDepositAmount()
 	{
-		return $this->minDepositAmount;
+		return $this->totalDepositAmount;
 	}
 
 	/**
-	 * @param float $minDepositAmount
+	 * @param float $totalDepositAmount
 	 * @return $this
 	 */
-	public function setMinDepositAmount($minDepositAmount)
+	public function setTotalDepositAmount($totalDepositAmount)
 	{
-		$this->minDepositAmount = $minDepositAmount;
+		$this->totalDepositAmount = $totalDepositAmount;
+		return $this;
+	}
+	
+	/**
+	 * @return float
+	 */
+	public function getTotalPositionCount()
+	{
+		return $this->totalPositionCount;
+	}
+
+	/**
+	 * @param float $totalPositionCount
+	 * @return $this
+	 */
+	public function setTotalPositionCount($totalPositionCount)
+	{
+		$this->totalPositionCount = $totalPositionCount;
 		return $this;
 	}
 }

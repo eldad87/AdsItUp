@@ -65,6 +65,7 @@ class CriteriaType extends CriteriaTypeAbstract {
                 'multiple' => true,
             ))
             ->add('minDepositAmount', 'money')
+            ->add('totalPositionCount', 'integer')
         ;
 
         $formModifier = function(FormInterface $form, $strategy = null) {
@@ -76,6 +77,7 @@ class CriteriaType extends CriteriaTypeAbstract {
                     $form->remove('saleStatus');
                     $form->remove('leadStatus');
                     $form->remove('minDepositAmount');
+                    $form->remove('totalPositionCount');
                     break;
                 case CommissionPlan::TYPE_CPL:
                     $form
@@ -129,11 +131,13 @@ class CriteriaType extends CriteriaTypeAbstract {
                             'multiple' => true,
                         ));
                     $form
-                        ->remove('minDepositAmount');
+                        ->remove('minDepositAmount')
+                        ->remove('totalPositionCount');
                     break;
                 case CommissionPlan::TYPE_CPA:
                     $form
-                        ->add('minDepositAmount');
+                        ->add('minDepositAmount')
+                        ->add('totalPositionCount');
                     break;
             }
         };
