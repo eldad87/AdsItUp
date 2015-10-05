@@ -26,13 +26,14 @@ class CommissionPlanType extends AbstractType {
             ->add('isActive', 'checkbox')
             ->add('strategy', 'choice', array(
                 'choices' => array(
-                    CommissionPlan::TYPE_CPC => 'CPC',
+                    //CommissionPlan::TYPE_CPC => 'CPC',
                     CommissionPlan::TYPE_CPL => 'CPL',
                     CommissionPlan::TYPE_CPA => 'CPA',
                 ),
                 'multiple' => false,
             ))
             ->add('priority', 'integer')
+            ->add('name', 'text')
             ->add('description', 'text')
             ->add('payout', 'money')
             ->add('criteria', $this->criteriaType);

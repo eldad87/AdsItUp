@@ -140,7 +140,7 @@ class Offer {
      * Set name
      *
      * @param string $name
-     * @return Brand
+     * @return $this
      */
     public function setName($name)
     {
@@ -170,7 +170,7 @@ class Offer {
 
     /**
      * @param mixed $destination
-     * @return Brand
+     * @return $this
      */
     public function setDestination($destination)
     {
@@ -189,7 +189,7 @@ class Offer {
 
     /**
      * @param mixed $description
-     * @return Brand
+     * @return $this
      */
     public function setDescription($description)
     {
@@ -220,7 +220,7 @@ class Offer {
      * Set isActive
      *
      * @param boolean $isActive
-     * @return Brand
+     * @return $this
      */
     public function setIsActive($isActive)
     {

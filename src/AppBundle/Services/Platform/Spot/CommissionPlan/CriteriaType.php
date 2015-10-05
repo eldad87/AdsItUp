@@ -33,7 +33,7 @@ class CriteriaType extends CriteriaTypeAbstract {
                 ),
                 'multiple' => true,
             ))
-            ->add('siteLanguageSelected', 'choice', array(
+            ->add('customerSelectedLang', 'choice', array(
                 'choices' => array(
                     'EN' => 'EN',
                     'AR' => 'AR',
@@ -70,7 +70,7 @@ class CriteriaType extends CriteriaTypeAbstract {
 
         $formModifier = function(FormInterface $form, $strategy = null) {
             switch($strategy) {
-                case CommissionPlan::TYPE_CPC:
+                /*case CommissionPlan::TYPE_CPC:
                     $form->remove('country');
                     $form->remove('siteLanguage');
                     $form->remove('siteLanguageSelected');
@@ -78,7 +78,7 @@ class CriteriaType extends CriteriaTypeAbstract {
                     $form->remove('leadStatus');
                     $form->remove('minDepositAmount');
                     $form->remove('totalPositionCount');
-                    break;
+                    break;*/
                 case CommissionPlan::TYPE_CPL:
                     $form
                         ->add('country', 'choice', array(

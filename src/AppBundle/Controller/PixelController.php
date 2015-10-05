@@ -74,10 +74,20 @@ class PixelController extends Controller
 
         /** @var BrandRecord $brandRecord */
         $brandRecord = $platform->getBrandRecord($record, $request);
+        if($brandRecord->getCommissionPlan()) {
+            // show 1px
+        }
+
+        $commissionPlan = $platform->getCommissionPlan($brandRecord);
+        if(!$commissionPlan) {
+            // show 1px
+        }
 
         /**
-         * Check if need to grant commission
-         *  Issue client pixel
+         * if client pixel
+         *  redirect
+         * mark as pending for server pixel
+         *  show pixel
          */
     }
 }

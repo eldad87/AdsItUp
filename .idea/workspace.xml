@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/AppBundle/Entity/BrandRecord.php" line="398" mnemonic="4" />
+    <bookmark url="file://$PROJECT_DIR$/src/AppBundle/Entity/BrandRecord.php" line="427" mnemonic="4" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f93fd010-8fbf-4eb3-8119-5fbc853a5ba1" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Entity/BrandRecord.php" afterPath="$PROJECT_DIR$/src/AppBundle/Entity/BrandRecord.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Entity/CommissionPlan.php" afterPath="$PROJECT_DIR$/src/AppBundle/Entity/CommissionPlan.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Form/CommissionPlanType.php" afterPath="$PROJECT_DIR$/src/AppBundle/Form/CommissionPlanType.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/Criteria.php" afterPath="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/Criteria.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Services/Platform/CommissionPlan/CriteriaAbstract.php" afterPath="$PROJECT_DIR$/src/AppBundle/Services/Platform/CommissionPlan/CriteriaAbstract.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/CriteriaType.php" afterPath="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/CriteriaType.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/INSTALL" afterPath="$PROJECT_DIR$/INSTALL" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Entity/Offer.php" afterPath="$PROJECT_DIR$/src/AppBundle/Entity/Offer.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Controller/PixelController.php" afterPath="$PROJECT_DIR$/src/AppBundle/Controller/PixelController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AppBundle/Services/Platform/PlatformAbstract.php" afterPath="$PROJECT_DIR$/src/AppBundle/Services/Platform/PlatformAbstract.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -54,7 +61,7 @@
         <entry file="file://$PROJECT_DIR$/INSTALL">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="18" selection-end-column="48" />
+              <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -64,7 +71,7 @@
         <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/PixelController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.7237308">
-              <caret line="75" column="42" selection-start-line="75" selection-start-column="42" selection-end-line="75" selection-end-column="42" />
+              <caret line="85" column="11" selection-start-line="85" selection-start-column="11" selection-end-line="85" selection-end-column="11" />
               <folding>
                 <element signature="e#40#67#0#PHP" expanded="true" />
               </folding>
@@ -72,31 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BrandRecord.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/BrandRecord.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.875">
-              <caret line="387" column="37" selection-start-line="387" selection-start-column="37" selection-end-line="387" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/User.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.9827585">
-              <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="79" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="PlatformAbstract.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/PlatformAbstract.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-16.481482">
-              <caret line="141" column="86" selection-start-line="141" selection-start-column="78" selection-end-line="141" selection-end-column="86" />
+            <state vertical-scroll-proportion="-18.148148">
+              <caret line="175" column="53" selection-start-line="175" selection-start-column="53" selection-end-line="175" selection-end-column="53" />
               <folding>
                 <element signature="e#47#74#0#PHP" expanded="true" />
               </folding>
@@ -112,7 +99,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/AppBundle/Validator/Constraint/ContainsUser.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Validator/Constraints/ContainsUser.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Validator/Constraints/ContainsUserValidator.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Validator/Constraints/ContainsUserEmail.php" />
@@ -127,8 +113,6 @@
         <option value="$PROJECT_DIR$/src/AppBundle/Command/CreateUserCommand.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Services/AccessMap.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Menu/Builder.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Entity/CommissionPlan.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Form/CommissionPlanType.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Form/UserType.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Form/UserCommissionPlanType.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Controller/UserController.php" />
@@ -150,19 +134,22 @@
         <option value="$PROJECT_DIR$/app/AppKernel.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Resources/views/Offer/view.html.twig" />
         <option value="$PROJECT_DIR$/src/AppBundle/Entity/OfferBanner.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Entity/Brand.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Entity/Offer.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Entity/OfferCategory.php" />
         <option value="$PROJECT_DIR$/app/config/parameters.yml" />
         <option value="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/Spot.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Controller/PixelController.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/Criteria.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/CriteriaType.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Controller/CommissionPlanController.php" />
         <option value="$PROJECT_DIR$/src/AppBundle/Controller/OfferController.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Entity/BrandRecord.php" />
-        <option value="$PROJECT_DIR$/src/AppBundle/Services/Platform/PlatformAbstract.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Entity/Offer.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Entity/Brand.php" />
         <option value="$PROJECT_DIR$/INSTALL" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Entity/BrandRecord.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Form/CommissionPlanType.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Entity/CommissionPlan.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Services/Platform/PlatformAbstract.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Services/Platform/CommissionPlan/CriteriaAbstract.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/CriteriaType.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/Criteria.php" />
+        <option value="$PROJECT_DIR$/src/AppBundle/Controller/PixelController.php" />
       </list>
     </option>
   </component>
@@ -296,6 +283,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="Services" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="adsItUp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="adsItUp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AppBundle" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="Entity" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -319,56 +328,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Controller" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adsItUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adsItUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adsItUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adsItUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="logs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adsItUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adsItUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -638,7 +597,13 @@
       <option name="project" value="LOCAL" />
       <updated>1444080656126</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="BrandRecord - add user referrer">
+      <created>1444080882362</created>
+      <option name="number" value="00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1444080882362</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -688,7 +653,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Offer click url" />
     <MESSAGE value="Handle click" />
     <MESSAGE value="Created/Updated at" />
     <MESSAGE value="gitignore .idea" />
@@ -713,7 +677,8 @@
     <MESSAGE value="Add totalPositionCount to Spot commission criteria" />
     <MESSAGE value="Spot - improve  pixelController::handleClientPixelAction" />
     <MESSAGE value="Fix order/commission plan add" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix order/commission plan add" />
+    <MESSAGE value="BrandRecord - add user referrer" />
+    <option name="LAST_COMMIT_MESSAGE" value="BrandRecord - add user referrer" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -915,13 +880,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/composer.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.51369864">
-          <caret line="43" column="31" selection-start-line="43" selection-start-column="31" selection-end-line="43" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/symfony/symfony/src/Symfony/Component/HttpFoundation/ParameterBag.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46689498">
@@ -1013,14 +971,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.892857">
           <caret line="12" column="37" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vendor/doctrine/common/lib/Doctrine/Common/Persistence/ObjectRepository.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7226027">
-          <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -1153,24 +1103,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/Brand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.703704">
-          <caret line="260" column="21" selection-start-line="260" selection-start-column="21" selection-end-line="260" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/Offer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.703704">
-          <caret line="283" column="21" selection-start-line="283" selection-start-column="21" selection-end-line="283" selection-end-column="21" />
-          <folding>
-            <element signature="e#36#84#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/OfferCategory.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.14497717">
@@ -1219,14 +1151,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/CommissionPlan.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3607306">
-          <caret line="100" column="7" selection-start-line="100" selection-start-column="7" selection-end-line="100" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/Spot.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-13.111111">
@@ -1234,30 +1158,6 @@
           <folding>
             <element signature="e#52#85#0#PHP" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/CriteriaType.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.051724">
-          <caret line="138" column="49" selection-start-line="138" selection-start-column="49" selection-end-line="138" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/CommissionPlan/CriteriaAbstract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.08219178">
-          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/Criteria.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.12328767">
-          <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1285,44 +1185,114 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/User.php">
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/Offer.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.9827585">
-          <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="79" selection-end-column="24" />
-          <folding />
+        <state vertical-scroll-proportion="0.46508875">
+          <caret line="138" column="0" selection-start-line="138" selection-start-column="0" selection-end-line="159" selection-end-column="5" />
+          <folding>
+            <element signature="e#36#84#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/PlatformAbstract.php">
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/Brand.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.481482">
-          <caret line="141" column="86" selection-start-line="141" selection-start-column="78" selection-end-line="141" selection-end-column="86" />
-          <folding>
-            <element signature="e#47#74#0#PHP" expanded="true" />
-          </folding>
+        <state vertical-scroll-proportion="-2.4655173">
+          <caret line="477" column="0" selection-start-line="477" selection-start-column="0" selection-end-line="508" selection-end-column="5" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/INSTALL">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="18" selection-end-column="48" />
+          <caret line="9" column="39" selection-start-line="9" selection-start-column="39" selection-end-line="9" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/User.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-9.481482">
+          <caret line="58" column="71" selection-start-line="58" selection-start-column="66" selection-end-line="58" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/doctrine/common/lib/Doctrine/Common/Persistence/ObjectRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5376712">
+          <caret line="63" column="20" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/CommissionPlan/CriteriaAbstract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2260274">
+          <caret line="11" column="19" selection-start-line="11" selection-start-column="19" selection-end-line="11" selection-end-column="19" />
+          <folding>
+            <element signature="e#61#94#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Form/CommissionPlanType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.36301368">
+          <caret line="28" column="22" selection-start-line="28" selection-start-column="22" selection-end-line="28" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/CommissionPlan.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.4178082">
+          <caret line="17" column="20" selection-start-line="17" selection-start-column="6" selection-end-line="17" selection-end-column="20" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/AppBundle/Entity/BrandRecord.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.875">
-          <caret line="387" column="37" selection-start-line="387" selection-start-column="37" selection-end-line="387" selection-end-column="37" />
+        <state vertical-scroll-proportion="0.22031963">
+          <caret line="21" column="6" selection-start-line="21" selection-start-column="6" selection-end-line="21" selection-end-column="6" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/CriteriaType.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5029586">
+          <caret line="35" column="39" selection-start-line="35" selection-start-column="39" selection-end-line="35" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/Spot/CommissionPlan/Criteria.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-56.0">
+          <caret line="84" column="8" selection-start-line="84" selection-start-column="8" selection-end-line="84" selection-end-column="8" />
+          <folding>
+            <element signature="e#67#100#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/AppBundle/Services/Platform/PlatformAbstract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.148148">
+          <caret line="175" column="53" selection-start-line="175" selection-start-column="53" selection-end-line="175" selection-end-column="53" />
+          <folding>
+            <element signature="e#47#74#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/AppBundle/Controller/PixelController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.7237308">
-          <caret line="75" column="42" selection-start-line="75" selection-start-column="42" selection-end-line="75" selection-end-column="42" />
+          <caret line="85" column="11" selection-start-line="85" selection-start-column="11" selection-end-line="85" selection-end-column="11" />
           <folding>
             <element signature="e#40#67#0#PHP" expanded="true" />
           </folding>

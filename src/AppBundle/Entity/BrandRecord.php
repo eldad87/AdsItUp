@@ -142,6 +142,35 @@ class BrandRecord {
     protected $brand;
 
     /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\ManyToOne(targetEntity="Brand", inversedBy="commissionPlans")
+     *
+     * @GRID\Column(field="commissionPlan.name", title="Commission Plan", operatorsVisible=false, filter="select", selectFrom="query")
+     */
+    protected $commissionPlan;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0
+     * )
+     *
+     * @ORM\Column(type="decimal")
+     *
+     * @GRID\Column(title="Payout", operatorsVisible=false, defaultOperator="btw")
+     */
+    protected $payout;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return mixed
      */
     public function getExternalId()
@@ -412,6 +441,47 @@ class BrandRecord {
     public function getOfferClick()
     {
         return $this->offerClick;
+    }
+
+    /**
+     * Set Commission Plan
+     *
+     * @param \AppBundle\Entity\CommissionPlan $commissionPlan
+     * @return User
+     */
+    public function setCommissionPlan(\AppBundle\Entity\CommissionPlan $commissionPlan = null)
+    {
+        $this->commissionPlan = $commissionPlan;
+
+        return $this;
+    }
+
+    /**
+     * Get Commission Plan
+     *
+     * @return \AppBundle\Entity\CommissionPlan
+     */
+    public function getCommissionPlan()
+    {
+        return $this->commissionPlan;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPayout()
+    {
+        return $this->payout;
+    }
+
+    /**
+     * @param float $payout
+     * @return $this
+     */
+    public function setPayout($payout)
+    {
+        $this->payout = $payout;
+        return $this;
     }
 
     public function __toString()

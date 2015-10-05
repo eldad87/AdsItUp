@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CommissionPlan {
 
-	const TYPE_CPC = 1;
+	//const TYPE_CPC = 1;
 	const TYPE_CPL = 2;
 	const TYPE_CPA = 3;
 
@@ -29,6 +29,19 @@ class CommissionPlan {
 	 * @GRID\Column(title="Id", type="number", operatorsVisible=false)
 	 */
 	protected $id;
+
+	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Length(
+	 *      min = 2,
+	 *      max = 50
+	 * )
+	 *
+	 * @ORM\Column(type="string", length=255)
+	 *
+	 * @GRID\Column(title="Name", type="text", operatorsVisible=false)
+	 */
+	protected $name;
 
 	/**
 	 * @Assert\NotBlank()
@@ -79,6 +92,7 @@ class CommissionPlan {
 	 * @Assert\NotBlank()
 	 *
 	 * @ORM\Column(type="object")
+	 * @var CriteriaAbstract
 	 */
 	protected $criteria;
 
@@ -106,9 +120,15 @@ class CommissionPlan {
 	 */
 	protected $users;
 
+	/**
+	 * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="commissionPlan")
+	 */
+	protected $brandRecords;
+
 	public function __construct()
 	{
 		$this->users = new ArrayCollection();
+		$this->brandRecords = new ArrayCollection();
 	}
 
 	/**
@@ -127,6 +147,29 @@ class CommissionPlan {
 	{
 		$this->id = $id;
 		return $this;
+	}
+
+	/**
+	 * Set name
+	 *
+	 * @param string $name
+	 * @return $this
+	 */
+	public function setName($name)
+	{
+		$this->name = $name;
+
+		return $this;
+	}
+
+	/**
+	 * Get name
+	 *
+	 * @return string
+	 */
+	public function getName()
+	{
+		return $this->name;
 	}
 
 	/**
@@ -298,5 +341,38 @@ class CommissionPlan {
 	public function getUsers()
 	{
 		return $this->users;
+	}
+
+	/**
+	 * Add record
+	 *
+	 * @param \AppBundle\Entity\BrandRecord $brandRecord
+	 * @return OfferCategory
+	 */
+	public function addBrandRecord(\AppBundle\Entity\BrandRecord $brandRecord)
+	{
+		$this->brandRecords[] = $brandRecord;
+
+		return $this;
+	}
+
+	/**
+	 * Remove record
+	 *
+	 * @param \AppBundle\Entity\BrandRecord $brandRecord
+	 */
+	public function removeBrandRecord(\AppBundle\Entity\BrandRecord $brandRecord)
+	{
+		$this->brandRecords->removeElement($brandRecord);
+	}
+
+	/**
+	 * Get records
+	 *
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getBrandRecords()
+	{
+		return $this->brandRecords;
 	}
 }

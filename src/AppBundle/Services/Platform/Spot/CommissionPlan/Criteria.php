@@ -2,6 +2,8 @@
 
 namespace AppBundle\Services\Platform\Spot\CommissionPlan;
 
+use AppBundle\Entity\BrandRecord;
+use AppBundle\Entity\CommissionPlan;
 use AppBundle\Services\Platform\CommissionPlan\CriteriaAbstract;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -20,7 +22,7 @@ class Criteria extends CriteriaAbstract {
 	/**
 	 * @Assert\NotBlank()
 	 */
-	protected $siteLanguageSelected;
+	protected $customerSelectedLang;
 
 	/**
 	 * @Assert\NotBlank()
@@ -38,14 +40,60 @@ class Criteria extends CriteriaAbstract {
 	 *      min = 0
 	 * )
 	 */
-	protected $totalDepositAmount;
+	protected $minDepositAmount;
 	/**
 	 * @Assert\NotBlank()
 	 * @Assert\Range(
 	 *      min = 0
 	 * )
 	 */
-	protected $totalPositionCount;
+	protected $minPositionCount;
+
+	public function isMatch(CommissionPlan $commissionPlan, BrandRecord $brandRecord)
+	{
+		//CPL can accept all types of records
+		if(CommissionPlan::TYPE_CPL == $commissionPlan->getStrategy()) {
+			if(!in_array($brandRecord->getType(),
+				array(BrandRecord::USER_TYPE_LEAD, BrandRecord::USER_TYPE_CUSTOMER,
+					BrandRecord::USER_TYPE_DEPOSITOR, BrandRecord::USER_TYPE_GAMER))) {
+				return false;
+			}
+		//CPA accept only depositor and gamer types of records
+		} else if(CommissionPlan::TYPE_CPA == $commissionPlan->getStrategy()) {
+			if(!in_array($brandRecord->getType(),
+				array(BrandRecord::USER_TYPE_DEPOSITOR, BrandRecord::USER_TYPE_GAMER))) {
+				return false;
+			}
+		}
+
+		//Check CPA / CPL conditions
+		$record = $brandRecord->getRecord();
+		if(!isSet($record['Country']) || strtolower($record['Country'])!=strtolower($this->getCountry())) {
+			return false;
+		}
+		if(!isSet($record['saleStatus']) || strtolower($record['saleStatus'])!=strtolower($this->getSaleStatus())) {
+			return false;
+		}
+		if(!isSet($record['leadStatus']) || strtolower($record['leadStatus'])!=strtolower($this->getLeadStatus())) {
+			return false;
+		}
+		if((!isSet($record['siteLanguage']) && !isSet($record['customerSelectedLang'])) ||
+			(strtolower($record['siteLanguage'])!=strtolower($this->getSiteLanguage()) &&
+				strtolower($record['customerSelectedLang'])!=strtolower($this->getCustomerSelectedLang()))) {
+			return false;
+		}
+
+		if(CommissionPlan::TYPE_CPA == $commissionPlan->getStrategy()) {
+			if($this->getMinDepositAmount() < $brandRecord->getTotalDepositsAmount()) {
+				return false;
+			}
+			if($this->getMinPositionCount() < $brandRecord->getTotalPositionsCount()) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	/**
 	 * @return array
@@ -86,18 +134,18 @@ class Criteria extends CriteriaAbstract {
 	/**
 	 * @return array
 	 */
-	public function getSiteLanguageSelected()
+	public function getCustomerSelectedLang()
 	{
-		return $this->siteLanguageSelected;
+		return $this->customerSelectedLang;
 	}
 
 	/**
-	 * @param array $siteLanguageSelected
+	 * @param array $customerSelectedLang
 	 * @return $this
 	 */
-	public function setSiteLanguageSelected($siteLanguageSelected)
+	public function setCustomerSelectedLang($customerSelectedLang)
 	{
-		$this->siteLanguageSelected = $siteLanguageSelected;
+		$this->customerSelectedLang = $customerSelectedLang;
 		return $this;
 	}
 
@@ -140,36 +188,36 @@ class Criteria extends CriteriaAbstract {
 	/**
 	 * @return float
 	 */
-	public function getTotalDepositAmount()
+	public function getMinDepositAmount()
 	{
-		return $this->totalDepositAmount;
+		return $this->minDepositAmount;
 	}
 
 	/**
-	 * @param float $totalDepositAmount
+	 * @param float $minDepositAmount
 	 * @return $this
 	 */
-	public function setTotalDepositAmount($totalDepositAmount)
+	public function setMinDepositAmount($minDepositAmount)
 	{
-		$this->totalDepositAmount = $totalDepositAmount;
+		$this->minDepositAmount = $minDepositAmount;
 		return $this;
 	}
 	
 	/**
 	 * @return float
 	 */
-	public function getTotalPositionCount()
+	public function getMinPositionCount()
 	{
-		return $this->totalPositionCount;
+		return $this->minPositionCount;
 	}
 
 	/**
-	 * @param float $totalPositionCount
+	 * @param float $minPositionCount
 	 * @return $this
 	 */
-	public function setTotalPositionCount($totalPositionCount)
+	public function setMinPositionCount($minPositionCount)
 	{
-		$this->totalPositionCount = $totalPositionCount;
+		$this->minPositionCount = $minPositionCount;
 		return $this;
 	}
 }

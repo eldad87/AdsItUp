@@ -4,6 +4,7 @@ namespace AppBundle\Services\Platform;
 
 use AppBundle\Entity\Brand;
 use AppBundle\Entity\BrandRecord;
+use AppBundle\Entity\CommissionPlan;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\OfferBanner;
 use AppBundle\Entity\OfferClick;
@@ -154,6 +155,34 @@ abstract class PlatformAbstract {
         $this->doctrine->getManager()->persist($brandRecord);
         $this->doctrine->getManager()->flush();
         return $brandRecord;
+    }
+
+    /**
+     * Find best matching CommissionPlan
+     * @param BrandRecord $brandRecord
+     * @return CommissionPlan|false
+     */
+    public function getCommissionPlan(BrandRecord $brandRecord)
+    {
+        if($brandRecord->getCommissionPlan()) {
+            return $brandRecord->getCommissionPlan();
+        }
+
+        $commissionPlans = $this->doctrine->getManager()->getRepository('AppBundle\Entity\CommissionPlan')
+            ->findBy(array('brand'=>$this->brand, 'users'=>array($brandRecord->getUser())), array('priority' => 'ASC'), 1);
+
+        /** @var CommissionPlan $commissionPlan */
+        foreach($commissionPlans AS $commissionPlan) {
+            if($commissionPlan->getCriteria()->isMatch($commissionPlan, $brandRecord)) {
+                return $brandRecord;
+            }
+        }
+
+        if(is_array($commissionPlans) && isset($commissionPlans[0])) {
+            return $commissionPlans[0];
+        }
+
+        return false;
     }
 
 	/**
