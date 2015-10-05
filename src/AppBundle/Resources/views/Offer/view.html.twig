@@ -19,7 +19,7 @@
     {% for banner in offer.offerBanners %}
         {% set bannerURL = app.request.getSchemeAndHttpHost()  ~ '/upload/brand/' ~ banner.brand.id ~ '/offer/' ~ banner.offer.id ~ '/' ~ banner.file %}
         <div class="row">
-            <h5>{{ banner.width }}x{{ banner.height }}</h5>
+            <h5>{{ banner.name }} {{ banner.width }}x{{ banner.height }}</h5>
             <img src="{{ bannerURL }}" />
             <div class="well well-sm">
                 {% set bannerBlock = '<a href="' ~ url('offer.click',(getBannerClickParameters(banner, false)|merge({'host':getClickHost(offer)}))) ~ '"><img src="' ~ bannerURL ~ '" /></a>' %}
