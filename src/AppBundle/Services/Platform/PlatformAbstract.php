@@ -139,6 +139,7 @@ abstract class PlatformAbstract {
             $brandRecord = new BrandRecord();
             $brandRecord->setBrand($brandRecord->getOffer()->getBrand());
             $brandRecord->setUser($recordAffiliateIdentity->getUser());
+            $brandRecord->setReferrer($recordAffiliateIdentity->getUser()->getReferrer());
             $brandRecord->setOffer($recordAffiliateIdentity->getOffer());
             $brandRecord->setOfferBanner($recordAffiliateIdentity->getOfferBanner());
             $brandRecord->setOfferClick($recordAffiliateIdentity->getOfferClick());

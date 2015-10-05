@@ -113,6 +113,12 @@ class BrandRecord {
     protected $user;
 
     /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="refBrandRecords")
+     * @GRID\Column(field="referrer.username", title="Referrer First Name", operatorsVisible=false, filter="select", selectFrom="query")
+     */
+    protected $referrer;
+
+    /**
      * @ORM\ManyToOne(targetEntity="OfferBanner", inversedBy="brandRecords")
      *
      * @GRID\Column(field="OfferBanner.name", title="Banner", operatorsVisible=false, filter="select", selectFrom="query")
@@ -278,7 +284,7 @@ class BrandRecord {
      * Set brand
      *
      * @param \AppBundle\Entity\Brand $brand
-     * @return User
+     * @return $this
      */
     public function setBrand(\AppBundle\Entity\Brand $brand = null)
     {
@@ -301,7 +307,7 @@ class BrandRecord {
      * Set offer banner
      *
      * @param \AppBundle\Entity\OfferBanner $offerBanner
-     * @return User
+     * @return $this
      */
     public function setOfferBanner(\AppBundle\Entity\OfferBanner $offerBanner = null)
     {
@@ -324,7 +330,7 @@ class BrandRecord {
      * Set offerCategory
      *
      * @param \AppBundle\Entity\Offer $offer
-     * @return Offer
+     * @return $this
      */
     public function setOffer(\AppBundle\Entity\Offer $offer = null)
     {
@@ -346,7 +352,7 @@ class BrandRecord {
      * Set user
      *
      * @param \AppBundle\Entity\User $user
-     * @return User
+     * @return $this
      */
     public function setUser(\AppBundle\Entity\User $user = null)
     {
@@ -365,10 +371,32 @@ class BrandRecord {
     }
 
     /**
+     * Set referrer
+     *
+     * @param \AppBundle\Entity\User $referrer
+     * @return $this
+     */
+    public function setReferrer(\AppBundle\Entity\User $referrer = null)
+    {
+        $this->referrer = $referrer;
+        return $this;
+    }
+
+    /**
+     * Get referrerCategory
+     *
+     * @return \AppBundle\Entity\User
+     */
+    public function getReferrer()
+    {
+        return $this->referrer;
+    }
+
+    /**
      * Set offerClick
      *
      * @param \AppBundle\Entity\OfferClick $offerClick
-     * @return OfferClick
+     * @return $this
      */
     public function setOfferClick(\AppBundle\Entity\OfferClick $offerClick = null)
     {

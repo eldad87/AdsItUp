@@ -13,12 +13,6 @@ platform_record entity
 		external_created, external_updated,
 		commission_payout, commission_id, ref_commission_payout, ref_commission_id
 
-
-PlatformX controller
-	handle lead
-	handle customer
-	handle deposit
-
 CommissionManager service
 	checkforCommission(platform_record): commission
 	checkforRefCommission(platform_record): commission
@@ -26,9 +20,8 @@ CommissionManager service
 
 pixel
 
+Referrer - commission plan
+
 session - save click for 30D in order to identify unique visitors
-
 clickID = uuid
-
-
 lead -> get info by id -> identify affiliate: (id, offer, banner, click) -> check if qualified -> grant commission
