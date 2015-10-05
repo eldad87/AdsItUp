@@ -282,6 +282,7 @@ class OfferBanner {
     }
 
     /**
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function setUpdatedAtValue()

@@ -145,6 +145,7 @@ class OfferCategory {
 
     /**
      * @ORM\PreUpdate
+     * @ORM\PreUpdate
      */
     public function setUpdatedAtValue()
     {
