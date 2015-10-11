@@ -7,6 +7,7 @@ use AppBundle\Entity\BrandRecord;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\OfferBanner;
 use AppBundle\Entity\PixelLog;
+use AppBundle\Entity\User;
 use AppBundle\Form\OfferBannerType;
 use AppBundle\Form\OfferType;
 use AppBundle\Services\Platform\Pixel\PixelSetting;
@@ -43,20 +44,59 @@ class PixelController extends Controller
      */
     public function listAction(Request $request)
     {
+        $source = new Entity('AppBundle:PixelLog');
+        /** @var Brand $brand */
+        $brand = $this->get('Brand')->byHost();
 
+        /** @var User $user */
+        $user = $this->getUser();
+        $source->manipulateQuery(
+            function (QueryBuilder $query) use ($source, $brand, $user)
+            {
+                $query->andWhere(sprintf('%s.brand = :brand', $source->getTableAlias()));
+                $query->setParameter('brand', $brand);
+
+                if(!$user->hasRole('ROLE_BRAND')) {
+                    if($user->hasRole('ROLE_AFFILIATE_MANAGER')) {
+                        $query->join(sprintf('%s.user', $source->getTableAlias()), 'user');
+                        $query->andWhere(sprintf('(user.manager = :manager OR user.manager IS NULL)', $source->getTableAlias()));
+                        $query->setParameter('manager', $user);
+                    } else {
+                        $query->andWhere(sprintf('%s.user = :user', $source->getTableAlias()));
+                        $query->setParameter('user', $user);
+                    }
+                }
+            }
+        );
+        $grid = $this->get('grid');
+
+
+        /** @var Grid $grid */
+        $grid->setSource($source);
+
+        // View
+        /*$rowAction = new RowAction('View', 'dashboard.pixel.view', false, '_self', array(), array('ROLE_AFFILIATE'));
+        $rowAction->setRouteParameters(array('id'));
+        $grid->addRowAction($rowAction);*/
+
+
+        $grid->isReadyForRedirect();
+
+        return $grid->getGridResponse('::listGrid.html.twig');
     }
 
     /**
      * View a pixel
      *
      * @Breadcrumb("{offer}")
-     * @Route("/Dashboard/Offer/{id}", requirements={"id": "\d+"},
+     * @Route("/Dashboard/Pixel/{id}", requirements={"id": "\d+"},
      *          name="dashboard.pixel.view")
      * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_AFFILIATE')")
      */
     public function viewAction(Request $request, Offer $offer)
     {
+        //Todo
     }
 
     /**

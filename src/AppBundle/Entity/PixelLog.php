@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="pixel_log")
- * @GRID\Source(columns="id, created")
+ * @GRID\Source(columns="id, offer.name, event, destinationType, originType, action, attempts, status, url, createdAt")
  * @ORM\HasLifecycleCallbacks()
  */
 class PixelLog {
@@ -37,7 +37,7 @@ class PixelLog {
 	 *
 	 * @ORM\Column(type="integer", options={"default" = 1})
 	 *
-	 * @GRID\Column(title="Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Lead","2"="Customer","3"="Deposit","4"="Game"})
+	 * @GRID\Column(title="Event", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Lead","2"="Customer","3"="Deposit","4"="Game"})
 	 */
 	protected $event;
 
@@ -47,7 +47,7 @@ class PixelLog {
 	 *
 	 * @ORM\Column(type="integer")
 	 *
-	 * @GRID\Column(title="Destination Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server"})
+	 * @GRID\Column(title="Destination", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server"})
 	 */
 	protected $destinationType;
 
@@ -57,7 +57,7 @@ class PixelLog {
 	 *
 	 * @ORM\Column(type="integer")
 	 *
-	 * @GRID\Column(title="Destination Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server","3"="CLI"})
+	 * @GRID\Column(title="Origin", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server","3"="CLI"})
 	 */
 	protected $originType;
 
@@ -112,6 +112,29 @@ class PixelLog {
 	 * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false)
 	 */
 	protected $createdAt;
+
+	/**
+	 * @ORM\Column(type="datetime")
+	 *
+	 * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false)
+	 */
+	protected $updatedAt;
+
+	/**
+	 * @Assert\NotBlank(groups={"postUpload"})
+	 *
+	 * @ORM\ManyToOne(targetEntity="Offer", inversedBy="offerBanners")
+	 *
+	 * @GRID\Column(field="offer.name", title="Offer", operatorsVisible=false, filter="select", selectFrom="query")
+	 */
+	protected $offer;
+
+	/**
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="offerClicks")
+	 *
+	 * @GRID\Column(field="user.username", title="Username", operatorsVisible=false, filter="select", selectFrom="query")
+	 */
+	protected $user;
 
 	/**
 	 * @Assert\NotBlank()
@@ -313,6 +336,31 @@ class PixelLog {
 	public function __toString()
 	{
 		return (string) $this->getId();
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getUpdatedAt()
+	{
+		return $this->updatedAt;
+	}
+
+	/**
+	 * @param \DateTime $updatedAt
+	 */
+	public function setUpdatedAt(\DateTime $updatedAt)
+	{
+		$this->updatedAt = $updatedAt;
+	}
+
+	/**
+	 * @ORM\PreUpdate
+	 * @ORM\PreUpdate
+	 */
+	public function setUpdatedAtValue()
+	{
+		$this->updatedAt = new \DateTime();
 	}
 
 	/**
