@@ -16,11 +16,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\HasLifecycleCallbacks()
  */
 class PixelLog {
-
-	const TYPE_CLIENT = 1;
-	const TYPE_SERVER = 2;
-	const ACTION_GET = 1;
-	const ACTION_POST = 2;
+	const STATUS_UNKNOWN = 0;
+	const STATUS_SUCCESS = 1;
+	const STATUS_ERROR = 2;
+	const STATUS_SERVER_PENDING = 3;
+	const STATUS_WILL_NOT_FIRE = 4;
 
 	/**
 	 * @ORM\Id
@@ -33,13 +33,33 @@ class PixelLog {
 
 	/**
 	 * @Assert\NotBlank()
+	 * @Assert\Choice(choices = {"1", "2", "3", "4"})
+	 *
+	 * @ORM\Column(type="integer", options={"default" = 1})
+	 *
+	 * @GRID\Column(title="Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Lead","2"="Customer","3"="Deposit","4"="Game"})
+	 */
+	protected $event;
+
+	/**
+	 * @Assert\NotBlank()
 	 * @Assert\Choice(choices = {"1", "2"})
 	 *
 	 * @ORM\Column(type="integer")
 	 *
-	 * @GRID\Column(title="Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server"})
+	 * @GRID\Column(title="Destination Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server"})
 	 */
-	protected $type;
+	protected $destinationType;
+
+	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Choice(choices = {"1", "2", "3"})
+	 *
+	 * @ORM\Column(type="integer")
+	 *
+	 * @GRID\Column(title="Destination Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server","3"="CLI"})
+	 */
+	protected $originType;
 
 	/**
 	 * @Assert\NotBlank()
@@ -62,6 +82,14 @@ class PixelLog {
 	protected $url;
 
 	/**
+	 * @ORM\Column(type="integer")
+	 *
+	 * @GRID\Column(title="Attempts", type="number", operatorsVisible=false)
+	 */
+	protected $attempts;
+
+
+	/**
 	 * @ORM\Column(type="text", nullable=true)
 	 *
 	 * @GRID\Column(title="Response", type="text", operatorsVisible=false)
@@ -73,9 +101,9 @@ class PixelLog {
 	 *
 	 * @ORM\Column(type="boolean")
 	 *
-	 * @GRID\Column(title="Is Success", type="boolean", operatorsVisible=false)
+	 * @GRID\Column(title="Status", operatorsVisible=false, filter="select", selectFrom="values", values={"0"="Unknown","1"="Success","2"="Error","3"="Server Pending","4"="Will not fire"})
 	 */
-	protected $isSuccess;
+	protected $status;
 
 	/**
 	 * @Assert\NotBlank()
@@ -113,18 +141,54 @@ class PixelLog {
 	/**
 	 * @return mixed
 	 */
-	public function getType()
+	public function getEvent()
 	{
-		return $this->type;
+		return $this->event;
 	}
 
 	/**
-	 * @param mixed $type
-	 * @return $this;
+	 * @param mixed $event
+	 * @return $this
 	 */
-	public function setType($type)
+	public function setEvent($event)
 	{
-		$this->type = $type;
+		$this->event = $event;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getDestinationType()
+	{
+		return $this->destinationType;
+	}
+
+	/**
+	 * @param mixed $destinationType
+	 * @return $this
+	 */
+	public function setDestinationType($destinationType)
+	{
+		$this->destinationType = $destinationType;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getOriginType()
+	{
+		return $this->originType;
+	}
+
+	/**
+	 * @param mixed $originType
+	 * @return PixelLog
+	 */
+	public function setOriginType($originType)
+	{
+		$this->originType = $originType;
 		return $this;
 	}
 
@@ -167,6 +231,24 @@ class PixelLog {
 	/**
 	 * @return mixed
 	 */
+	public function getAttempts()
+	{
+		return $this->attempts;
+	}
+
+	/**
+	 * @param mixed $attempts
+	 * @return PixelLog
+	 */
+	public function setAttempts($attempts)
+	{
+		$this->attempts = $attempts;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
 	public function getResponse()
 	{
 		return $this->response;
@@ -183,15 +265,14 @@ class PixelLog {
 	}
 
 	/**
-	 * Set isSuccess
+	 * Set status
 	 *
-	 * @param boolean $isSuccess
+	 * @param int $status
 	 * @return $this
 	 */
-	public function setIsSuccess($isSuccess)
+	public function setStatus($status)
 	{
-		$this->isSuccess = $isSuccess;
-
+		$this->status = $status;
 		return $this;
 	}
 
@@ -200,9 +281,9 @@ class PixelLog {
 	 *
 	 * @return boolean
 	 */
-	public function getIsSuccess()
+	public function getStatus()
 	{
-		return $this->isSuccess;
+		return $this->status;
 	}
 
 	/**

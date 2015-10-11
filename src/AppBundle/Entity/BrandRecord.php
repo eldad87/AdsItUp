@@ -52,7 +52,6 @@ class BrandRecord {
      */
     protected $type;
 
-
     /**
      * @Assert\NotBlank()
      * @Assert\Range(
@@ -73,9 +72,18 @@ class BrandRecord {
      *
      * @ORM\Column(type="integer")
      *
-     * @GRID\Column(title="Total Positions Count", operatorsVisible=false, defaultOperator="btw")
+     * @GRID\Column(title="Total Games Count", operatorsVisible=false, defaultOperator="btw")
      */
-    protected $totalPositionsCount;
+    protected $totalGamesCount;
+
+    /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @GRID\Column(title="Is Commission Granted", type="boolean", operatorsVisible=false)
+     */
+    protected $isCommissionGranted;
 
     /**
      * @ORM\Column(type="datetime")
@@ -163,15 +171,6 @@ class BrandRecord {
     protected $payout;
 
     /**
-     * @Assert\NotBlank()
-     *
-     * @ORM\Column(type="boolean")
-     *
-     * @GRID\Column(title="Server Pixel Pending", type="boolean", operatorsVisible=false)
-     */
-    protected $isServerPixelPending;
-
-    /**
      * @ORM\OneToMany(targetEntity="PixelLog", mappedBy="brandRecord")
      */
     protected $pixelLog;
@@ -189,23 +188,6 @@ class BrandRecord {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getIsServerPixelPending()
-    {
-        return $this->isServerPixelPending;
-    }
-
-    /**
-     * @param mixed $isServerPixelPending
-     * @return $this
-     */
-    public function setIsServerPixelPending($isServerPixelPending)
-    {
-        $this->isServerPixelPending = $isServerPixelPending;
-        return $this;
-    }
 
     /**
      * @return mixed
@@ -264,20 +246,39 @@ class BrandRecord {
     /**
      * @return mixed
      */
-    public function getTotalPositionsCount()
+    public function getTotalGamesCount()
     {
-        return $this->totalPositionsCount;
+        return $this->totalGamesCount;
     }
 
     /**
-     * @param mixed $totalPositionsCount
+     * @param mixed $totalGamesCount
      * @return $this
      */
-    public function setTotalPositionsCount($totalPositionsCount)
+    public function setTotalGamesCount($totalGamesCount)
     {
-        $this->totalPositionsCount = $totalPositionsCount;
+        $this->totalGamesCount = $totalGamesCount;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getIsCommissionGranted()
+    {
+        return $this->isCommissionGranted;
+    }
+
+    /**
+     * @param mixed $isCommissionGranted
+     * @return BrandRecord
+     */
+    public function setIsCommissionGranted($isCommissionGranted)
+    {
+        $this->isCommissionGranted = $isCommissionGranted;
+        return $this;
+    }
+
 
     /**
      * @return \DateTime

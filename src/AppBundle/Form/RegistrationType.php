@@ -19,25 +19,7 @@ class RegistrationType extends AbstractType
             ->add('icq', 'text', array('required'=>false))
             ->add('company', 'text', array('required'=>false))
             ->add('website', 'text', array('required'=>false))
-            ->add('comment', 'textarea', array('required'=>false))
-
-            ->add('pixelType', 'choice', array(
-                'choices' => array(
-                    PixelLog::TYPE_CLIENT => 'Client',
-                    PixelLog::TYPE_SERVER => 'Server',
-                ),
-                'multiple' => false,
-            ))
-            ->add('pixelAction', 'choice', array(
-                'choices' => array(
-                    PixelLog::ACTION_GET => 'GET',
-                    PixelLog::ACTION_POST => 'POST',
-                ),
-                'multiple' => false,
-            ))
-            ->add('pixelUrl', 'textarea', array('required'=>false))
-        ;
-        $builder->remove('username');
+            ->add('comment', 'textarea', array('required'=>false));
     }
 
     public function getParent()

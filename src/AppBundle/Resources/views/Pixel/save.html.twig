@@ -1,0 +1,48 @@
+{% extends '::layout.html.twig' %}
+
+{% block content %}
+    <div id="alert_placeholder"></div>
+
+    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+    {#{{ form_errors(form) }}#}
+
+    {{ form_widget(form, {'form_type': 'horizontal'}) }}
+
+    {{ form_rest(form) }}
+
+    <div class="form-group">
+        <input type="submit" class="btn btn-primary pull-right" value="Save" />
+    </div>
+
+    {{ form_end(form) }}
+
+    <script>
+
+        var $pixelDestinationType = $("[id$=Pixel_destinationType]");
+        // When sport gets selected ...
+        $pixelDestinationType.change(function() {
+            // ... retrieve the corresponding form.
+            var $form = $(this).closest('form');
+            // Simulate form data, but only include the selected sport value.
+            var data = $($form).serializeArray().reduce(function(obj, item) {
+                obj[item.name] = item.value;
+                return obj;
+            }, {});
+            //data[$commissionPlanStrategy.attr('name')] = $commissionPlanStrategy.val();
+            // Submit data via AJAX to the form's action path.
+            var self = this;
+            $.ajax({
+                url : $form.attr('action'),
+                type: $form.attr('method'),
+                data : data,
+                success: function(html) {
+                    var id = $(self).parent().parent().find("[id$=Pixel_action]").attr('id');
+                    $('#' + id).replaceWith(
+                            // ... with the returned one from the AJAX response.
+                            $(html).find('#' + id)
+                    );
+                }
+            });
+        });
+    </script>
+{% endblock %}

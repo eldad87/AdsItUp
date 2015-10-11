@@ -8,8 +8,13 @@ abstract class CriteriaTypeAbstract extends AbstractType {
     /** @var FormBuilderInterface */
     protected $parentBuilder;
 
+    /**
+     * @param FormBuilderInterface $builder
+     * @return $this
+     */
     public function setParentBuilder(FormBuilderInterface $builder)
     {
         $this->parentBuilder = $builder;
+        return $this;
     }
 }

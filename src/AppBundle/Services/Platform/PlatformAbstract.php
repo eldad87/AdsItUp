@@ -13,16 +13,17 @@ use AppBundle\Entity\User;
 use AppBundle\Services\Platform\CommissionPlan\CriteriaTypeAbstract;
 use AppBundle\Services\Platform\Exception\InvalidPixelException;
 use AppBundle\Services\Platform\Exception\InvalidSettingException;
+use AppBundle\Services\Platform\Pixel\PixelSetting;
+use AppBundle\Services\Platform\Pixel\PixelSettingTypeAbstract;
 use AppBundle\Services\Platform\SettingAbstract;
 use Doctrine\Common\Persistence\AbstractManagerRegistry;
 use FOS\UserBundle\Model\UserManager;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Validator\RecursiveValidator;
 
 abstract class PlatformAbstract {
-    const PIXEL_TYPE_LEAD = 'Lead';
-    const PIXEL_TYPE_CUSTOMER = 'Customer';
-    const PIXEL_TYPE_DEPOSIT = 'Deposit';
-    const PIXEL_TYPE_GAME = 'Game';
 
     /** @var AbstractManagerRegistry */
     protected $doctrine;
@@ -72,15 +73,25 @@ abstract class PlatformAbstract {
         return $this;
     }
 
-    /**
-     * @return CriteriaTypeAbstract
-     */
-    public function getCommissionPlanCriteriaType()
-    {
-        $criteriaType = sprintf('AppBundle\Services\Platform\%s\CommissionPlan\CriteriaType',
-                $this->brand->getPlatform()->getName());
-        return new $criteriaType();
-    }
+	/**
+	 * @return PixelSettingTypeAbstract
+	 */
+	public function getPixelType()
+	{
+		$criteriaType = sprintf('AppBundle\Services\Platform\%s\Pixel\PixelSettingType',
+			$this->brand->getPlatform()->getName());
+		return new $criteriaType();
+	}
+
+	/**
+	 * @return CriteriaTypeAbstract
+	 */
+	public function getCommissionPlanCriteriaType()
+	{
+		$criteriaType = sprintf('AppBundle\Services\Platform\%s\CommissionPlan\CriteriaType',
+			$this->brand->getPlatform()->getName());
+		return new $criteriaType();
+	}
 
     /**
      * Apply affiliate parameters
@@ -90,18 +101,6 @@ abstract class PlatformAbstract {
      * @return string URL
      */
     abstract public function handleClick(OfferClick $offerClick);
-
-    /**
-     * Fetch record from DB
-     * @param $id
-     * @param $type
-     * @return BrandRecord|null
-     */
-    protected function _getBrandRecord($id, $type)
-    {
-        return $this->doctrine->getManager()->getRepository('AppBundle\Entity\BrandRecord')
-            ->findOneBy(array('brand'=>$this->brand, 'externalId'=>$id));
-    }
 
     /**
      * Identify affiliate/assets involved with this record
@@ -115,20 +114,30 @@ abstract class PlatformAbstract {
      * Return a record (Lead or Customer) from API by id and pixel type (PlatformAbstract::PIXEL_TYPE_*)
      *  return false if no such record exists
      * @param $id
-     * @param $pixelType
+     * @param $event - PixelSetting::EVENT_*
      * @return array|false
      * @throws InvalidPixelException
      */
-    abstract public function getRecordByPixel($id, $pixelType);
+    abstract public function getRecordByPixel($id, $event);
+
+    /**
+     * Fetch record from DB
+     * @param array $record
+     * @return BrandRecord|null
+     */
+    public function getBrandRecord(array $record)
+    {
+        return $this->doctrine->getManager()->getRepository('AppBundle\Entity\BrandRecord')
+            ->findOneBy(array('brand'=>$this->brand, 'externalId'=>$record['id']));
+    }
 
     /**
      * Get brand record
-     * @param \Symfony\Component\HttpFoundation\Request $request
      * @param array $record
      * @return BrandRecord
      * @throws InvalidPixelException
      */
-    public function getBrandRecord(array $record, \Symfony\Component\HttpFoundation\Request $request=null)
+    public function updatedBrandRecord(array $record)
     {
         //Get most updated record from API
         $recordAffiliateIdentity = $this->getAffiliateIdentity($record);
@@ -136,11 +145,11 @@ abstract class PlatformAbstract {
 
         //Get our local DB record
         /** @var BrandRecord $brandRecord */
-        $brandRecord = $this->_getBrandRecord($recordAffiliateIdentity->getId(), $type);
+        $brandRecord = $this->getBrandRecord($record);
         if(!$brandRecord) {
             //No local record found, init a new one
             $brandRecord = new BrandRecord();
-            $brandRecord->setIsServerPixelPending(false);
+            $brandRecord->setIsCommissionGranted(false);
             $brandRecord->setBrand($brandRecord->getOffer()->getBrand());
             $brandRecord->setUser($recordAffiliateIdentity->getUser());
             $brandRecord->setReferrer($recordAffiliateIdentity->getUser()->getReferrer());
@@ -153,7 +162,7 @@ abstract class PlatformAbstract {
         $brandRecord->setType($type);
         $brandRecord->setRecord($record);
         $brandRecord->setTotalDepositsAmount($recordAffiliateIdentity->getTotalDepositsAmount());
-        $brandRecord->setTotalPositionsCount($recordAffiliateIdentity->getTotalPositionsCount());
+        $brandRecord->setTotalGamesCount($recordAffiliateIdentity->getTotalGamesCount());
 
         $this->doctrine->getManager()->persist($brandRecord);
         $this->doctrine->getManager()->flush();
@@ -161,21 +170,215 @@ abstract class PlatformAbstract {
     }
 
     /**
+     * Handle a situation in which incoming pixel cannot be mapped to any of the brand's records
+     * @param $origin - PixelSetting::ORIGIN_TYPE_*
+     * @return Response
+     */
+    abstract public function getPixelResponseNoEventGivenAndNoneIdentified($origin);
+
+    /**
+     * Handle a situation in which incoming pixel cannot be mapped to any of the brand's records
+     * @param $origin - PixelSetting::ORIGIN_TYPE_*
+     * @return Response
+     */
+    abstract public function getPixelResponseBrandRecordNotFound($origin);
+
+    /**
+     * Handle a situation in which incoming commission is already st
+     *  therefore, another pixel should be fired
+     * @param $origin - PixelSetting::ORIGIN_TYPE_*
+     * @return Response
+     */
+    abstract public function getPixelResponseBrandRecordAlreadyCommissionQualified($origin);
+
+    /**
+     * Handle a situation in which incoming pixel match a BrandRecord but its not yet qualified for commission
+     *  therefore, pixel cannot fire.
+     * @param $origin - PixelSetting::ORIGIN_TYPE_*
+     * @return Response
+     */
+    abstract public function getPixelResponseBrandRecordNoCommissionPlanMatch($origin);
+
+    /**
+     * Handle a situation in which affiliate is not set with a relevant pixel.
+     * @param $origin - PixelSetting::ORIGIN_TYPE_*
+     * @return Response
+     */
+    abstract public function getPixelResponseAffiliatePixelNotDefined($origin);
+
+    /**
+     * Handle a situation in which pixel is fired or saved for offline (cron) processing
+     * @param $origin - PixelSetting::ORIGIN_TYPE_*
+     * @return Response
+     */
+    abstract public function getPixelResponseSuccess($origin);
+
+    /**
+     * Handle a situation in which affiliate pixel is defined as Client-side pixel
+     *  while incoming pixel is Server-side pixel.
+     * @param $origin - PixelSetting::ORIGIN_TYPE_*
+     * @return Response
+     */
+    abstract public function getPixelResponseServerClientConflict($origin);
+
+    /**
+     * @param $origin PixelSetting::ORIGIN_*
+     * @param array $record
+     * @param $event PixelSetting::EVENT_*
+     * @return Response
+     */
+    public function handlePixelAction($origin, array $record, $event=null)
+    {
+        $em = $this->doctrine->getManager();
+
+        //Identify event
+        if(!$event) {
+            //Get current stored record
+            /** @var BrandRecord $brandRecord */
+            $brandRecord = $this->getBrandRecord($record);
+
+            //Get updated record
+            /** @var BrandRecord $brandRecord */
+            $updatedBrandRecord = $this->updatedBrandRecord($record);
+
+            //Check if there is an event
+            if(!$brandRecord || $brandRecord->getType() < $updatedBrandRecord->getType()) {
+                switch($updatedBrandRecord->getType()) {
+                    case BrandRecord::USER_TYPE_LEAD:
+                        $event  = PixelSetting::EVENT_LEAD;
+                        break;
+                    case BrandRecord::USER_TYPE_CUSTOMER:
+                        $event  = PixelSetting::EVENT_CUSTOMER;
+                        break;
+                    case BrandRecord::USER_TYPE_DEPOSITOR:
+                        $event  = PixelSetting::EVENT_DEPOSIT;
+                        break;
+                    case BrandRecord::USER_TYPE_GAMER:
+                        $event  = PixelSetting::EVENT_GAME;
+                        break;
+                }
+            } else if($brandRecord->getTotalDepositsAmount() < $updatedBrandRecord->getTotalDepositsAmount()) {
+                $event  = PixelSetting::EVENT_DEPOSIT;
+            } else if($brandRecord->getTotalGamesCount() < $updatedBrandRecord->getTotalGamesCount()) {
+                $event  = PixelSetting::EVENT_GAME;
+            } else {
+                return $this->getPixelResponseNoEventGivenAndNoneIdentified($origin);
+            }
+
+        } else {
+            /** @var BrandRecord $brandRecord */
+            $updatedBrandRecord = $this->updatedBrandRecord($record);
+        }
+
+        if(!$updatedBrandRecord) {
+            return $this->getPixelResponseBrandRecordNotFound($origin);
+        }
+
+        //Get relevant pixel
+        /** @var PixelSetting $pixelSetting */
+        $pixelSetting = false;
+        switch($event) {
+            case PixelSetting::EVENT_LEAD:
+                $pixelSetting = $updatedBrandRecord->getUser()->getLeadPixel();
+                break;
+            case PixelSetting::EVENT_CUSTOMER:
+                $pixelSetting = $updatedBrandRecord->getUser()->getCustomerPixel();
+                break;
+            case PixelSetting::EVENT_DEPOSIT:
+                $pixelSetting = $updatedBrandRecord->getUser()->getDepositPixel();
+                break;
+            case PixelSetting::EVENT_GAME:
+                $pixelSetting = $updatedBrandRecord->getUser()->getGamePixel();
+                break;
+        }
+
+        //Get matching commission plan
+        $commissionPlan = $this->getCommissionPlan($updatedBrandRecord);
+        if($commissionPlan && !$updatedBrandRecord->getCommissionPlan()) {
+            $updatedBrandRecord->setCommissionPlan($commissionPlan);
+            $em->persist($updatedBrandRecord);
+            $em->flush();
+        }
+
+        if(!$pixelSetting) {
+            // Pixel is not defined
+            return $this->getPixelResponseAffiliatePixelNotDefined($origin);
+        }
+
+        if($updatedBrandRecord->getCommissionPlan() && PixelSetting::FIRE_CONDITION_ON_QUALIFICATION == $pixelSetting->getFireCondition()) {
+            // Commission already set
+            return $this->getPixelResponseBrandRecordAlreadyCommissionQualified($origin);
+        }
+
+        if(!$commissionPlan && PixelSetting::FIRE_CONDITION_MATCH_A_COMMISSION_PLAN == $pixelSetting->getFireCondition()) {
+            // No Commission Plan Match
+            return $this->getPixelResponseBrandRecordNoCommissionPlanMatch($origin);
+        }
+
+        //Save pixel log
+        $pixelLog = new PixelLog();
+        $pixelLog->setAttempts(1);
+        $pixelLog->setEvent($event);
+        $pixelLog->setUrl($this->getOutGoingPixelURL($updatedBrandRecord, $pixelSetting));
+        $pixelLog->setAction($pixelSetting->getAction());
+        $pixelLog->setDestinationType($pixelSetting->getDestinationType());
+        $pixelLog->setOriginType($origin);
+        $pixelLog->setBrand($updatedBrandRecord->getBrand());
+        $pixelLog->setUser($updatedBrandRecord->getUser());
+        $pixelLog->setOffer($updatedBrandRecord->getOffer());
+        $pixelLog->setBrandRecord($updatedBrandRecord);
+
+        if(PixelSetting::DESTINATION_TYPE_CLIENT == $pixelSetting->getDestinationType() &&
+            PixelSetting::ORIGIN_TYPE_CLIENT != $origin) {
+            $pixelLog->setStatus(PixelLog::STATUS_WILL_NOT_FIRE);
+            $em->persist($pixelLog);
+            $em->flush();
+            // Platform-Server-pixel cannot post-back to Affiliate-Client-pixel
+            return $this->getPixelResponseServerClientConflict($origin);
+
+        } else if(PixelSetting::DESTINATION_TYPE_CLIENT == $pixelSetting->getDestinationType()) {
+            $pixelLog->setStatus(PixelLog::STATUS_SUCCESS);
+            $em->persist($pixelLog);
+            $em->flush();
+            // Redirect
+            return $this->getPixelResponseSuccess($origin);
+        } else {
+			$pixelLog->setAttempts(0);
+            $pixelLog->setStatus(PixelLog::STATUS_SERVER_PENDING);
+            $em->persist($pixelLog);
+            $em->flush();
+            return $this->getPixelResponseSuccess($origin);
+        }
+    }
+
+    /**
+     * a default Response for incoming client pixel
+     *  used in cases such
+     *      - No matching commission plan
+     *      - Pixel already fired
+     *      - No Pixel need to fire (Affiliate doesn't have pixel in his setting)
+     *      - Incoming request error (Cannot find which record the incoming pixel is related to)
+     * @param Brand $brand
+     * @return RedirectResponse
+     */
+    protected function getPixelGifImageURL(Brand $brand)
+    {
+        return $brand->getHost() . '/img/pixel.gif';
+    }
+
+    /**
      *
      * @param BrandRecord $brandRecord
      * @return bool|string
      */
-    public function getClientPixelURL(BrandRecord $brandRecord)
+    public function getOutGoingPixelURL(BrandRecord $brandRecord, PixelSetting $pixelSetting)
     {
         if(!$brandRecord->getUser()) {
             return false;
         }
-        if(PixelLog::TYPE_CLIENT != $brandRecord->getUser()->getPixelType()) {
-            return false;
-        }
 
         $parameters = $brandRecord->getOfferClick() ? $brandRecord->getOfferClick()->getParameters() : array();
-        return $this->appendParametersToURL($brandRecord->getUser()->getPixelUrl(), $parameters);
+        return $this->appendParametersToURL($pixelSetting->getUrl(), $parameters);
     }
 
     /**
@@ -183,7 +386,7 @@ abstract class PlatformAbstract {
      * @param BrandRecord $brandRecord
      * @return CommissionPlan|false
      */
-    protected function getCommissionPlan(BrandRecord $brandRecord)
+    public function getCommissionPlan(BrandRecord $brandRecord)
     {
         if($brandRecord->getCommissionPlan()) {
             return $brandRecord->getCommissionPlan();
@@ -204,32 +407,6 @@ abstract class PlatformAbstract {
         }
 
         return false;
-    }
-
-    /**
-     * Find matching commission-plan
-     *  set commission to user
-     * @param BrandRecord $brandRecord
-     * @return bool
-     */
-    public function handleCommission(BrandRecord $brandRecord)
-    {
-        //Get matching commission plan
-        $commissionPlan = $this->getCommissionPlan($brandRecord);
-        if(!$commissionPlan) {
-            return false;
-        }
-
-        //Set Plan
-        $brandRecord->setCommissionPlan($commissionPlan);
-        $brandRecord->setPayout($commissionPlan->getPayout());
-        //Set Commission
-        $brandRecord->getUser()->incBalance($commissionPlan->getPayout());
-
-        $this->doctrine->getManager()->persist($brandRecord);
-        $this->doctrine->getManager()->persist($brandRecord->getUser());
-        $this->doctrine->getManager()->flush();
-        return true;
     }
 
 	/**

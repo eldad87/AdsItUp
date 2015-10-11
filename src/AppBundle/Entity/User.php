@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Services\Platform\Pixel\PixelSetting;
 use Doctrine\Common\Collections\ArrayCollection;
 use FOS\UserBundle\Model\User AS BaseUser;
 use Doctrine\ORM\Mapping as ORM;
@@ -160,33 +161,32 @@ class User extends BaseUser {
 
     /**
      * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"1", "2"})
      *
-     * @ORM\Column(type="integer", options={"default" = 1})
-     *
-     * @GRID\Column(title="Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Client","2"="Server"})
+     * @ORM\Column(type="object", nullable=true)
+     * @var PixelSetting
      */
-    protected $pixelType;
-
+    protected $leadPixel;
     /**
      * @Assert\NotBlank()
-     * @Assert\Url()
      *
-     * @ORM\Column(type="text")
-     *
-     * @GRID\Column(title="Name", type="text", operatorsVisible=false)
+     * @ORM\Column(type="object", nullable=true)
+     * @var PixelSetting
      */
-    protected $pixelUrl;
-
+    protected $customerPixel;
     /**
      * @Assert\NotBlank()
-     * @Assert\Choice(choices = {"GET", "POST"})
      *
-     * @ORM\Column(type="integer", options={"default" = 1})
-     *
-     * @GRID\Column(title="Action", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="GET","2"="POST"})
+     * @ORM\Column(type="object", nullable=true)
+     * @var PixelSetting
      */
-    protected $pixelAction;
+    protected $depositPixel;
+    /**
+     * @Assert\NotBlank()
+     *
+     * @ORM\Column(type="object", nullable=true)
+     * @var PixelSetting
+     */
+    protected $gamePixel;
 
     /**
      * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerClick")
@@ -416,56 +416,74 @@ class User extends BaseUser {
     }
 
     /**
-     * @return mixed
+     * @return PixelSetting
      */
-    public function getPixelType()
+    public function getLeadPixel()
     {
-        return $this->pixelType;
+        return $this->leadPixel;
     }
 
     /**
-     * @param mixed $pixelType
+     * @param PixelSetting $leadPixel
      * @return $this
      */
-    public function setPixelType($pixelType)
+    public function setLeadPixel(PixelSetting $leadPixel=null)
     {
-        $this->pixelType = $pixelType;
+        $this->leadPixel = $leadPixel;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return PixelSetting
      */
-    public function getPixelUrl()
+    public function getCustomerPixel()
     {
-        return $this->pixelUrl;
+        return $this->customerPixel;
     }
 
     /**
-     * @param mixed $pixelUrl
+     * @param PixelSetting $customerPixel
      * @return $this
      */
-    public function setPixelUrl($pixelUrl)
+    public function setCustomerPixel(PixelSetting $customerPixel=null)
     {
-        $this->pixelUrl = $pixelUrl;
+        $this->customerPixel = $customerPixel;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return PixelSetting
      */
-    public function getPixelAction()
+    public function getDepositPixel()
     {
-        return $this->pixelAction;
+        return $this->depositPixel;
     }
 
     /**
-     * @param mixed $pixelAction
+     * @param PixelSetting $depositPixel
      * @return $this
      */
-    public function setPixelAction($pixelAction)
+    public function setDepositPixel(PixelSetting $depositPixel=null)
     {
-        $this->pixelAction = $pixelAction;
+        $this->depositPixel = $depositPixel;
+        return $this;
+    }
+
+    /**
+     * @return PixelSetting
+     */
+    public function getGamePixel()
+    {
+        return $this->gamePixel;
+    }
+
+    /**
+     * @param PixelSetting $gamePixel
+     * @return $this
+     */
+    public function setGamePixel(PixelSetting $gamePixel=null)
+    {
+        $this->gamePixel = $gamePixel;
         return $this;
     }
 

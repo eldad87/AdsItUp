@@ -9,6 +9,9 @@ use AppBundle\Entity\User;
 use AppBundle\Form\OfferBannerType;
 use AppBundle\Form\OfferType;
 use AppBundle\Form\UserCommissionPlanType;
+use AppBundle\Form\UserPixelSettingType;
+use AppBundle\Services\Platform\PlatformAbstract;
+use AppBundle\Services\Platform\Spot\Pixel\PixelSettingType;
 use APY\DataGridBundle\Grid\Action\MassAction;
 use APY\DataGridBundle\Grid\Action\RowAction;
 use APY\DataGridBundle\Grid\Grid;
@@ -71,6 +74,11 @@ class UserController extends Controller
 
         // Commission Plan
         $rowAction = new RowAction('Commission Plan', 'dashboard.user.commission_plan.save', false, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));
+        $rowAction->setRouteParameters(array('id'));
+        $grid->addRowAction($rowAction);
+
+        // Pixel
+        $rowAction = new RowAction('Pixel', 'dashboard.user.pixel.save', false, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));
         $rowAction->setRouteParameters(array('id'));
         $grid->addRowAction($rowAction);
 
@@ -172,5 +180,44 @@ class UserController extends Controller
         return $this->render('::save.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * Add/Edit an Commission Plan
+     *
+     * @Breadcrumb("Save")
+     * @Breadcrumb("{user}")
+     * @Route("/Dashboard/User/Pixel/{id}", requirements={"id": "\d+"},
+     *          name="dashboard.user.pixel.save")
+     * @Method({"GET", "POST"})
+     * @Security("has_role('ROLE_AFFILIATE_MANAGER')")
+     */
+    public function pixelAction(Request $request, User $user)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if($user->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
+            throw $this->createAccessDeniedException('Unable to access this page!');
+        }
+
+        /** @var PlatformAbstract $platform */
+        $platform = $this->get('PlatformFactory')->create();
+
+        $form = $this->createForm(new UserPixelSettingType($platform->getPixelType()), $user);
+        $form->handleRequest($request);
+        //Ignore Ajax because it used to modify the form according to the commission strategy
+        if ($form->isValid() && $request->isMethod($request::METHOD_POST) && !$request->isXmlHttpRequest()) {
+            $commissionPlan = $form->getData();
+            $commissionPlan->setBrand($this->get('Brand')->byHost());
+
+            $em->persist($commissionPlan);
+            $em->flush();
+
+            return $this->redirectToRoute('dashboard.user');
+        }
+
+        return $this->render('AppBundle:Pixel:save.html.twig', array(
+            'form' => $form->createView(),
+        ));
+
     }
 }

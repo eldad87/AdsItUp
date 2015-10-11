@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Services\Platform;
 
+use AppBundle\Entity\BrandRecord;
 use AppBundle\Entity\Offer;
 use AppBundle\Entity\OfferBanner;
 use AppBundle\Entity\OfferClick;
@@ -8,9 +9,12 @@ use AppBundle\Entity\User;
 
 class RecordAffiliateIdentity {
 	private $id;
+	/**
+	 * @var BrandRecord::USER_TYPE_*
+	 */
 	private $type;
 	private $totalDepositsAmount;
-	private $totalPositionsCount;
+	private $totalGamesCount;
 
 	/** @var User */
 	private $user;
@@ -21,13 +25,13 @@ class RecordAffiliateIdentity {
 	/** @var OfferClick */
 	private $offerClick;
 
-	public function __construct($id, $type, $totalDepositsAmount, $totalPositionsCount,
+	public function __construct($id, $type, $totalDepositsAmount, $totalGamesCount,
 								User $user, Offer $offer=null, OfferBanner $offerBanner=null, OfferClick $offerClick=null)
 	{
 		$this->id = $id;
 		$this->type = $type;
 		$this->totalDepositsAmount = $totalDepositsAmount;
-		$this->totalPositionsCount = $totalPositionsCount;
+		$this->totalGamesCount = $totalGamesCount;
 		$this->user = $user;
 		$this->offer = $offer;
 		$this->offerBanner = $offerBanner;
@@ -69,9 +73,9 @@ class RecordAffiliateIdentity {
 	/**
 	 * @return mixed
 	 */
-	public function getTotalPositionsCount()
+	public function getTotalGamesCount()
 	{
-		return $this->totalPositionsCount;
+		return $this->totalGamesCount;
 	}
 
 	/**

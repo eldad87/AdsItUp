@@ -8,6 +8,7 @@ use AppBundle\Entity\OfferClick;
 use AppBundle\Entity\User;
 use AppBundle\Services\Platform\Exception\InvalidPixelException;
 use AppBundle\Services\Platform\Exception\InvalidSettingException;
+use AppBundle\Services\Platform\Pixel\PixelSetting;
 use AppBundle\Services\Platform\PlatformAbstract;
 use AppBundle\Services\Platform\RecordAffiliateIdentity;
 use AppBundle\Services\Platform\SettingAbstract;
@@ -85,39 +86,6 @@ class Spot extends PlatformAbstract {
 	/**
 	 * @inheritdoc
 	 */
-	public function getRecordByPixel($id, $pixelType)
-	{
-		$data = false;
-		switch($pixelType) {
-			case PlatformAbstract::PIXEL_TYPE_LEAD:
-				$req = new Request('Lead', 'view', array('FILTER'=>array('id'=>$id)));
-				$data = $this->executeRequest($req);
-				break;
-			case PlatformAbstract::PIXEL_TYPE_CUSTOMER:
-				$req = new Request('Customer', 'view', array('FILTER'=>array('id'=>$id)));
-				$data = $this->executeRequest($req);
-				break;
-			case PlatformAbstract::PIXEL_TYPE_DEPOSIT:
-				$req = new Request('CustomerDeposits', 'view', array('FILTER'=>array('customerId'=>$id)));
-				$deposits = $this->executeRequest($req);
-				if(is_array($deposits) && isset($deposits[0])) {
-					$customerId = $deposits[0]['customerId'];
-					$req = new Request('Customer', 'view', array('FILTER'=>array('id'=>$customerId)));
-					$data = $this->executeRequest($req);
-				}
-				break;
-			case PlatformAbstract::PIXEL_TYPE_GAME:
-				throw new InvalidPixelException(sprintf('Pixel [%s] not supported for brand [%d]',
-					PlatformAbstract::PIXEL_TYPE_GAME, $this->brand->getId()));
-				break;
-		}
-
-		return (is_array($data) && isset($data[0])) ? $data[0] : false;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	protected function getAffiliateIdentity(array $record)
 	{
 		if($this->setting->getCampaignId() != $record['campaignId']) {
@@ -149,7 +117,7 @@ class Spot extends PlatformAbstract {
 		}
 
 		$totalDepositsAmount = 0;
-		$totalPositionsCount = 0;
+		$totalGamesCount = 0;
 
 		$this->setBatchMode(true);
 		$type = BrandRecord::USER_TYPE_LEAD;
@@ -182,16 +150,105 @@ class Spot extends PlatformAbstract {
 				}
 
 				if(isSet($responses[2])) {
-					$totalPositionsCount += count($responses[2]);
-					$totalPositionsCount += count($responses[3]);
+					$totalGamesCount += count($responses[2]);
+					$totalGamesCount += count($responses[3]);
 				}
 			}
 		}
 
 		return new RecordAffiliateIdentity(
-			$record['id'], $type, $totalDepositsAmount, $totalPositionsCount,
+			$record['id'], $type, $totalDepositsAmount, $totalGamesCount,
 				$user, $offer, $offerClick->getOfferBanner(), $offerClick
 		);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getRecordByPixel($id, $event)
+	{
+		$data = false;
+		switch($event) {
+			case PixelSetting::EVENT_LEAD:
+				$req = new Request('Lead', 'view', array('FILTER'=>array('id'=>$id)));
+				$data = $this->executeRequest($req);
+				break;
+			case PixelSetting::EVENT_CUSTOMER:
+				$req = new Request('Customer', 'view', array('FILTER'=>array('id'=>$id)));
+				$data = $this->executeRequest($req);
+				break;
+			case PixelSetting::EVENT_DEPOSIT:
+				$req = new Request('CustomerDeposits', 'view', array('FILTER'=>array('customerId'=>$id)));
+				$deposits = $this->executeRequest($req);
+				if(is_array($deposits) && isset($deposits[0])) {
+					$customerId = $deposits[0]['customerId'];
+					$req = new Request('Customer', 'view', array('FILTER'=>array('id'=>$customerId)));
+					$data = $this->executeRequest($req);
+				}
+				break;
+			case PixelSetting::EVENT_GAME:
+				throw new InvalidPixelException(sprintf('Pixel [%s] not supported for brand [%d]',
+					PixelSetting::EVENT_GAME, $this->brand->getId()));
+				break;
+		}
+
+		return (is_array($data) && isset($data[0])) ? $data[0] : false;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPixelResponseNoEventGivenAndNoneIdentified($origin)
+	{
+		return new \Symfony\Component\HttpFoundation\Response('Event Not Found', 404);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPixelResponseBrandRecordNotFound($origin)
+	{
+		return new \Symfony\Component\HttpFoundation\Response('Record Not Found', 405);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPixelResponseBrandRecordAlreadyCommissionQualified($origin)
+	{
+		return new \Symfony\Component\HttpFoundation\Response('Duplicate Pixel', 201);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPixelResponseBrandRecordNoCommissionPlanMatch($origin)
+	{
+		return new \Symfony\Component\HttpFoundation\Response('Not Qualified', 202);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPixelResponseAffiliatePixelNotDefined($origin)
+	{
+		return new \Symfony\Component\HttpFoundation\Response('Not Qualified', 203);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPixelResponseSuccess($origin)
+	{
+		return new \Symfony\Component\HttpFoundation\Response('Not Qualified', 204);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPixelResponseServerClientConflict($origin)
+	{
+		return new \Symfony\Component\HttpFoundation\Response('Record Not Found', 406);
 	}
 
 	/**

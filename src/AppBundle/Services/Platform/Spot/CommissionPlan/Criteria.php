@@ -87,7 +87,7 @@ class Criteria extends CriteriaAbstract {
 			if($this->getMinDepositAmount() < $brandRecord->getTotalDepositsAmount()) {
 				return false;
 			}
-			if($this->getMinPositionCount() < $brandRecord->getTotalPositionsCount()) {
+			if($this->getMinPositionCount() < $brandRecord->getTotalGanesCount()) {
 				return false;
 			}
 		}
