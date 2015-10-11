@@ -3,10 +3,6 @@ download http://dev.maxmind.com/geoip/geoip2/geolite2/ to /AppBundle/MaxMindDB/G
 on new platform, add a new %Platform%Setting class
 
 
-View
-	Pixel log
-	Brand record
-
 Cron
 	Pixel
 		search for status = STATUS_SERVER_PENDING
@@ -35,7 +31,8 @@ platform_record entity
 		ref_commission_payout, ref_commission_id
 
 
-
+Pixel log
+Brand record log
 session - save click for 30D in order to identify unique visitors
 clickID = uuid
 lead -> get info by id -> identify affiliate: (id, offer, banner, click) -> check if qualified -> grant commission

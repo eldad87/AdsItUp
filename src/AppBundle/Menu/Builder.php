@@ -61,6 +61,10 @@ class Builder extends ContainerAware
                 ->setAttribute('icon', 'glyphicon glyphicon-list');
             $menu['Offer']->addChild('Add', array('route' => 'dashboard.offer.save'))
                 ->setAttribute('icon', 'glyphicon glyphicon-plus');
+            $menu['Offer']->addChild('Pixel', array('route' => 'dashboard.pixel'))
+                ->setAttribute('icon', 'glyphicon glyphicon-screenshot');
+            $menu['Offer']->addChild('Record', array('route' => 'dashboard.record'))
+                ->setAttribute('icon', 'glyphicon glyphicon-paperclip');
         }
 
         if($this->container->get('security.authorization_checker')->isGranted('ROLE_BRAND')) {

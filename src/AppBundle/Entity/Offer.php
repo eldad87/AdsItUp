@@ -77,14 +77,14 @@ class Offer {
     /**
      * @ORM\Column(type="datetime")
      *
-     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false)
+     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false)
+     * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $updatedAt;
 

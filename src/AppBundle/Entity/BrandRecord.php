@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @ORM\Table(name="brand_record")
  * @ORM\HasLifecycleCallbacks()
- * @GRID\Source(columns="id, remote_id")
+ * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, createdAt, updatedAt")
  * @UniqueEntity(
  *     fields={"brand", "externalId"},
  *     errorPath="externalId",
@@ -48,7 +48,7 @@ class BrandRecord {
      *
      * @ORM\Column(type="integer")
      *
-     * @GRID\Column(title="Type", type="text", operatorsVisible=false)
+     * @GRID\Column(title="Type", operatorsVisible=false, filter="select", selectFrom="values", values={"1"="Lead","2"="Customer","3"="Depositor","4"="Gamer"})
      */
     protected $type;
 
@@ -88,14 +88,14 @@ class BrandRecord {
     /**
      * @ORM\Column(type="datetime")
      *
-     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false)
+     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      *
-     * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false)
+     * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $updatedAt;
 
@@ -116,13 +116,13 @@ class BrandRecord {
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="brandRecords")
      *
-     * @GRID\Column(field="user.username", title="Username", operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(field="user.username", title="Username", operatorsVisible=false, filter="select", selectFrom="query", role="ROLE_AFFILIATE_MANAGER")
      */
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="refBrandRecords")
-     * @GRID\Column(field="referrer.username", title="Referrer First Name", operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(field="referrer.username", title="Referrer First Name", operatorsVisible=false, filter="select", selectFrom="query", role="ROLE_AFFILIATE_MANAGER")
      */
     protected $referrer;
 

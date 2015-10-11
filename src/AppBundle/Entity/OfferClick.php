@@ -102,7 +102,7 @@ class OfferClick {
     /**
      * @ORM\Column(type="datetime")
      *
-     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false)
+     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $createdAt;
 

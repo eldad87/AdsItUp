@@ -31,20 +31,20 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  *
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
- * @Breadcrumb("Pixels", route={"name"="dashboard.pixel"})
+ * @Breadcrumb("Record", route={"name"="dashboard.record"})
  */
-class PixelController extends Controller
+class BrandRecordController extends Controller
 {
     /**
      * List all pixels
      *
-     * @Route("/Dashboard/Pixel", name="dashboard.pixel")
+     * @Route("/Dashboard/Record", name="dashboard.record")
      * @Method({"GET"})
      * @Security("has_role('ROLE_AFFILIATE')")
      */
     public function listAction(Request $request)
     {
-        $source = new Entity('AppBundle:PixelLog');
+        $source = new Entity('AppBundle:BrandRecord');
         /** @var Brand $brand */
         $brand = $this->get('Brand')->byHost();
 
@@ -97,55 +97,5 @@ class PixelController extends Controller
     public function viewAction(Request $request, Offer $offer)
     {
         //Todo
-    }
-
-    /**
-     * Handle client lead
-     *
-     * @Route("/Pixel/{origin}/{event}/{id}", host="{host}",
-     *          requirements={"host": ".+", "id": "\d+", "type":"Client|Server", "event":"Lead|Customer|Deposit|Game"},
-     *          name="pixel.client.lead"),
-     * @Method({"GET"})
-     */
-    public function handlePixelAction(Request $request, $origin, $event, $id)
-    {
-        /** @var PlatformFactory $platformFactory */
-        $platformFactory = $this->container->get('PlatformFactory');
-        /** @var PlatformAbstract $platform */
-        $platform = $platformFactory->create();
-
-        switch($origin) {
-            case 'Client':
-                $origin = PixelSetting::ORIGIN_TYPE_CLIENT;
-                break;
-            case 'Server':
-                $origin = PixelSetting::ORIGIN_TYPE_SERVER;
-                break;
-            default:
-                return new Response(406);
-        }
-
-        switch($event) {
-            case 'Lead':
-                $event = PixelSetting::EVENT_LEAD;
-                break;
-            case 'Customer':
-                $event = PixelSetting::EVENT_CUSTOMER;
-                break;
-            case 'Deposit':
-                $event = PixelSetting::EVENT_DEPOSIT;
-                break;
-            case 'Game':
-                $event = PixelSetting::EVENT_GAME;
-                break;
-        }
-
-        $record = $platform->getRecordByPixel($id, $event);
-        if(!$record) {
-            // BrandRecord not found
-            return $platform->getPixelResponseBrandRecordNotFound($origin);
-        }
-
-        return $platform->handlePixelAction($origin, $record, $event);
     }
 }

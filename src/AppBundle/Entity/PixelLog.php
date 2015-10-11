@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="pixel_log")
- * @GRID\Source(columns="id, offer.name, event, destinationType, originType, action, attempts, status, url, createdAt")
+ * @GRID\Source(columns="id, offer.name, user.email, event, destinationType, originType, action, attempts, status, url, createdAt, updatedAt")
  * @ORM\HasLifecycleCallbacks()
  */
 class PixelLog {
@@ -77,7 +77,7 @@ class PixelLog {
 	 *
 	 * @ORM\Column(type="text")
 	 *
-	 * @GRID\Column(title="Name", type="text", operatorsVisible=false)
+	 * @GRID\Column(title="Name", type="text", operatorsVisible=false, role="ROLE_AFFILIATE_MANAGER")
 	 */
 	protected $url;
 
@@ -109,14 +109,14 @@ class PixelLog {
 	 * @Assert\NotBlank()
 	 * @ORM\Column(type="datetime")
 	 *
-	 * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false)
+	 * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
 	 */
 	protected $createdAt;
 
 	/**
 	 * @ORM\Column(type="datetime")
 	 *
-	 * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false)
+	 * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
 	 */
 	protected $updatedAt;
 
