@@ -2,12 +2,7 @@ composer
 download http://dev.maxmind.com/geoip/geoip2/geolite2/ to /AppBundle/MaxMindDB/GeoLite2-City.mmdb
 on new platform, add a new %Platform%Setting class
 
-
 Cron
-	Pixel
-		search for status = STATUS_SERVER_PENDING
-			++Attempt
-		fire
 	Commission Cron
 		search for isCommissionGranted = false
 			set true
@@ -15,6 +10,8 @@ Cron
 			use repo (update user set balance += x) instead of $brandRecord->getUser()->incBalance($commissionPlan->getPayout());
 				which can be defected by race condition
 	Spot updates
+
+Payment
 
 Referrer - commission plan
 

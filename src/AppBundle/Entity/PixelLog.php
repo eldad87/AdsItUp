@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="pixel_log")
  * @GRID\Source(columns="id, offer.name, user.email, event, destinationType, originType, action, attempts, status, url, createdAt, updatedAt")
+ * @ORM\Table(indexes={@ORM\Index(name="fire_pixel", columns={"next_attempt", "status"})})
  * @ORM\HasLifecycleCallbacks()
  */
 class PixelLog {
@@ -88,13 +89,19 @@ class PixelLog {
 	 */
 	protected $attempts;
 
+	/**
+	 * @ORM\Column(type="text", nullable=true)
+	 *
+	 * @GRID\Column(title="Response Body", type="text", operatorsVisible=false)
+	 */
+	protected $responseBody;
 
 	/**
 	 * @ORM\Column(type="text", nullable=true)
 	 *
-	 * @GRID\Column(title="Response", type="text", operatorsVisible=false)
+	 * @GRID\Column(title="Response Code", type="text", operatorsVisible=false)
 	 */
-	protected $response;
+	protected $responseCode;
 
 	/**
 	 * @Assert\NotBlank()
@@ -104,6 +111,14 @@ class PixelLog {
 	 * @GRID\Column(title="Status", operatorsVisible=false, filter="select", selectFrom="values", values={"0"="Unknown","1"="Success","2"="Error","3"="Server Pending","4"="Will not fire"})
 	 */
 	protected $status;
+
+	/**
+	 * @Assert\NotBlank()
+	 * @ORM\Column(type="datetime")
+	 *
+	 * @GRID\Column(title="Next Attempt", type="datetime", operatorsVisible=false, defaultOperator="btwe")
+	 */
+	protected $nextAttempt;
 
 	/**
 	 * @Assert\NotBlank()
@@ -272,18 +287,36 @@ class PixelLog {
 	/**
 	 * @return mixed
 	 */
-	public function getResponse()
+	public function getResponseBody()
 	{
 		return $this->response;
 	}
 
 	/**
-	 * @param mixed $response
+	 * @param mixed $responseBody
 	 * @return $this;
 	 */
-	public function setResponse($response)
+	public function setResponseBody($responseBody)
 	{
-		$this->response = $response;
+		$this->responseBody = $responseBody;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getResponseCode()
+	{
+		return $this->responseCode;
+	}
+
+	/**
+	 * @param mixed $responseCode
+	 * @return $this;
+	 */
+	public function setResponseCode($responseCode)
+	{
+		$this->responseCode = $responseCode;
 		return $this;
 	}
 
@@ -331,6 +364,30 @@ class PixelLog {
 	public function setCreatedAtValue()
 	{
 		$this->createdAt = new \DateTime();
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getNextAttempt()
+	{
+		return $this->nextAttempt;
+	}
+
+	/**
+	 * @param \DateTime $nextAttempt
+	 */
+	public function setNextAttempt(\DateTime $nextAttempt)
+	{
+		$this->nextAttempt = $nextAttempt;
+	}
+
+	/**
+	 * @ORM\PrePersist
+	 */
+	public function setNextAttemptValue()
+	{
+		$this->nextAttempt = new \DateTime();
 	}
 
 	public function __toString()

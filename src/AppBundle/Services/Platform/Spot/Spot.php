@@ -216,7 +216,7 @@ class Spot extends PlatformAbstract {
 	 */
 	public function getPixelResponseBrandRecordAlreadyCommissionQualified($origin)
 	{
-		return new \Symfony\Component\HttpFoundation\Response('Duplicate Pixel', 201);
+		return new \Symfony\Component\HttpFoundation\Response('', 204);
 	}
 
 	/**
@@ -224,7 +224,7 @@ class Spot extends PlatformAbstract {
 	 */
 	public function getPixelResponseBrandRecordNoCommissionPlanMatch($origin)
 	{
-		return new \Symfony\Component\HttpFoundation\Response('Not Qualified', 202);
+		return new \Symfony\Component\HttpFoundation\Response('', 204);
 	}
 
 	/**
@@ -232,7 +232,7 @@ class Spot extends PlatformAbstract {
 	 */
 	public function getPixelResponseAffiliatePixelNotDefined($origin)
 	{
-		return new \Symfony\Component\HttpFoundation\Response('Not Qualified', 203);
+		return new \Symfony\Component\HttpFoundation\Response('', 204);
 	}
 
 	/**
@@ -240,7 +240,7 @@ class Spot extends PlatformAbstract {
 	 */
 	public function getPixelResponseSuccess($origin)
 	{
-		return new \Symfony\Component\HttpFoundation\Response('Not Qualified', 204);
+		return new \Symfony\Component\HttpFoundation\Response('', 204);
 	}
 
 	/**
