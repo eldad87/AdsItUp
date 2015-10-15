@@ -1,20 +1,7 @@
-{% extends '::layout.html.twig' %}
+{% extends '::save.html.twig' %}
 
 {% block content %}
-    <div id="alert_placeholder"></div>
-
-    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-    {#{{ form_errors(form) }}#}
-
-    {{ form_widget(form, {'form_type': 'horizontal'}) }}
-
-    {{ form_rest(form) }}
-
-    <div class="form-group">
-        <input type="submit" class="btn btn-primary pull-right" value="Save" />
-    </div>
-
-    {{ form_end(form) }}
+    {{ parent() }}
 
     <script>
         var $commissionPlanStrategy = $('#commission_plan_strategy');

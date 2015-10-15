@@ -2,11 +2,15 @@
 
 {% block content %}
     <div class="row">
-        <h4>Referrer Link</h4>
+        <div class="col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-8">
+            <h4>Referrer Link</h4>
+        </div>
     </div>
     <div class="row">
-        {% set urlBlock = '<a href="' ~ url('fos_user_registration_register', {referrerId: app.user.id}) ~ '">' ~ 'Referr a Friend'|trans ~ '</a>' %}
-        <div class="well well-sm">{{ urlBlock|e('html') }}</div>
+        <div class="col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-8">
+            {% set urlBlock = '<a href="' ~ url('fos_user_registration_register', {referrerId: app.user.id}) ~ '">' ~ 'Referr a Friend'|trans ~ '</a>' %}
+            <div class="well well-sm">{{ urlBlock|e('html') }}</div>
+        </div>
     </div>
 
 {% endblock %}

@@ -1,18 +1,24 @@
 {% extends '::layout.html.twig' %}
 
 {% block content %}
-    <div id="alert_placeholder"></div>
 
-    {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
-    {#{{ form_errors(form) }}#}
+    <div class="row">
+        <div class="col-lg-offset-2 col-lg-8 col-md-offset-2 col-md-8">
 
-    {{ form_widget(form, {'form_type': 'horizontal'}) }}
+            <div id="alert_placeholder"></div>
 
-    {{ form_rest(form) }}
+            {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+            {#{{ form_errors(form) }}#}
 
-    <div class="form-group">
-        <input type="submit" class="btn btn-primary pull-right" value="Save" />
+            {{ form_widget(form, {'form_type': 'horizontal'}) }}
+
+            {{ form_rest(form) }}
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary pull-right" value="Save" />
+            </div>
+
+            {{ form_end(form) }}
+        </div>
     </div>
-
-    {{ form_end(form) }}
 {% endblock %}

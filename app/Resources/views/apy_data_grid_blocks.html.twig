@@ -4,8 +4,8 @@
 {% block grid %}
     <div class="grid">
         {% if grid.totalCount > 0 or grid.isFiltered or grid.noDataMessage is sameas(false) %}
-            <form class="form-inline" id="{{ grid.hash }}" action="{{ grid.routeUrl }}" method="post">
-                <div class="grid_header">
+            <form class="form" id="{{ grid.hash }}" action="{{ grid.routeUrl }}" method="post">
+                <div class="grid_header form-inline">
                     {% if grid.massActions|length > 0 %}
                         {{ grid_actions(grid) }}
                     {% endif %}

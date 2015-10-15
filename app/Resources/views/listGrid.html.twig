@@ -9,5 +9,9 @@
         </div>
     {% endif %}
 
-    {{ grid(grid, '::apy_data_grid_blocks.html.twig') }}
+    <div class="row">
+        <div class="col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10">
+            {{ grid(grid, '::apy_data_grid_blocks.html.twig') }}
+        </div>
+    </div>
 {% endblock %}
