@@ -65,7 +65,7 @@ class CriteriaType extends CriteriaTypeAbstract {
                 'multiple' => true,
             ))
             ->add('minDepositAmount', 'money')
-            ->add('totalPositionCount', 'integer')
+            ->add('minGamesCount', 'integer')
         ;
 
         $formModifier = function(FormInterface $form, $strategy = null) {
@@ -73,11 +73,11 @@ class CriteriaType extends CriteriaTypeAbstract {
                 /*case CommissionPlan::TYPE_CPC:
                     $form->remove('country');
                     $form->remove('siteLanguage');
-                    $form->remove('siteLanguageSelected');
+                    $form->remove('customerSelectedLang');
                     $form->remove('saleStatus');
                     $form->remove('leadStatus');
                     $form->remove('minDepositAmount');
-                    $form->remove('totalPositionCount');
+                    $form->remove('minGamesCount');
                     break;*/
                 case CommissionPlan::TYPE_CPL:
                     $form
@@ -99,7 +99,7 @@ class CriteriaType extends CriteriaTypeAbstract {
                             ),
                             'multiple' => true,
                         ))
-                        ->add('siteLanguageSelected', 'choice', array(
+                        ->add('customerSelectedLang', 'choice', array(
                             'choices' => array(
                                 'EN' => 'EN',
                                 'AR' => 'AR',
@@ -132,12 +132,12 @@ class CriteriaType extends CriteriaTypeAbstract {
                         ));
                     $form
                         ->remove('minDepositAmount')
-                        ->remove('totalPositionCount');
+                        ->remove('minGamesCount');
                     break;
                 case CommissionPlan::TYPE_CPA:
                     $form
-                        ->add('minDepositAmount')
-                        ->add('totalPositionCount');
+                        ->add('minDepositAmount', 'money')
+                        ->add('minGamesCount');
                     break;
             }
         };

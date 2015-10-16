@@ -54,12 +54,16 @@ class PixelCommand extends ContainerAwareCommand
                 ->setMaxResults(100);
             $pendingPixels = $qb->getResult();
 
-            $output->writeln('Processing 100');
+            if($pendingPixels) {
+                $output->writeln(sprintf('Processing %d records', $pendingPixels));
+            }
+
             $this->fire($pendingPixels, $maxParallel, $timeout);
             $em->flush();
 
             $maxPixels -= count($pendingPixels);
         } while($pendingPixels && $maxPixels>0);
+        $output->writeln('Done');
     }
 
     protected function fire(array $pixels, $maxParallel, $timeout)

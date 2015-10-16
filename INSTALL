@@ -3,29 +3,17 @@ download http://dev.maxmind.com/geoip/geoip2/geolite2/ to /AppBundle/MaxMindDB/G
 on new platform, add a new %Platform%Setting class
 
 Cron
-	Commission Cron
-		search for isCommissionGranted = false
-			set true
-		grant commission
-			use repo (update user set balance += x) instead of $brandRecord->getUser()->incBalance($commissionPlan->getPayout());
-				which can be defected by race condition
 	Spot updates
 
 Payment
-
-Referrer - commission plan
+Brand Record
+	status
+	language
+Communication / Comments
+Rev share
 
 platform_record entity
-	id, brand, external_id
-		type (lead|customer|deposit),
-		user_id}, , click_id, offer_banner_id, offer_id,
-		ref_user_id
-		created, updated, commission_id, commission_payout
-	unique: brand, external_id
-
-
-		external_created, external_updated,
-		ref_commission_payout, ref_commission_id
+	external_created, external_updated,
 
 
 Pixel log

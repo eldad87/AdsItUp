@@ -189,9 +189,14 @@ class User extends BaseUser {
     protected $gamePixel;
 
     /**
-     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerClick")
+     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="user")
      */
     protected $brandRecords;
+
+    /**
+     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="referrer")
+     */
+    protected $refBrandRecords;
 
     /**
      * @ORM\OneToMany(targetEntity="PixelLog", mappedBy="user")

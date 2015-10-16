@@ -109,6 +109,18 @@ class CommissionPlan {
 	protected $payout;
 
 	/**
+	 * @Assert\NotBlank()
+	 * @Assert\Range(
+	 *      min = 0
+	 * )
+	 *
+	 * @ORM\Column(type="decimal")
+	 *
+	 * @GRID\Column(title="Referrer Payout", operatorsVisible=false, defaultOperator="btw")
+	 */
+	protected $referrerPayout;
+
+	/**
 	 * @ORM\ManyToOne(targetEntity="Brand")
 	 *
 	 * @GRID\Column(field="brand.name", title="Brand", operatorsVisible=false, filter="select", selectFrom="query")
@@ -282,6 +294,24 @@ class CommissionPlan {
 	public function setPayout($payout)
 	{
 		$this->payout = $payout;
+		return $this;
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getReferrerPayout()
+	{
+		return $this->referrerPayout;
+	}
+
+	/**
+	 * @param mixed $referrerPayout
+	 * @return CommissionPlan
+	 */
+	public function setReferrerPayout($referrerPayout)
+	{
+		$this->referrerPayout = $referrerPayout;
 		return $this;
 	}
 

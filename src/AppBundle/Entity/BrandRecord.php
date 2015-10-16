@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="brand_record")
+ * @ORM\Table(name="brand_record", indexes={@ORM\Index(name="updatedAt", columns={"is_commission_granted", "updated_at"})})
  * @ORM\HasLifecycleCallbacks()
  * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, createdAt, updatedAt")
  * @UniqueEntity(
@@ -152,7 +152,7 @@ class BrandRecord {
     /**
      * @Assert\NotBlank()
      *
-     * @ORM\ManyToOne(targetEntity="Brand", inversedBy="commissionPlans")
+     * @ORM\ManyToOne(targetEntity="CommissionPlan", inversedBy="brandRecords")
      *
      * @GRID\Column(field="commissionPlan.name", title="Commission Plan", operatorsVisible=false, filter="select", selectFrom="query")
      */
@@ -169,6 +169,18 @@ class BrandRecord {
      * @GRID\Column(title="Payout", operatorsVisible=false, defaultOperator="btw")
      */
     protected $payout;
+
+    /**
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = 0
+     * )
+     *
+     * @ORM\Column(type="decimal")
+     *
+     * @GRID\Column(title="Referrer Payout", operatorsVisible=false, defaultOperator="btw")
+     */
+    protected $referrerPayout;
 
     /**
      * @ORM\OneToMany(targetEntity="PixelLog", mappedBy="brandRecord")
@@ -519,6 +531,24 @@ class BrandRecord {
     public function setPayout($payout)
     {
         $this->payout = $payout;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReferrerPayout()
+    {
+        return $this->referrerPayout;
+    }
+
+    /**
+     * @param mixed $referrerPayout
+     * @return BrandRecord
+     */
+    public function setReferrerPayout($referrerPayout)
+    {
+        $this->referrerPayout = $referrerPayout;
         return $this;
     }
 

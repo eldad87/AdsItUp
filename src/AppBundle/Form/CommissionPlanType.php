@@ -35,7 +35,8 @@ class CommissionPlanType extends AbstractType {
             ->add('priority', 'integer')
             ->add('name', 'text')
             ->add('description', 'text')
-            ->add('payout', 'money')
+            ->add('payout', 'money', array('currency'=>'USD'))
+            ->add('referrerPayout', 'money', array('currency'=>'USD'))
             ->add('criteria', $this->criteriaType);
         ;
     }

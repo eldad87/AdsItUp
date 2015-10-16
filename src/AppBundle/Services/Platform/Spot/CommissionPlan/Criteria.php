@@ -47,7 +47,7 @@ class Criteria extends CriteriaAbstract {
 	 *      min = 0
 	 * )
 	 */
-	protected $minPositionCount;
+	protected $minGamesCount;
 
 	public function isMatch(CommissionPlan $commissionPlan, BrandRecord $brandRecord)
 	{
@@ -87,7 +87,7 @@ class Criteria extends CriteriaAbstract {
 			if($this->getMinDepositAmount() < $brandRecord->getTotalDepositsAmount()) {
 				return false;
 			}
-			if($this->getMinPositionCount() < $brandRecord->getTotalGanesCount()) {
+			if($this->getMinGamesCount() < $brandRecord->getTotalGamesCount()) {
 				return false;
 			}
 		}
@@ -206,18 +206,18 @@ class Criteria extends CriteriaAbstract {
 	/**
 	 * @return float
 	 */
-	public function getMinPositionCount()
+	public function getMinGamesCount()
 	{
-		return $this->minPositionCount;
+		return $this->minGamesCount;
 	}
 
 	/**
-	 * @param float $minPositionCount
+	 * @param float $minGamesCount
 	 * @return $this
 	 */
-	public function setMinPositionCount($minPositionCount)
+	public function setMinGamesCount($minGamesCount)
 	{
-		$this->minPositionCount = $minPositionCount;
+		$this->minGamesCount = $minGamesCount;
 		return $this;
 	}
 }
