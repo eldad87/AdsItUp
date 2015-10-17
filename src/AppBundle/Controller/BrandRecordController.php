@@ -61,6 +61,7 @@ class BrandRecordController extends AbstractController
 
         /** @var Grid $grid */
         $grid->setSource($source);
+        $grid->setNoDataMessage(false);
 
         // View
         /*$rowAction = new RowAction('View', 'dashboard.pixel.view', false, '_self', array(), array('ROLE_AFFILIATE'));

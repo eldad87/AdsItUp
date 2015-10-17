@@ -52,6 +52,7 @@ class PaymentController extends AbstractController
 
         /** @var Grid $grid */
         $grid->setSource($source);
+        $grid->setNoDataMessage(false);
 
         // Add
         $massAction = new MassAction('Add', function() use ($user) {

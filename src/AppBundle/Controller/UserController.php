@@ -64,6 +64,7 @@ class UserController extends AbstractController
 
         /** @var Grid $grid */
         $grid->setSource($source);
+        $grid->setNoDataMessage(false);
 
         // Commission Plan
         $rowAction = new RowAction('Commission Plan', 'dashboard.user.commission_plan.save', false, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));

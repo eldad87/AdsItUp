@@ -50,6 +50,7 @@ class OfferController extends AbstractController
 
         /** @var Grid $grid */
         $grid->setSource($source);
+        $grid->setNoDataMessage(false);
 
         // Edit
         $rowAction = new RowAction('Edit', 'dashboard.offer.save', false, '_self', array(), array('ROLE_BRAND'));

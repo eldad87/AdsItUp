@@ -61,6 +61,7 @@ class PixelController extends AbstractController
 
         /** @var Grid $grid */
         $grid->setSource($source);
+        $grid->setNoDataMessage(false);
 
         $grid->isReadyForRedirect();
 
