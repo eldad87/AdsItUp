@@ -48,26 +48,33 @@ class Builder extends ContainerAware
         // Dashboard
         $menu->addChild('Dashboard', array('route' => 'dashboard'));
 
-        if($this->container->get('security.authorization_checker')->isGranted('ROLE_AFFILIATE_MANAGER')) {
-            // Dashboard
-            $menu->addChild('User', array('route' => 'dashboard.user'));
-        }
-
         if($this->container->get('security.authorization_checker')->isGranted('ROLE_AFFILIATE')) {
             // Offer
             $menu->addChild('Offer')
                 ->setAttribute('dropdown', true);
             $menu['Offer']->addChild('List', array('route' => 'dashboard.offer'))
                 ->setAttribute('icon', 'glyphicon glyphicon-list');
-            $menu['Offer']->addChild('Add', array('route' => 'dashboard.offer.save'))
-                ->setAttribute('icon', 'glyphicon glyphicon-plus');
-            $menu['Offer']->addChild('Pixel', array('route' => 'dashboard.pixel'))
+
+            $menu->addChild('Report')
+                ->setAttribute('dropdown', true);
+            $menu['Report']->addChild('Pixel', array('route' => 'dashboard.pixel'))
                 ->setAttribute('icon', 'glyphicon glyphicon-screenshot');
-            $menu['Offer']->addChild('Record', array('route' => 'dashboard.record'))
+            $menu['Report']->addChild('Record', array('route' => 'dashboard.record'))
                 ->setAttribute('icon', 'glyphicon glyphicon-paperclip');
         }
 
+        if($this->container->get('security.authorization_checker')->isGranted('ROLE_AFFILIATE_MANAGER')) {
+            // Dashboard
+            $menu->addChild('User', array('route' => 'dashboard.user'));
+
+            $menu['Report']->addChild('Payment', array('route' => 'dashboard.payment'))
+                ->setAttribute('icon', 'glyphicon glyphicon-usd');
+        }
+
         if($this->container->get('security.authorization_checker')->isGranted('ROLE_BRAND')) {
+            $menu['Offer']->addChild('Add', array('route' => 'dashboard.offer.save'))
+                ->setAttribute('icon', 'glyphicon glyphicon-plus');
+
             // Commission Plan
             $menu->addChild('Commission Plan')
                 ->setAttribute('dropdown', true);

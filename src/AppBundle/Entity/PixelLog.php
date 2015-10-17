@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="pixel_log")
  * @GRID\Source(columns="id, offer.name, user.email, event, destinationType, originType, action, attempts, status, url, createdAt, updatedAt")
- * @ORM\Table(indexes={@ORM\Index(name="fire_pixel", columns={"next_attempt", "status"})})
+ * @ORM\Table(indexes={@ORM\Index(name="fire_pixel", columns={"next_attempt", "status"}), @ORM\Index(name="brand", columns={"brand_id", "user_id"})})
  * @ORM\HasLifecycleCallbacks()
  */
 class PixelLog {
@@ -78,7 +78,7 @@ class PixelLog {
 	 *
 	 * @ORM\Column(type="text")
 	 *
-	 * @GRID\Column(title="Name", type="text", operatorsVisible=false, role="ROLE_AFFILIATE_MANAGER")
+	 * @GRID\Column(title="URL", type="text", operatorsVisible=false, role="ROLE_AFFILIATE_MANAGER")
 	 */
 	protected $url;
 

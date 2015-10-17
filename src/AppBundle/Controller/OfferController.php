@@ -25,7 +25,7 @@ use APY\DataGridBundle\Grid\Source\Entity;
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
  * @Breadcrumb("Offers", route={"name"="dashboard.offer"})
  */
-class OfferController extends Controller
+class OfferController extends AbstractController
 {
     /**
      * List all offers
@@ -42,8 +42,7 @@ class OfferController extends Controller
         $source->manipulateQuery(
             function (QueryBuilder $query) use ($source, $brand)
             {
-                $query->andWhere(sprintf('%s.brand = :brand', $source->getTableAlias()));
-                $query->setParameter('brand', $brand);
+                $this->applyPermission($query);
             }
         );
         $grid = $this->get('grid');
@@ -85,9 +84,7 @@ class OfferController extends Controller
      */
     public function viewAction(Request $request, Offer $offer)
     {
-        if($offer->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
-            throw $this->createAccessDeniedException('Unable to access this page!');
-        }
+        $this->checkAccess($offer);
 
         $form = null;
         if($this->isGranted('ROLE_BRAND')) {
@@ -150,9 +147,7 @@ class OfferController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         if($offer) {
-            if($offer->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
-                throw $this->createAccessDeniedException('Unable to access this page!');
-            }
+            $this->checkAccess($offer);
         } else {
             $offer = new Offer();
             $offer->setSalt(md5($this->get('security.secure_random')->nextBytes(32)));

@@ -36,6 +36,6 @@ class UserCommissionPlanType extends AbstractType
 
     public function getName()
     {
-        return 'app_user';
+        return 'app_user_commission_plan';
     }
 }

@@ -23,7 +23,7 @@ use APY\DataGridBundle\Grid\Source\Entity;
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
  * @Breadcrumb("Commission", route={"name"="dashboard.commission_plan"})
  */
-class CommissionPlanController extends Controller
+class CommissionPlanController extends AbstractController
 {
 	/**
 	 * List all Commission Plans
@@ -40,8 +40,7 @@ class CommissionPlanController extends Controller
 		$source->manipulateQuery(
 			function (QueryBuilder $query) use ($source, $brand)
 			{
-				$query->andWhere(sprintf('%s.brand = :brand', $source->getTableAlias()));
-				$query->setParameter('brand', $brand);
+				$this->applyPermission($query);
 			}
 		);
 		$grid = $this->get('grid');
@@ -81,9 +80,7 @@ class CommissionPlanController extends Controller
 	{
 		$em = $this->getDoctrine()->getManager();
 		if($commissionPlan) {
-			if($commissionPlan->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
-				throw $this->createAccessDeniedException('Unable to access this page!');
-			}
+			$this->checkAccess($commissionPlan);
 		} else {
 			$commissionPlan = new CommissionPlan();
 		}

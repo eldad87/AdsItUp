@@ -75,13 +75,13 @@ class PayoutCommand extends ContainerAwareCommand
 
             if($cp) {
                 if($cp->getPayout()) {
-                    $record->getUser()->incBalance($cp->getPayout());
+                    $record->getUser()->incPayout($cp->getPayout());
                     $record->setPayout($cp->getPayout());
                     $em->persist($record->getUser());
                 }
 
                 if($record->getReferrer() && $cp->getReferrerPayout()) {
-                    $record->getReferrer()->incBalance($cp->getReferrerPayout());
+                    $record->getReferrer()->incPayout($cp->getReferrerPayout());
                     $record->setReferrerPayout($cp->getReferrerPayout());
                     $em->persist($record->getReferrer());
                 }

@@ -33,7 +33,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
  * @Breadcrumb("Users", route={"name"="dashboard.user"})
  */
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * List all offers
@@ -56,14 +56,7 @@ class UserController extends Controller
         $source->manipulateQuery(
             function (QueryBuilder $query) use ($source, $brand, $user, $ac)
             {
-                $query->andWhere(sprintf('%s.brand = :brand', $source->getTableAlias()));
-                if(!$ac->isGranted('ROLE_BRAND')) {
-                    $query->andWhere(sprintf('(%s.manager = :user OR %s.manager IS NULL
-                    OR %s.id = :user)', $source->getTableAlias(), $source->getTableAlias(), $source->getTableAlias()));
-                    $query->setParameter('user', $user);
-                }
-                $query->setParameter('brand', $brand);
-
+                $this->applyPermission($query);
             }
         );
         $grid = $this->get('grid');
@@ -83,13 +76,20 @@ class UserController extends Controller
         $grid->addRowAction($rowAction);
 
         // Enable/Disable
-        $rowAction = new RowAction('Enable/Disable', 'dashboard.user.enable_disable', false, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));
+        $rowAction = new RowAction('Enable/Disable', 'dashboard.user.enable_disable', true, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));
         $rowAction->setRouteParameters(array('id'));
         $grid->addRowAction($rowAction);
 
         // Assign/UnAssign
-        $rowAction = new RowAction('Assign/UnAssign', 'dashboard.user.assign_unassign', false, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));
+        $rowAction = new RowAction('Assign/UnAssign', 'dashboard.user.assign_unassign', true, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));
         $rowAction->setRouteParameters(array('id'));
+        $grid->addRowAction($rowAction);
+
+        // PaymentLog
+        $rowAction = new RowAction('Payments Log', 'dashboard.payment', false, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));
+        $rowAction->setRouteParameters(array('id'));
+        /*$rowAction->setRouteParametersMapping(array('id' => 'user'));*/
+
         $grid->addRowAction($rowAction);
 
 
@@ -110,12 +110,10 @@ class UserController extends Controller
      */
     public function enableDisableAction(Request $request, User $user)
     {
+        $this->checkAccess($user);
+
         /** @var UserManagerInterface $userManager */
         $userManager = $this->get('fos_user.user_manager');
-        if($user->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
-            throw $this->createAccessDeniedException('Unable to access this page!');
-        }
-
         $user->setEnabled(!$user->isEnabled());
 
         $userManager->updateUser($user);
@@ -134,11 +132,10 @@ class UserController extends Controller
      */
     public function assignUnAssignAction(Request $request, User $user)
     {
+        $this->checkAccess($user);
+
         /** @var UserManagerInterface $userManager */
         $userManager = $this->get('fos_user.user_manager');
-        if($user->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
-            throw $this->createAccessDeniedException('Unable to access this page!');
-        }
 
         if($user->getManager()) {
             $user->setManager(null);
@@ -161,11 +158,10 @@ class UserController extends Controller
      */
     public function commissionPlanAction(Request $request, User $user)
     {
+        $this->checkAccess($user);
+
         /** @var UserManagerInterface $userManager */
         $userManager = $this->get('fos_user.user_manager');
-        if($user->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
-            throw $this->createAccessDeniedException('Unable to access this page!');
-        }
 
         $form = $this->createForm(new UserCommissionPlanType($user->getBrand()), $user);
         $form->handleRequest($request);
@@ -194,10 +190,9 @@ class UserController extends Controller
      */
     public function pixelAction(Request $request, User $user)
     {
+        $this->checkAccess($user);
+
         $em = $this->getDoctrine()->getManager();
-        if($user->getBrand()->getId() != $this->get('Brand')->byHost()->getId()) {
-            throw $this->createAccessDeniedException('Unable to access this page!');
-        }
 
         /** @var PlatformAbstract $platform */
         $platform = $this->get('PlatformFactory')->create();

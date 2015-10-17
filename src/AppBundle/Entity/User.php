@@ -13,7 +13,7 @@ use APY\DataGridBundle\Grid\Mapping as GRID;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user", uniqueConstraints={@ORM\UniqueConstraint(name="brand_email", columns={"brand_id", "email"})})
- * @GRID\Source(columns="id, enabled, balance, email, firstName, lastName, phone, country, skype, icq, company, website, manager.firstName, manager.lastName")
+ * @GRID\Source(columns="id, enabled, payout, email, firstName, lastName, phone, country, skype, icq, company, website, manager.firstName, manager.lastName")
  * @UniqueEntity(
  *     fields={"brand", "email"},
  *     errorPath="email",
@@ -43,9 +43,16 @@ class User extends BaseUser {
     /**
      * @var float
      * @ORM\Column(type="decimal", nullable=false, precision=5, scale=2, options={"default" = 0})
-     * @GRID\Column(title="Balance", type="number", operatorsVisible=false)
+     * @GRID\Column(title="Payout", type="number", operatorsVisible=false)
      */
-    protected $balance;
+    protected $payout;
+
+    /**
+     * @var float
+     * @ORM\Column(type="decimal", nullable=false, precision=5, scale=2, options={"default" = 0})
+     * @GRID\Column(title="Payment", type="number", operatorsVisible=false)
+     */
+    protected $payment;
 
     /**
      * @var string
@@ -203,6 +210,11 @@ class User extends BaseUser {
      */
     protected $pixelLog;
 
+    /**
+     * @ORM\OneToMany(targetEntity="PaymentLog", mappedBy="user")
+     */
+    protected $paymentLog;
+
     public function __construct()
     {
         parent::__construct();
@@ -210,6 +222,7 @@ class User extends BaseUser {
         $this->subordinates = new ArrayCollection();
         $this->brandRecords = new ArrayCollection();
         $this->pixelLog = new ArrayCollection();
+        $this->paymentLog = new ArrayCollection();
     }
 
     /**
@@ -225,28 +238,56 @@ class User extends BaseUser {
     /**
      * @return float
      */
-    public function getBalance()
+    public function getPayout()
     {
-        return $this->balance;
+        return $this->payout;
     }
 
     /**
-     * @param float $balance
+     * @param float $payout
      * @return $this;
      */
-    public function setBalance($balance)
+    public function setPayout($payout)
     {
-        $this->balance = $balance;
+        $this->payout = $payout;
         return $this;
     }
 
     /**
-     * @param float $balance
+     * @param float $payout
      * @return $this;
      */
-    public function incBalance($balance)
+    public function incPayout($payout)
     {
-        $this->balance += $balance;
+        $this->payout += $payout;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPayment()
+    {
+        return $this->payment;
+    }
+
+    /**
+     * @param float $payment
+     * @return $this;
+     */
+    public function setPayment($payment)
+    {
+        $this->payment = $payment;
+        return $this;
+    }
+
+    /**
+     * @param float $payment
+     * @return $this;
+     */
+    public function incPayment($payment)
+    {
+        $this->payment += $payment;
         return $this;
     }
 
@@ -690,5 +731,38 @@ class User extends BaseUser {
     public function getPixelLogs()
     {
         return $this->pixelLog;
+    }
+
+    /**
+     * Add PaymentLog
+     *
+     * @param \AppBundle\Entity\PaymentLog $paymentLog
+     * @return OfferCategory
+     */
+    public function addPaymentLog(\AppBundle\Entity\PaymentLog $paymentLog)
+    {
+        $this->paymentLog[] = $paymentLog;
+
+        return $this;
+    }
+
+    /**
+     * Remove record
+     *
+     * @param \AppBundle\Entity\PaymentLog $paymentLog
+     */
+    public function removePaymentLog(\AppBundle\Entity\PaymentLog $paymentLog)
+    {
+        $this->paymentLog->removeElement($paymentLog);
+    }
+
+    /**
+     * Get records
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPaymentLogs()
+    {
+        return $this->paymentLog;
     }
 }

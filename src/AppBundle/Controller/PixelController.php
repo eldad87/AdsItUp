@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
  * @Breadcrumb("Pixels", route={"name"="dashboard.pixel"})
  */
-class PixelController extends Controller
+class PixelController extends AbstractController
 {
     /**
      * List all pixels
@@ -53,19 +53,7 @@ class PixelController extends Controller
         $source->manipulateQuery(
             function (QueryBuilder $query) use ($source, $brand, $user)
             {
-                $query->andWhere(sprintf('%s.brand = :brand', $source->getTableAlias()));
-                $query->setParameter('brand', $brand);
-
-                if(!$user->hasRole('ROLE_BRAND')) {
-                    if($user->hasRole('ROLE_AFFILIATE_MANAGER')) {
-                        $query->join(sprintf('%s.user', $source->getTableAlias()), 'user');
-                        $query->andWhere(sprintf('(user.manager = :manager OR user.manager IS NULL)', $source->getTableAlias()));
-                        $query->setParameter('manager', $user);
-                    } else {
-                        $query->andWhere(sprintf('%s.user = :user', $source->getTableAlias()));
-                        $query->setParameter('user', $user);
-                    }
-                }
+                $this->applyPermission($query);
             }
         );
         $grid = $this->get('grid');
@@ -74,29 +62,9 @@ class PixelController extends Controller
         /** @var Grid $grid */
         $grid->setSource($source);
 
-        // View
-        /*$rowAction = new RowAction('View', 'dashboard.pixel.view', false, '_self', array(), array('ROLE_AFFILIATE'));
-        $rowAction->setRouteParameters(array('id'));
-        $grid->addRowAction($rowAction);*/
-
-
         $grid->isReadyForRedirect();
 
         return $grid->getGridResponse('::listGrid.html.twig');
-    }
-
-    /**
-     * View a pixel
-     *
-     * @Breadcrumb("{offer}")
-     * @Route("/Dashboard/Pixel/{id}", requirements={"id": "\d+"},
-     *          name="dashboard.pixel.view")
-     * @Method({"GET", "POST"})
-     * @Security("has_role('ROLE_AFFILIATE')")
-     */
-    public function viewAction(Request $request, Offer $offer)
-    {
-        //Todo
     }
 
     /**

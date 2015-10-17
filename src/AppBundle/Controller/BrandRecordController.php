@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @Breadcrumb("Dashboard", route={"name"="dashboard"})
  * @Breadcrumb("Record", route={"name"="dashboard.record"})
  */
-class BrandRecordController extends Controller
+class BrandRecordController extends AbstractController
 {
     /**
      * List all pixels
@@ -53,19 +53,7 @@ class BrandRecordController extends Controller
         $source->manipulateQuery(
             function (QueryBuilder $query) use ($source, $brand, $user)
             {
-                $query->andWhere(sprintf('%s.brand = :brand', $source->getTableAlias()));
-                $query->setParameter('brand', $brand);
-
-                if(!$user->hasRole('ROLE_BRAND')) {
-                    if($user->hasRole('ROLE_AFFILIATE_MANAGER')) {
-                        $query->join(sprintf('%s.user', $source->getTableAlias()), 'user');
-                        $query->andWhere(sprintf('(user.manager = :manager OR user.manager IS NULL)', $source->getTableAlias()));
-                        $query->setParameter('manager', $user);
-                    } else {
-                        $query->andWhere(sprintf('%s.user = :user', $source->getTableAlias()));
-                        $query->setParameter('user', $user);
-                    }
-                }
+                $this->applyPermission($query);
             }
         );
         $grid = $this->get('grid');
