@@ -46,8 +46,8 @@ class PayoutCommand extends ContainerAwareCommand
                 ->leftJoin('br.commissionPlan', 'cp')
                 ->leftJoin('br.user', 'u')
                 ->leftJoin('br.referrer', 'r')
-                ->where('br.isCommissionGranted = :isCommissionGranted')
-                ->setParameter('isCommissionGranted', false)
+                ->where('br.isProcessed = :isProcessed')
+                ->setParameter('isProcessed', false)
                 ->orderBy('br.updatedAt')
                 ->getQuery()
                 ->setMaxResults(100);
@@ -87,7 +87,7 @@ class PayoutCommand extends ContainerAwareCommand
                 }
             }
 
-            $record->setIsCommissionGranted(true);
+            $record->setIsProcessed(true);
             $em->persist($record);
         }
 

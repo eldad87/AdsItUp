@@ -149,7 +149,7 @@ abstract class PlatformAbstract {
         if(!$brandRecord) {
             //No local record found, init a new one
             $brandRecord = new BrandRecord();
-            $brandRecord->setIsCommissionGranted(false);
+            $brandRecord->setIsProcessed(false);
             $brandRecord->setBrand($brandRecord->getOffer()->getBrand());
             $brandRecord->setUser($recordAffiliateIdentity->getUser());
             $brandRecord->setReferrer($recordAffiliateIdentity->getUser()->getReferrer());

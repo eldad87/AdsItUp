@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="brand_record", indexes={@ORM\Index(name="updatedAt", columns={"is_commission_granted", "updated_at"})})
+ * @ORM\Table(name="brand_record", indexes={@ORM\Index(name="updatedAt", columns={"is_processed", "updated_at"})})
  * @ORM\HasLifecycleCallbacks()
  * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, createdAt, updatedAt")
  * @UniqueEntity(
@@ -81,9 +81,9 @@ class BrandRecord {
      *
      * @ORM\Column(type="boolean")
      *
-     * @GRID\Column(title="Is Commission Granted", type="boolean", operatorsVisible=false)
+     * @GRID\Column(title="Is Processed", type="boolean", operatorsVisible=false)
      */
-    protected $isCommissionGranted;
+    protected $isProcessed;
 
     /**
      * @ORM\Column(type="datetime")
@@ -274,23 +274,22 @@ class BrandRecord {
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
-    public function getIsCommissionGranted()
+    public function getIsProcessed()
     {
-        return $this->isCommissionGranted;
+        return $this->isProcessed;
     }
 
     /**
-     * @param mixed $isCommissionGranted
-     * @return BrandRecord
+     * @param bool $isProcessed
+     * @return $this
      */
-    public function setIsCommissionGranted($isCommissionGranted)
+    public function setIsProcessed($isProcessed)
     {
-        $this->isCommissionGranted = $isCommissionGranted;
+        $this->isProcessed = $isProcessed;
         return $this;
     }
-
 
     /**
      * @return \DateTime

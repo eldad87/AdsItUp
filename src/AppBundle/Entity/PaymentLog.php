@@ -13,7 +13,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="payment_log")
  * @GRID\Source(columns="id, amount, comment, user.username, createdAt")
- * @ORM\Table(indexes={@ORM\Index(name="created_at", columns={"brand_id", "created_at"}), @ORM\Index(name="created_a_user_idt", columns={"brand_id", "user_id", "created_at"})})
+ * @ORM\Table(indexes={@ORM\Index(name="created_at", columns={"brand_id", "created_at"}),
+ * 		@ORM\Index(name="created_a_user_idt", columns={"brand_id", "user_id", "created_at"}),
+ * 		@ORM\Index(name="updatedAt", columns={"is_processed", "updated_at"})})
+ *
  * @ORM\HasLifecycleCallbacks()
  */
 class PaymentLog {
@@ -25,6 +28,15 @@ class PaymentLog {
 	 * @GRID\Column(title="Id", type="number", operatorsVisible=false)
 	 */
 	protected $id;
+
+	/**
+	 * @Assert\NotBlank()
+	 *
+	 * @ORM\Column(type="boolean")
+	 *
+	 * @GRID\Column(title="Is Processed", type="boolean", operatorsVisible=false)
+	 */
+	protected $isProcessed;
 
 	/**
 	 * @Assert\NotBlank()
@@ -67,6 +79,13 @@ class PaymentLog {
 	protected $createdAt;
 
 	/**
+	 * @ORM\Column(type="datetime")
+	 *
+	 * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
+	 */
+	protected $updatedAt;
+
+	/**
 	 * @Assert\NotBlank()
 	 *
 	 * @ORM\ManyToOne(targetEntity="Brand", inversedBy="paymentLog")
@@ -83,6 +102,24 @@ class PaymentLog {
 	public function getId()
 	{
 		return $this->id;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function getIsProcessed()
+	{
+		return $this->isProcessed;
+	}
+
+	/**
+	 * @param bool $isProcessed
+	 * @return $this
+	 */
+	public function setIsProcessed($isProcessed)
+	{
+		$this->isProcessed = $isProcessed;
+		return $this;
 	}
 
 	/**
@@ -143,6 +180,31 @@ class PaymentLog {
 	public function setCreatedAtValue()
 	{
 		$this->createdAt = new \DateTime();
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getUpdatedAt()
+	{
+		return $this->updatedAt;
+	}
+
+	/**
+	 * @param \DateTime $createdAt
+	 */
+	public function setUpdatedAt(\DateTime $createdAt)
+	{
+		$this->updatedAt = $createdAt;
+	}
+
+	/**
+	 * @ORM\PreUpdate
+	 * @ORM\PreUpdate
+	 */
+	public function setUpdatedAtValue()
+	{
+		$this->updatedAt = new \DateTime();
 	}
 
 	public function __toString()

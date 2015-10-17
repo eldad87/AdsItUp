@@ -82,6 +82,7 @@ class PaymentController extends AbstractController
         $paymentLog->setUser($user);
         $paymentLog->setBrand($user->getBrand());
         $paymentLog->setCreator($this->getUser());
+        $paymentLog->setIsProcessed(false);
         $this->checkAccess($paymentLog);
 
         $form = $this->createForm(new PaymentLogType( function(QueryBuilder $query){return $this->applyPermission($query);}), $paymentLog);
