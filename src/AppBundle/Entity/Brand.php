@@ -269,7 +269,7 @@ class Brand {
     }
 
     /**
-     * @ORM\PreUpdate
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function setUpdatedAtValue()

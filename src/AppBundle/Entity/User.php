@@ -13,7 +13,7 @@ use APY\DataGridBundle\Grid\Mapping as GRID;
 /**
  * @ORM\Entity
  * @ORM\Table(name="fos_user", uniqueConstraints={@ORM\UniqueConstraint(name="brand_email", columns={"brand_id", "email"})})
- * @GRID\Source(columns="id, enabled, payout, email, firstName, lastName, phone, country, skype, icq, company, website, manager.firstName, manager.lastName")
+ * @GRID\Source(columns="id, enabled, balance, email, firstName, lastName, phone, country, skype, icq, company, website, manager.firstName, manager.lastName")
  * @UniqueEntity(
  *     fields={"brand", "email"},
  *     errorPath="email",
@@ -43,16 +43,9 @@ class User extends BaseUser {
     /**
      * @var float
      * @ORM\Column(type="decimal", nullable=false, precision=5, scale=2, options={"default" = 0})
-     * @GRID\Column(title="Payout", type="number", operatorsVisible=false)
+     * @GRID\Column(title="Balance", type="number", operatorsVisible=false)
      */
-    protected $payout;
-
-    /**
-     * @var float
-     * @ORM\Column(type="decimal", nullable=false, precision=5, scale=2, options={"default" = 0})
-     * @GRID\Column(title="Payment", type="number", operatorsVisible=false)
-     */
-    protected $payment;
+    protected $balance;
 
     /**
      * @var string
@@ -238,58 +231,21 @@ class User extends BaseUser {
     /**
      * @return float
      */
-    public function getPayout()
+    public function getBalance()
     {
-        return $this->payout;
+        return $this->balance;
     }
 
     /**
-     * @param float $payout
+     * @param float $balance
      * @return $this;
      */
-    public function setPayout($payout)
+    public function setBalance($balance)
     {
-        $this->payout = $payout;
+        $this->balance = $balance;
         return $this;
     }
 
-    /**
-     * @param float $payout
-     * @return $this;
-     */
-    public function incPayout($payout)
-    {
-        $this->payout += $payout;
-        return $this;
-    }
-
-    /**
-     * @return float
-     */
-    public function getPayment()
-    {
-        return $this->payment;
-    }
-
-    /**
-     * @param float $payment
-     * @return $this;
-     */
-    public function setPayment($payment)
-    {
-        $this->payment = $payment;
-        return $this;
-    }
-
-    /**
-     * @param float $payment
-     * @return $this;
-     */
-    public function incPayment($payment)
-    {
-        $this->payment += $payment;
-        return $this;
-    }
 
     public function setEmail($email)
     {

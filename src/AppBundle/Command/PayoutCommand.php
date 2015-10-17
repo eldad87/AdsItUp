@@ -22,9 +22,9 @@ class PayoutCommand extends ContainerAwareCommand
     {
         $this
             ->setName('app:payout:sync')
-            ->setDescription('Fire pending Pixels.')
+            ->setDescription('Fire pending Payouts.')
             ->setDefinition(array(
-                new InputArgument('maxRecords', InputArgument::OPTIONAL, 'Maximum brand-records to process', 1000)
+                new InputArgument('maxRecords', InputArgument::OPTIONAL, 'Maximum payout-records to process', 1000)
             ));
     }
 
@@ -35,7 +35,7 @@ class PayoutCommand extends ContainerAwareCommand
     {
         $output->writeln('Payout Sync start');
         $maxRecords = $input->getArgument('maxRecords');
-;
+
         /** @var EntityManager $em */
         $em = $this->getContainer()->get('doctrine')->getEntityManager();
         do {
@@ -75,13 +75,29 @@ class PayoutCommand extends ContainerAwareCommand
 
             if($cp) {
                 if($cp->getPayout()) {
-                    $record->getUser()->incPayout($cp->getPayout());
+                    $qb = $em->createQueryBuilder();
+                    $qb
+                        ->update('AppBundle:User', 'u')
+                        ->set('u.balance', $qb->expr()->sum('u.balance', $cp->getPayout()))
+                        ->where('u.id = :user')
+                        ->setParameter('user', $record->getUser())
+                        ->getQuery()
+                        ->execute();
+
                     $record->setPayout($cp->getPayout());
                     $em->persist($record->getUser());
                 }
 
                 if($record->getReferrer() && $cp->getReferrerPayout()) {
-                    $record->getReferrer()->incPayout($cp->getReferrerPayout());
+                    $qb = $em->createQueryBuilder();
+                    $qb
+                        ->update('AppBundle:User', 'u')
+                        ->set('u.balance', $qb->expr()->sum('u.balance', $cp->getReferrerPayout()))
+                        ->where('u.id = :user')
+                        ->setParameter('user', $record->getReferrer())
+                        ->getQuery()
+                        ->execute();
+
                     $record->setReferrerPayout($cp->getReferrerPayout());
                     $em->persist($record->getReferrer());
                 }

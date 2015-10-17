@@ -80,13 +80,14 @@ class PaymentController extends AbstractController
         /** @var PaymentLog $paymentLog */
         $paymentLog = new PaymentLog();
         $paymentLog->setUser($user);
-        $paymentLog->setBrand($user->getBrand());
+        $paymentLog->setBrand($this->getUser()->getBrand());
         $paymentLog->setCreator($this->getUser());
         $paymentLog->setIsProcessed(false);
         $this->checkAccess($paymentLog);
 
-        $form = $this->createForm(new PaymentLogType( function(QueryBuilder $query){return $this->applyPermission($query);}), $paymentLog);
+        $form = $this->createForm(new PaymentLogType(function(QueryBuilder $query){return $this->applyPermission($query);}), $paymentLog);
         $form->handleRequest($request);
+
         if ($form->isValid() && $request->isMethod($request::METHOD_POST)) {
             $paymentLog = $form->getData();
 

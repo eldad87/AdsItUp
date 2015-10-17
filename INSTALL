@@ -2,23 +2,18 @@ composer
 download http://dev.maxmind.com/geoip/geoip2/geolite2/ to /AppBundle/MaxMindDB/GeoLite2-City.mmdb
 on new platform, add a new %Platform%Setting class
 
-Payment
-	Aff Manager
-		add
-	Aff
-		view
-
-payout
-	user repo to update balance
+Brand Record
+	status
+	language
 
 Report
 	Click
 	Record
+
+Override BrandRecord Affiliate - until commission is granted
+
 Cron
 	Spot updates
-Brand Record
-	status
-	language
 Communication / Comments
 Rev share
 

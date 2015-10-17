@@ -332,7 +332,7 @@ class BrandRecord {
     }
 
     /**
-     * @ORM\PreUpdate
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function setUpdatedAtValue()

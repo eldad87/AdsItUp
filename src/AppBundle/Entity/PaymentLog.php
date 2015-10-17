@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity
  * @ORM\Table(name="payment_log")
- * @GRID\Source(columns="id, amount, comment, user.username, createdAt")
+ * @GRID\Source(columns="id, amount, comment, user.username, isProcessed, createdAt, updatedAt")
  * @ORM\Table(indexes={@ORM\Index(name="created_at", columns={"brand_id", "created_at"}),
  * 		@ORM\Index(name="created_a_user_idt", columns={"brand_id", "user_id", "created_at"}),
  * 		@ORM\Index(name="updatedAt", columns={"is_processed", "updated_at"})})
@@ -30,7 +30,6 @@ class PaymentLog {
 	protected $id;
 
 	/**
-	 * @Assert\NotBlank()
 	 *
 	 * @ORM\Column(type="boolean")
 	 *
@@ -86,8 +85,6 @@ class PaymentLog {
 	protected $updatedAt;
 
 	/**
-	 * @Assert\NotBlank()
-	 *
 	 * @ORM\ManyToOne(targetEntity="Brand", inversedBy="paymentLog")
 	 *
 	 * @GRID\Column(field="brand.name", title="Brand", operatorsVisible=false, filter="select", selectFrom="query")
@@ -199,7 +196,7 @@ class PaymentLog {
 	}
 
 	/**
-	 * @ORM\PreUpdate
+	 * @ORM\PrePersist
 	 * @ORM\PreUpdate
 	 */
 	public function setUpdatedAtValue()

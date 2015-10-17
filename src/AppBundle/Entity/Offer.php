@@ -288,7 +288,7 @@ class Offer {
     }
 
     /**
-     * @ORM\PreUpdate
+     * @ORM\PrePersist
      * @ORM\PreUpdate
      */
     public function setUpdatedAtValue()
