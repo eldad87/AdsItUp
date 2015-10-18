@@ -116,6 +116,14 @@ class Spot extends PlatformAbstract {
 				$record['subCampaignParam'], $record['id']));
 		}
 
+		if(isSet($record['customerSelectedLang']) && !empty($record['customerSelectedLang'])) {
+			$language = $record['customerSelectedLang'];
+		} else {
+			$language = $record['siteLanguage'];
+		}
+		$status = $record['saleStatus'];
+		$country = $record['Country'];
+
 		$totalDepositsAmount = 0;
 		$totalGamesCount = 0;
 
@@ -157,7 +165,7 @@ class Spot extends PlatformAbstract {
 		}
 
 		return new RecordAffiliateIdentity(
-			$record['id'], $type, $totalDepositsAmount, $totalGamesCount,
+			$record['id'], $type, $country, $language, $status, $totalDepositsAmount, $totalGamesCount,
 				$user, $offer, $offerClick->getOfferBanner(), $offerClick
 		);
 	}

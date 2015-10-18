@@ -53,6 +53,27 @@ class BrandRecord {
     protected $type;
 
     /**
+     * @ORM\Column(type="string", length=2, options={"fixed" = true})
+     *
+     * @GRID\Column(title="Country", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="query")
+     */
+    protected $country;
+
+    /**
+     * @ORM\Column(type="string", length=2, options={"fixed" = true})
+     *
+     * @GRID\Column(title="Language", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="query")
+     */
+    protected $language;
+
+    /**
+     * @ORM\Column(type="string")
+     *
+     * @GRID\Column(title="Status", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="query")
+     */
+    protected $status;
+
+    /**
      * @Assert\NotBlank()
      * @Assert\Range(
      *      min = 0
@@ -234,6 +255,60 @@ class BrandRecord {
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param mixed $country
+     * @return BrandRecord
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param mixed $language
+     * @return BrandRecord
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     * @return BrandRecord
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
         return $this;
     }
 

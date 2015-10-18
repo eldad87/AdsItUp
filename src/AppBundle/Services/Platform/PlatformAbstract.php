@@ -141,7 +141,6 @@ abstract class PlatformAbstract {
     {
         //Get most updated record from API
         $recordAffiliateIdentity = $this->getAffiliateIdentity($record);
-        $type = $recordAffiliateIdentity->getType();
 
         //Get our local DB record
         /** @var BrandRecord $brandRecord */
@@ -156,13 +155,20 @@ abstract class PlatformAbstract {
             $brandRecord->setOffer($recordAffiliateIdentity->getOffer());
             $brandRecord->setOfferBanner($recordAffiliateIdentity->getOfferBanner());
             $brandRecord->setOfferClick($recordAffiliateIdentity->getOfferClick());
+        } else if(!$brandRecord->getCommissionPlan()) {
+            //Update affiliate as long and no commission is given
+            $brandRecord->setUser($recordAffiliateIdentity->getUser());
+            $brandRecord->setReferrer($recordAffiliateIdentity->getUser()->getReferrer());
         }
 
         //Update brand record
-        $brandRecord->setType($type);
-        $brandRecord->setRecord($record);
+        $brandRecord->setType($recordAffiliateIdentity->getType());
+        $brandRecord->setCountry($recordAffiliateIdentity->getCountry());
+        $brandRecord->setLanguage($recordAffiliateIdentity->getLanguage());
+        $brandRecord->setStatus($recordAffiliateIdentity->getStatus());
         $brandRecord->setTotalDepositsAmount($recordAffiliateIdentity->getTotalDepositsAmount());
         $brandRecord->setTotalGamesCount($recordAffiliateIdentity->getTotalGamesCount());
+        $brandRecord->setRecord($record);
 
         $this->doctrine->getManager()->persist($brandRecord);
         $this->doctrine->getManager()->flush();

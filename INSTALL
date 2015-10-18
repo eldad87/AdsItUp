@@ -2,26 +2,22 @@ composer
 download http://dev.maxmind.com/geoip/geoip2/geolite2/ to /AppBundle/MaxMindDB/GeoLite2-City.mmdb
 on new platform, add a new %Platform%Setting class
 
-Brand Record
-	status
-	language
+clickID = uuid
+	collect clicks and merge in a cron
 
 Report
 	Click
 	Record
-
-Override BrandRecord Affiliate - until commission is granted
 
 Cron
 	Spot updates
 Communication / Comments
 Rev share
 
-platform_record entity
-	external_created, external_updated,
-
+Identify affiliate by regex (bots)
+session - save click for 30D in order to identify unique visitors
 Pixel log
 Brand record log
-session - save click for 30D in order to identify unique visitors
-clickID = uuid
-lead -> get info by id -> identify affiliate: (id, offer, banner, click) -> check if qualified -> grant commission
+
+platform_record entity
+	external_created, external_updated,

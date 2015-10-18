@@ -13,6 +13,9 @@ class RecordAffiliateIdentity {
 	 * @var BrandRecord::USER_TYPE_*
 	 */
 	private $type;
+	private $country;
+	private $language;
+	private $status;
 	private $totalDepositsAmount;
 	private $totalGamesCount;
 
@@ -25,11 +28,14 @@ class RecordAffiliateIdentity {
 	/** @var OfferClick */
 	private $offerClick;
 
-	public function __construct($id, $type, $totalDepositsAmount, $totalGamesCount,
+	public function __construct($id, $type, $country, $language, $status, $totalDepositsAmount, $totalGamesCount,
 								User $user, Offer $offer=null, OfferBanner $offerBanner=null, OfferClick $offerClick=null)
 	{
 		$this->id = $id;
 		$this->type = $type;
+		$this->country = $country;
+		$this->language = $language;
+		$this->status = $status;
 		$this->totalDepositsAmount = $totalDepositsAmount;
 		$this->totalGamesCount = $totalGamesCount;
 		$this->user = $user;
@@ -55,11 +61,35 @@ class RecordAffiliateIdentity {
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function getCountry()
+	{
+		return $this->country;
+	}
+
+	/**
 	 * @return User
 	 */
 	public function getType()
 	{
 		return $this->type;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLanguage()
+	{
+		return $this->language;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getStatus()
+	{
+		return $this->status;
 	}
 
 	/**
