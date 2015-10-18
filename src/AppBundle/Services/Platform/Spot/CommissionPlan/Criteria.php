@@ -68,18 +68,18 @@ class Criteria extends CriteriaAbstract {
 
 		//Check CPA / CPL conditions
 		$record = $brandRecord->getRecord();
-		if(!isSet($record['Country']) || strtolower($record['Country'])!=strtolower($this->getCountry())) {
+		if(!isSet($record['Country']) || !in_array($record['Country'], $this->getCountry())) {
 			return false;
 		}
-		if(!isSet($record['saleStatus']) || strtolower($record['saleStatus'])!=strtolower($this->getSaleStatus())) {
+		if(!isSet($record['saleStatus']) || !in_array($record['saleStatus'], $this->getSaleStatus())) {
 			return false;
 		}
-		if(!isSet($record['leadStatus']) || strtolower($record['leadStatus'])!=strtolower($this->getLeadStatus())) {
+		if(!isSet($record['leadStatus']) || !in_array($record['leadStatus'], $this->getLeadStatus())) {
 			return false;
 		}
 		if((!isSet($record['siteLanguage']) && !isSet($record['customerSelectedLang'])) ||
-			(strtolower($record['siteLanguage'])!=strtolower($this->getSiteLanguage()) &&
-				strtolower($record['customerSelectedLang'])!=strtolower($this->getCustomerSelectedLang()))) {
+			(!in_array($record['siteLanguage'], $this->getSiteLanguage()) &&
+				!in_array($record['customerSelectedLang'], $this->getCustomerSelectedLang()))) {
 			return false;
 		}
 
