@@ -18,6 +18,10 @@ class RecordAffiliateIdentity {
 	private $status;
 	private $totalDepositsAmount;
 	private $totalGamesCount;
+	/** @var  \DateTime */
+	private $createdAt;
+	/** @var  \DateTime */
+	private $updatedAt;
 
 	/** @var User */
 	private $user;
@@ -28,7 +32,7 @@ class RecordAffiliateIdentity {
 	/** @var OfferClick */
 	private $offerClick;
 
-	public function __construct($id, $type, $country, $language, $status, $totalDepositsAmount, $totalGamesCount,
+	public function __construct($id, $type, $country, $language, $status, \Datetime $createdAt, \Datetime $updatedAt, $totalDepositsAmount, $totalGamesCount,
 								User $user, Offer $offer=null, OfferBanner $offerBanner=null, OfferClick $offerClick=null)
 	{
 		$this->id = $id;
@@ -42,6 +46,8 @@ class RecordAffiliateIdentity {
 		$this->offer = $offer;
 		$this->offerBanner = $offerBanner;
 		$this->offerClick = $offerClick;
+		$this->createdAt = $createdAt;
+		$this->updatedAt = $updatedAt;
 	}
 
 	/**
@@ -90,6 +96,22 @@ class RecordAffiliateIdentity {
 	public function getStatus()
 	{
 		return $this->status;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getCreatedAt()
+	{
+		return $this->createdAt;
+	}
+
+	/**
+	 * @return \DateTime
+	 */
+	public function getUpdatedAt()
+	{
+		return $this->updatedAt;
 	}
 
 	/**

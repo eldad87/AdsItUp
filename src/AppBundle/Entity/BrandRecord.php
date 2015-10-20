@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @ORM\Table(name="brand_record", indexes={@ORM\Index(name="updatedAt", columns={"is_processed", "updated_at"})})
  * @ORM\HasLifecycleCallbacks()
- * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, country, language, status, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, createdAt, updatedAt")
+ * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, country, language, status, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, recordCreatedAt, recordUpdatedAt")
  * @UniqueEntity(
  *     fields={"brand", "externalId"},
  *     errorPath="externalId",
@@ -111,12 +111,26 @@ class BrandRecord {
      *
      * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
      */
-    protected $createdAt;
+    protected $recordCreatedAt;
 
     /**
      * @ORM\Column(type="datetime")
      *
      * @GRID\Column(title="Updated At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
+     */
+    protected $recordUpdatedAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @GRID\Column(title="DB Created At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
+     */
+    protected $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @GRID\Column(title="DB Updated At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $updatedAt;
 
@@ -364,6 +378,38 @@ class BrandRecord {
     {
         $this->isProcessed = $isProcessed;
         return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRecordCreatedAt()
+    {
+        return $this->recordCreatedAt;
+    }
+
+    /**
+     * @param \DateTime $recordCreatedAt
+     */
+    public function setRecordCreatedAt(\DateTime $recordCreatedAt)
+    {
+        $this->recordCreatedAt = $recordCreatedAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRecordUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $recordUpdatedAt
+     */
+    public function setRecordUpdatedAt(\DateTime $recordUpdatedAt)
+    {
+        $this->recordUpdatedAt = $recordUpdatedAt;
     }
 
     /**

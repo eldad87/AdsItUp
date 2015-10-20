@@ -124,6 +124,10 @@ class Spot extends PlatformAbstract {
 		$status = $record['saleStatus'];
 		$country = $record['Country'];
 
+		//TODO:
+		$createdAt = new \DateTime();
+		$updatedAt = new \DateTime();
+
 		$totalDepositsAmount = 0;
 		$totalGamesCount = 0;
 
@@ -165,7 +169,7 @@ class Spot extends PlatformAbstract {
 		}
 
 		return new RecordAffiliateIdentity(
-			$record['id'], $type, $country, $language, $status, $totalDepositsAmount, $totalGamesCount,
+			$record['id'], $type, $country, $language, $createdAt, $updatedAt, $status, $totalDepositsAmount, $totalGamesCount,
 				$user, $offer, $offerClick->getOfferBanner(), $offerClick
 		);
 	}

@@ -155,6 +155,7 @@ abstract class PlatformAbstract {
             $brandRecord->setOffer($recordAffiliateIdentity->getOffer());
             $brandRecord->setOfferBanner($recordAffiliateIdentity->getOfferBanner());
             $brandRecord->setOfferClick($recordAffiliateIdentity->getOfferClick());
+            $brandRecord->setRecordCreatedAt($recordAffiliateIdentity->getCreatedAt());
         } else if(!$brandRecord->getCommissionPlan()) {
             //Update affiliate as long and no commission is given
             $brandRecord->setUser($recordAffiliateIdentity->getUser());
@@ -162,6 +163,7 @@ abstract class PlatformAbstract {
         }
 
         //Update brand record
+        $brandRecord->setRecordUpdatedAt($recordAffiliateIdentity->getUpdatedAt());
         $brandRecord->setType($recordAffiliateIdentity->getType());
         $brandRecord->setCountry($recordAffiliateIdentity->getCountry());
         $brandRecord->setLanguage($recordAffiliateIdentity->getLanguage());
