@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @ORM\Table(name="brand_record", indexes={@ORM\Index(name="updatedAt", columns={"is_processed", "updated_at"})})
  * @ORM\HasLifecycleCallbacks()
- * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, createdAt, updatedAt")
+ * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, country, language, status, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, createdAt, updatedAt")
  * @UniqueEntity(
  *     fields={"brand", "externalId"},
  *     errorPath="externalId",
