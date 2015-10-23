@@ -2,19 +2,19 @@ composer
 download http://dev.maxmind.com/geoip/geoip2/geolite2/ to /AppBundle/MaxMindDB/GeoLite2-City.mmdb
 on new platform, add a new %Platform%Setting class
 
-clickID = uuid
-	collect clicks and merge in a cron
-
-Report
-	Click
-	Record
+Communication / Comments
 
 Cron
 	Spot updates
-Communication / Comments
-Rev share
 
+Tiers
+Rev share
 Identify affiliate by regex (bots)
+
+clickID = uuid
+	collect clicks and merge in a cron
+	Remote server
+
 session - save click for 30D in order to identify unique visitors
 Pixel log
 Brand record log

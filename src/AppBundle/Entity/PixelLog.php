@@ -138,14 +138,14 @@ class PixelLog {
 	/**
 	 * @Assert\NotBlank(groups={"postUpload"})
 	 *
-	 * @ORM\ManyToOne(targetEntity="Offer", inversedBy="offerBanners")
+	 * @ORM\ManyToOne(targetEntity="Offer", inversedBy="pixelLog")
 	 *
 	 * @GRID\Column(field="offer.name", title="Offer", operatorsVisible=false, filter="select", selectFrom="query")
 	 */
 	protected $offer;
 
 	/**
-	 * @ORM\ManyToOne(targetEntity="User", inversedBy="offerClicks")
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="pixelLog")
 	 *
 	 * @GRID\Column(field="user.username", title="Username", operatorsVisible=false, filter="select", selectFrom="query")
 	 */
@@ -162,7 +162,7 @@ class PixelLog {
 
 	/**
 	 * @Assert\NotBlank()
-	 * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="pixelLog")
+	 * @ORM\ManyToOne(targetEntity="BrandRecord", inversedBy="pixelLog")
 	 */
 	protected $brandRecord;
 

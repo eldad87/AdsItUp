@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @ORM\Table(name="brand_record", indexes={@ORM\Index(name="updatedAt", columns={"is_processed", "updated_at"})})
  * @ORM\HasLifecycleCallbacks()
- * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, country, language, status, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, recordCreatedAt, recordUpdatedAt")
+ * @GRID\Source(columns="id, externalId, offer.name, user.email, referrer.email, type, country, language, status, totalDepositsAmount, totalGamesCount, commissionPlan.name, payout, offerClick.createdAt, offerClick.createdAt:date, recordCreatedAt, recordCreatedAt:date, recordUpdatedAt")
  * @UniqueEntity(
  *     fields={"brand", "externalId"},
  *     errorPath="externalId",
@@ -55,21 +55,21 @@ class BrandRecord {
     /**
      * @ORM\Column(type="string", length=2, options={"fixed" = true})
      *
-     * @GRID\Column(title="Country", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(title="Country", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="source")
      */
     protected $country;
 
     /**
      * @ORM\Column(type="string", length=2, options={"fixed" = true})
      *
-     * @GRID\Column(title="Language", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(title="Language", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="source")
      */
     protected $language;
 
     /**
      * @ORM\Column(type="string")
      *
-     * @GRID\Column(title="Status", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(title="Status", operatorsVisible=false, operatorsVisible=false, filter="select", selectFrom="source")
      */
     protected $status;
 
@@ -109,7 +109,8 @@ class BrandRecord {
     /**
      * @ORM\Column(type="datetime")
      *
-     * @GRID\Column(title="Created At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
+     * @GRID\Column(title="Created At Date Time", type="datetime", operatorsVisible=false, defaultOperator="btwe")
+     * @Grid\Column(field="recordCreatedAt:date", title="Created At Date", type="date", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $recordCreatedAt;
 
@@ -122,7 +123,6 @@ class BrandRecord {
 
     /**
      * @ORM\Column(type="datetime")
-     *
      * @GRID\Column(title="DB Created At", type="datetime", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $createdAt;
@@ -144,27 +144,27 @@ class BrandRecord {
     /**
      * @ORM\ManyToOne(targetEntity="Offer", inversedBy="brandRecords")
      *
-     * @GRID\Column(field="offer.name", title="Offer", operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(field="offer.name", title="Offer", operatorsVisible=false, filter="select", selectFrom="source")
      */
     protected $offer;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="brandRecords")
      *
-     * @GRID\Column(field="user.username", title="Username", operatorsVisible=false, filter="select", selectFrom="query", role="ROLE_AFFILIATE_MANAGER")
+     * @GRID\Column(field="user.username", title="Username", operatorsVisible=false, filter="select", selectFrom="source", role="ROLE_AFFILIATE_MANAGER")
      */
     protected $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="refBrandRecords")
-     * @GRID\Column(field="referrer.username", title="Referrer First Name", operatorsVisible=false, filter="select", selectFrom="query", role="ROLE_AFFILIATE_MANAGER")
+     * @GRID\Column(field="referrer.username", title="Referrer First Name", operatorsVisible=false, filter="select", selectFrom="source", role="ROLE_AFFILIATE_MANAGER")
      */
     protected $referrer;
 
     /**
      * @ORM\ManyToOne(targetEntity="OfferBanner", inversedBy="brandRecords")
      *
-     * @GRID\Column(field="OfferBanner.name", title="Banner", operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(field="OfferBanner.name", title="Banner", operatorsVisible=false, filter="select", selectFrom="source")
      */
     protected $offerBanner;
 
@@ -173,7 +173,8 @@ class BrandRecord {
      *
      * @ORM\ManyToOne(targetEntity="OfferClick", inversedBy="brandRecords")
      *
-     * @GRID\Column(field="offerClick.createdAt", title="Click", operatorsVisible=false, operator="btwe")
+     * @GRID\Column(field="offerClick.createdAt", title="Click Date Time", type="datetime", operatorsVisible=false, defaultOperator="btwe")
+     * @GRID\Column(field="offerClick.createdAt:date", title="Click Date", type="date", operatorsVisible=false, defaultOperator="btwe")
      */
     protected $offerClick;
 
@@ -189,7 +190,7 @@ class BrandRecord {
      *
      * @ORM\ManyToOne(targetEntity="CommissionPlan", inversedBy="brandRecords")
      *
-     * @GRID\Column(field="commissionPlan.name", title="Commission Plan", operatorsVisible=false, filter="select", selectFrom="query")
+     * @GRID\Column(field="commissionPlan.name", title="Commission Plan", operatorsVisible=false, filter="select", selectFrom="source")
      */
     protected $commissionPlan;
 

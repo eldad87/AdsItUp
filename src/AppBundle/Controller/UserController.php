@@ -39,32 +39,22 @@ class UserController extends AbstractController
      * List all offers
      *
      * @Route("/Dashboard/User", name="dashboard.user")
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_AFFILIATE_MANAGER')")
      */
     public function listAction(Request $request)
     {
         $source = new Entity('AppBundle:User');
-
-        /** @var User $user */
-        $user = $this->getUser();
-        /** @var Brand $brand */
-        $brand = $this->get('Brand')->byHost();
-
-        /** @var AuthorizationCheckerInterface $ac */
-        $ac = $this->container->get('security.authorization_checker');
-        $source->manipulateQuery(
-            function (QueryBuilder $query) use ($source, $brand, $user, $ac)
-            {
-                $this->applyPermission($query);
-            }
-        );
         $grid = $this->get('grid');
-
 
         /** @var Grid $grid */
         $grid->setSource($source);
         $grid->setNoDataMessage(false);
+
+        //Set permissions
+        $qb = $source->getRepository()->createQueryBuilder($source->getTableAlias());
+        $this->applyPermission($qb);
+        $source->initQueryBuilder($qb);
 
         // Commission Plan
         $rowAction = new RowAction('Commission Plan', 'dashboard.user.commission_plan.save', false, '_self', array(), array('ROLE_AFFILIATE_MANAGER'));

@@ -113,7 +113,7 @@ class OfferBanner {
     protected $offerClicks;
 
     /**
-     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerClick")
+     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerBanner")
      */
     protected $brandRecords;
 

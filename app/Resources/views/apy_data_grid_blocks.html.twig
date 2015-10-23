@@ -5,6 +5,11 @@
     <div class="grid">
         {% if grid.totalCount > 0 or grid.isFiltered or grid.noDataMessage is sameas(false) %}
             <form class="form" id="{{ grid.hash }}" action="{{ grid.routeUrl }}" method="post">
+
+                {% if form is defined %}
+                    {{ form_widget(form, {'form_type': 'horizontal'}) }}
+                {% endif %}
+
                 <div class="grid_header form-inline">
                     {% if grid.massActions|length > 0 %}
                         {{ grid_actions(grid) }}

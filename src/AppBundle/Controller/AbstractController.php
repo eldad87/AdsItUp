@@ -92,4 +92,56 @@ class AbstractController extends Controller
             }
         }
     }
+
+    /**
+     * @param bool $success
+     * @param integer $code
+     * @param array $data
+     * @param bool $defaultMessage
+     * @param bool $useDefaultFormat - if true, use the default response structure,
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function apiResponse($success, $code, $data = array(), $defaultMessage = null, $useDefaultFormat = true)
+    {
+        $request = $this->getRequest();
+        /**
+         * The default format
+         */
+        $format = $request->getRequestFormat();
+
+        if (!$useDefaultFormat) {
+            $response = $this->render('::layout.' . $format . '.twig', array('data' => $data));
+
+        } else {
+            $response = $this->render(
+                '::layout.' . $format . '.twig',
+                array(
+                    'data' => array(
+                        'success' => $success,
+                        'code'    => $code,
+                        'msg'     => $this->getResponseMessage($success, $code, $defaultMessage),
+                        'data'    => $data
+                    )
+                )
+            );
+
+            if ($format == 'csv') {
+                $response->headers->set('Content-Type', 'text/csv');
+                $response->headers->set(
+                    'Content-Disposition',
+                    'attachment; filename=' . (isSet($data['fileName']) ? $data['fileName'] : 'csv')
+                );
+            }
+        }
+
+        $length = mb_strlen($response->getContent());
+        $response->headers->set('content-length', $length);
+
+        return $response;
+    }
+
+    protected function getResponseMessage($success, $code, $defaultMessage)
+    {
+        return $defaultMessage;
+    }
 }

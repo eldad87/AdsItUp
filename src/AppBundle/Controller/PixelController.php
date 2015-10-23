@@ -39,29 +39,22 @@ class PixelController extends AbstractController
      * List all pixels
      *
      * @Route("/Dashboard/Pixel", name="dashboard.pixel")
-     * @Method({"GET"})
+     * @Method({"GET", "POST"})
      * @Security("has_role('ROLE_AFFILIATE')")
      */
     public function listAction(Request $request)
     {
         $source = new Entity('AppBundle:PixelLog');
-        /** @var Brand $brand */
-        $brand = $this->get('Brand')->byHost();
-
-        /** @var User $user */
-        $user = $this->getUser();
-        $source->manipulateQuery(
-            function (QueryBuilder $query) use ($source, $brand, $user)
-            {
-                $this->applyPermission($query);
-            }
-        );
         $grid = $this->get('grid');
-
 
         /** @var Grid $grid */
         $grid->setSource($source);
         $grid->setNoDataMessage(false);
+
+        //Set permissions
+        $qb = $source->getRepository()->createQueryBuilder($source->getTableAlias());
+        $this->applyPermission($qb);
+        $source->initQueryBuilder($qb);
 
         $grid->isReadyForRedirect();
 

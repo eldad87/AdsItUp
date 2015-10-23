@@ -114,14 +114,14 @@ class OfferClick {
     protected $offer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="offerClicks")
+     * @ORM\ManyToOne(targetEntity="User")
      *
      * @GRID\Column(field="user.username", title="Username", operatorsVisible=false, filter="select", selectFrom="query")
      */
     protected $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="OfferBanner", inversedBy="bannerClicks")
+     * @ORM\ManyToOne(targetEntity="OfferBanner", inversedBy="offerClicks")
      *
      * @GRID\Column(field="OfferBanner.width", title="BannerW", operatorsVisible=false, filter="select", selectFrom="query")
      * @GRID\Column(field="OfferBanner.height", title="BannerH", operatorsVisible=false, filter="select", selectFrom="query")

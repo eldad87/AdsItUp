@@ -3,9 +3,6 @@ namespace AppBundle\Menu;
 
 use AppBundle\Services\AccessMap;
 use Doctrine\Common\Annotations\AnnotationReader;
-use JMS\DiExtraBundle\Metadata\ClassMetadata;
-use JMS\DiExtraBundle\Metadata\DefaultNamingStrategy;
-use JMS\DiExtraBundle\Metadata\Driver\AnnotationDriver;
 use Knp\Menu\FactoryInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\DependencyInjection\ContainerAware;
@@ -57,31 +54,36 @@ class Builder extends ContainerAware
 
             $menu->addChild('Report')
                 ->setAttribute('dropdown', true);
-            $menu['Report']->addChild('Pixel', array('route' => 'dashboard.pixel'))
+            $menu['Report']->addChild('Pixel Log', array('route' => 'dashboard.pixel'))
                 ->setAttribute('icon', 'glyphicon glyphicon-screenshot');
-            $menu['Report']->addChild('Record', array('route' => 'dashboard.record'))
+            $menu['Report']->addChild('Record Log', array('route' => 'dashboard.record'))
                 ->setAttribute('icon', 'glyphicon glyphicon-paperclip');
-        }
 
-        if($this->container->get('security.authorization_checker')->isGranted('ROLE_AFFILIATE_MANAGER')) {
-            // Dashboard
-            $menu->addChild('User', array('route' => 'dashboard.user'));
+            if($this->container->get('security.authorization_checker')->isGranted('ROLE_AFFILIATE_MANAGER')) {
+                // Dashboard
+                $menu->addChild('User', array('route' => 'dashboard.user'));
 
-            $menu['Report']->addChild('Payment', array('route' => 'dashboard.payment'))
-                ->setAttribute('icon', 'glyphicon glyphicon-usd');
-        }
+                $menu['Report']->addChild('Payment', array('route' => 'dashboard.payment'))
+                    ->setAttribute('icon', 'glyphicon glyphicon-usd');
+            }
 
-        if($this->container->get('security.authorization_checker')->isGranted('ROLE_BRAND')) {
-            $menu['Offer']->addChild('Add', array('route' => 'dashboard.offer.save'))
-                ->setAttribute('icon', 'glyphicon glyphicon-plus');
+            $menu['Report']->addChild('Record Breakdown', array('route' => 'dashboard.report', 'routeParameters'=>array('entity'=>'BrandRecord')))
+                ->setAttribute('icon', 'glyphicon glyphicon-stats');
+            $menu['Report']->addChild('Pixel Log Breakdown', array('route' => 'dashboard.report', 'routeParameters'=>array('entity'=>'PixelLog')))
+                ->setAttribute('icon', 'glyphicon glyphicon-stats');
 
-            // Commission Plan
-            $menu->addChild('Commission Plan')
-                ->setAttribute('dropdown', true);
-            $menu['Commission Plan']->addChild('List', array('route' => 'dashboard.commission_plan'))
-                ->setAttribute('icon', 'glyphicon glyphicon-list');
-            $menu['Commission Plan']->addChild('Add', array('route' => 'dashboard.commission_plan.save'))
-                ->setAttribute('icon', 'glyphicon glyphicon-plus');
+            if($this->container->get('security.authorization_checker')->isGranted('ROLE_BRAND')) {
+                $menu['Offer']->addChild('Add', array('route' => 'dashboard.offer.save'))
+                    ->setAttribute('icon', 'glyphicon glyphicon-plus');
+
+                // Commission Plan
+                $menu->addChild('Commission Plan')
+                    ->setAttribute('dropdown', true);
+                $menu['Commission Plan']->addChild('List', array('route' => 'dashboard.commission_plan'))
+                    ->setAttribute('icon', 'glyphicon glyphicon-list');
+                $menu['Commission Plan']->addChild('Add', array('route' => 'dashboard.commission_plan.save'))
+                    ->setAttribute('icon', 'glyphicon glyphicon-plus');
+            }
         }
         //$this->filterMenu($menu);
 

@@ -37,20 +37,16 @@ class OfferController extends AbstractController
     public function listAction(Request $request)
     {
         $source = new Entity('AppBundle:Offer');
-        /** @var Brand $brand */
-        $brand = $this->get('Brand')->byHost();
-        $source->manipulateQuery(
-            function (QueryBuilder $query) use ($source, $brand)
-            {
-                $this->applyPermission($query);
-            }
-        );
         $grid = $this->get('grid');
-
 
         /** @var Grid $grid */
         $grid->setSource($source);
         $grid->setNoDataMessage(false);
+
+        //Set permissions
+        $qb = $source->getRepository()->createQueryBuilder($source->getTableAlias());
+        $this->applyPermission($qb);
+        $source->initQueryBuilder($qb);
 
         // Edit
         $rowAction = new RowAction('Edit', 'dashboard.offer.save', false, '_self', array(), array('ROLE_BRAND'));

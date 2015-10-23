@@ -38,21 +38,21 @@ class PaymentController extends AbstractController
         $this->checkAccess($user);
 
         $source = new Entity('AppBundle:PaymentLog');
-        $source->manipulateQuery(
-            function (QueryBuilder $query) use ($source, $userViewer, $user)
-            {
-                $this->applyPermission($query);
-                if($user) {
-                    $query->andWhere(sprintf('%s.user = :user', $source->getTableAlias()));
-                    $query->setParameter('user', $user);
-                }
-            }
-        );
         $grid = $this->get('grid');
 
         /** @var Grid $grid */
         $grid->setSource($source);
         $grid->setNoDataMessage(false);
+
+        //Set permissions
+        $qb = $source->getRepository()->createQueryBuilder($source->getTableAlias());
+        $this->applyPermission($qb);
+        if($user) {
+            $qb->andWhere(sprintf('%s.user = :user', $source->getTableAlias()));
+            $qb->setParameter('user', $user);
+        }
+        $source->initQueryBuilder($qb);
+
 
         // Add
         $massAction = new MassAction('Add', function() use ($user) {

@@ -57,7 +57,7 @@ class User extends BaseUser {
     protected $email;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CommissionPlan", inversedBy="users")
+     * @ORM\ManyToMany(targetEntity="CommissionPlan", mappedBy="users")
      */
     protected $commissionPlans;
 
@@ -74,7 +74,7 @@ class User extends BaseUser {
     protected $manager;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="subordinates")
+     * @ORM\ManyToOne(targetEntity="User")
      * @GRID\Column(field="referrer.firstName", title="Referrer First Name", operatorsVisible=false, filter="select", selectFrom="query")
      * @GRID\Column(field="referrer.lastName", title="Referrer Last Name", operatorsVisible=false, filter="select", selectFrom="query")
      */

@@ -117,7 +117,7 @@ class Offer {
     protected $offerClicks;
 
     /**
-     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offerClick")
+     * @ORM\OneToMany(targetEntity="BrandRecord", mappedBy="offer")
      */
     protected $brandRecords;
 

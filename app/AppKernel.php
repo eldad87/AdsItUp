@@ -22,7 +22,7 @@ class AppKernel extends Kernel
             new Braincrafted\Bundle\BootstrapBundle\BraincraftedBootstrapBundle(),
             new APY\DataGridBundle\APYDataGridBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new APY\BreadcrumbTrailBundle\APYBreadcrumbTrailBundle(),
+            new APY\BreadcrumbTrailBundle\APYBreadcrumbTrailBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
